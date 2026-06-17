@@ -1,209 +1,158 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/lib/stores/auth-store";
-import { Button } from "@/components/ui/button";
-import {
-  Store,
-  ShoppingBag,
-  ArrowRight,
-  Shield,
-  Clock,
-  MapPin,
-  Star,
-  CheckCircle,
-} from "lucide-react";
+import { Search, MapPin } from "lucide-react";
 
-export default function LandingPage() {
-  const { login } = useAuthStore();
-  const router = useRouter();
-  const [selectedRole, setSelectedRole] = useState<"customer" | "vendor">(
-    "customer"
-  );
+const categories = [
+  { id: "mama-baba-mboga", label: "Mama/Baba Mboga", icon: "🥬" },
+  { id: "maasai-shop", label: "Maasai Shop", icon: "🛍️" },
+  { id: "barbers", label: "Barbers", icon: "💈" },
+  { id: "saloonists", label: "Saloonists", icon: "💇‍♀️" },
+  { id: "water-vendors", label: "Water Vendors", icon: "💧" },
+  { id: "gas-refillers", label: "Gas Refillers", icon: "🔥" },
+  { id: "butcheries", label: "Butcheries", icon: "🥩" },
+  { id: "laundry-mart", label: "Laundry Mart", icon: "👕" },
+  { id: "supermarkets", label: "SuperMarkets & Wholesellers", icon: "🏪" },
+  { id: "eateries", label: "Eateries", icon: "🍽️" },
+  { id: "quick-snacks", label: "Quick Snacks", icon: "🍟" },
+];
 
-  const handleGetStarted = () => {
-    login(selectedRole);
-    if (selectedRole === "vendor") {
-      router.push("/vendor/dashboard");
-    } else {
-      router.push("/customer-home");
-    }
-  };
+export default function HomePage() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [location, setLocation] = useState("");
 
   return (
-    <div className="min-h-screen bg-neutral-50">
-      {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-brand-900 to-brand-950" />
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 left-10 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-10 right-10 w-48 h-48 bg-copper-400/20 rounded-full blur-3xl" />
-        </div>
-
-        <div className="relative max-w-2xl mx-auto px-6 pt-12 pb-20 text-center">
-          <div className="flex items-center justify-center gap-2 mb-8">
-            <div className="w-11 h-11 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center border border-white/20">
-              <span className="text-white font-bold text-base">SP</span>
-            </div>
-          </div>
-
-          <h1 className="text-4xl sm:text-5xl font-bold text-white leading-tight tracking-tight">
-            Your market,
-            <br />
-            <span className="text-copper-300">smarter.</span>
-          </h1>
-
-          <p className="mt-5 text-base text-brand-200 leading-relaxed max-w-md mx-auto">
-            Order fresh food and goods from vendors near you. Skip the queue,
-            pick up when ready, or get it delivered.
-          </p>
-
-          <div className="flex items-center justify-center gap-6 mt-8">
-            <div className="flex items-center gap-2 text-brand-200">
-              <Shield className="w-4 h-4" />
-              <span className="text-sm">Trusted Vendors</span>
-            </div>
-            <div className="flex items-center gap-2 text-brand-200">
-              <Clock className="w-4 h-4" />
-              <span className="text-sm">Order Ahead</span>
-            </div>
-            <div className="flex items-center gap-2 text-brand-200">
-              <MapPin className="w-4 h-4" />
-              <span className="text-sm">Near You</span>
-            </div>
+    <main className="min-h-screen bg-neutral-50">
+      {/* Header */}
+      <header className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center justify-between">
+            <h1 className="text-2xl font-bold text-brand-700">SökoPay</h1>
+            <button className="text-sm text-brand-600 hover:text-brand-700 font-medium">
+              Sign In
+            </button>
           </div>
         </div>
-      </section>
+      </header>
 
-      {/* Role Selection */}
-      <section className="max-w-2xl mx-auto px-6 -mt-8 relative z-10">
-        <div className="bg-white rounded-2xl border border-neutral-100 shadow-elevated p-6">
-          <h2 className="text-base font-semibold text-neutral-900 text-center mb-4">
-            How do you want to use SokoPay?
+      {/* Hero Section */}
+      <div className="bg-brand-600 text-white py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold mb-2">
+            Find Local Services Near You
           </h2>
-
-          <div className="grid grid-cols-2 gap-3">
-            <button
-              onClick={() => setSelectedRole("customer")}
-              className={`relative p-4 rounded-xl border-2 text-left transition-all duration-200 ${
-                selectedRole === "customer"
-                  ? "border-brand-600 bg-brand-50"
-                  : "border-neutral-200 hover:border-neutral-300"
-              }`}
-            >
-              {selectedRole === "customer" && (
-                <CheckCircle className="absolute top-3 right-3 w-4 h-4 text-brand-600" />
-              )}
-              <ShoppingBag
-                className={`w-8 h-8 mb-3 ${
-                  selectedRole === "customer"
-                    ? "text-brand-600"
-                    : "text-neutral-400"
-                }`}
-              />
-              <h3 className="text-sm font-semibold text-neutral-900">
-                Customer
-              </h3>
-              <p className="text-xs text-neutral-500 mt-1">
-                Browse vendors, order food & goods
-              </p>
-            </button>
-
-            <button
-              onClick={() => setSelectedRole("vendor")}
-              className={`relative p-4 rounded-xl border-2 text-left transition-all duration-200 ${
-                selectedRole === "vendor"
-                  ? "border-brand-600 bg-brand-50"
-                  : "border-neutral-200 hover:border-neutral-300"
-              }`}
-            >
-              {selectedRole === "vendor" && (
-                <CheckCircle className="absolute top-3 right-3 w-4 h-4 text-brand-600" />
-              )}
-              <Store
-                className={`w-8 h-8 mb-3 ${
-                  selectedRole === "vendor"
-                    ? "text-brand-600"
-                    : "text-neutral-400"
-                }`}
-              />
-              <h3 className="text-sm font-semibold text-neutral-900">Vendor</h3>
-              <p className="text-xs text-neutral-500 mt-1">
-                Sell goods, manage orders
-              </p>
-            </button>
-          </div>
-
-          <Button
-            onClick={handleGetStarted}
-            fullWidth
-            size="lg"
-            className="mt-5"
-          >
-            Get Started
-            <ArrowRight className="w-4 h-4" />
-          </Button>
-
-          <p className="text-center text-xs text-neutral-400 mt-4">
-            Already have an account?{" "}
-            <button
-              onClick={() => router.push("/auth/login")}
-              className="text-brand-600 font-medium hover:text-brand-700"
-            >
-              Sign in
-            </button>
+          <p className="text-brand-100 mb-6">
+            Discover trusted vendors and service providers in your area
           </p>
-        </div>
-      </section>
 
-      {/* Trust Section */}
-      <section className="max-w-2xl mx-auto px-6 py-16">
-        <div className="grid grid-cols-3 gap-6">
-          <div className="text-center">
-            <div className="w-12 h-12 bg-brand-50 rounded-2xl flex items-center justify-center mx-auto mb-3">
-              <CheckCircle className="w-6 h-6 text-brand-600" />
+          {/* Search Bar */}
+          <div className="bg-white rounded-lg shadow-md p-4">
+            <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                <input
+                  type="text"
+                  placeholder="What do you need? (e.g., sukuma wiki, haircut, water)"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+              <div className="relative">
+                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                <input
+                  type="text"
+                  placeholder="Enter your location"
+                  className="w-full sm:w-64 pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-transparent"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                />
+              </div>
+              <button className="bg-brand-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-brand-700 transition-colors">
+                Search
+              </button>
             </div>
-            <h3 className="text-sm font-semibold text-neutral-900">
-              Verified Vendors
-            </h3>
-            <p className="text-xs text-neutral-500 mt-1">
-              Every vendor is vetted
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="w-12 h-12 bg-brand-50 rounded-2xl flex items-center justify-center mx-auto mb-3">
-              <Clock className="w-6 h-6 text-brand-600" />
-            </div>
-            <h3 className="text-sm font-semibold text-neutral-900">
-              Order Ahead
-            </h3>
-            <p className="text-xs text-neutral-500 mt-1">
-              Skip the market queue
-            </p>
-          </div>
-          <div className="text-center">
-            <div className="w-12 h-12 bg-brand-50 rounded-2xl flex items-center justify-center mx-auto mb-3">
-              <Star className="w-6 h-6 text-brand-600" />
-            </div>
-            <h3 className="text-sm font-semibold text-neutral-900">
-              Rated & Reviewed
-            </h3>
-            <p className="text-xs text-neutral-500 mt-1">
-              Real customer feedback
-            </p>
           </div>
         </div>
-      </section>
+      </div>
+
+      {/* Categories Section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <h3 className="text-xl font-semibold text-gray-900 mb-6">
+          Browse Categories
+        </h3>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          {categories.map((category) => (
+            <button
+              key={category.id}
+              className="flex flex-col items-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-100"
+            >
+              <span className="text-3xl mb-2">{category.icon}</span>
+              <span className="text-sm font-medium text-gray-700 text-center">
+                {category.label}
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Featured Vendors Section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <h3 className="text-xl font-semibold text-gray-900 mb-6">
+          Featured Vendors
+        </h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Placeholder vendor cards - will be populated with real data later */}
+          {[1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden"
+            >
+              <div className="bg-gray-200 h-48 flex items-center justify-center">
+                <span className="text-gray-400">Vendor Image</span>
+              </div>
+              <div className="p-4">
+                <h4 className="font-semibold text-gray-900 mb-1">
+                  Vendor Name {i}
+                </h4>
+                <p className="text-sm text-gray-500 mb-2">Category</p>
+                <div className="flex items-center text-sm text-gray-600">
+                  <MapPin className="h-4 w-4 mr-1" />
+                  <span>0.{i} km away</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
 
       {/* Footer */}
-      <footer className="border-t border-neutral-100 py-6">
-        <div className="max-w-2xl mx-auto px-6 text-center">
-          <p className="text-xs text-neutral-400">
-            SokoPay — Connecting Kenyan markets to your fingertips
-          </p>
+      <footer className="bg-gray-900 text-white py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="mb-4 md:mb-0">
+              <h4 className="text-xl font-bold">SökoPay</h4>
+              <p className="text-gray-400 text-sm mt-1">
+                Connecting you to local services
+              </p>
+            </div>
+            <div className="flex space-x-6">
+              <a href="#" className="text-gray-400 hover:text-white">
+                About
+              </a>
+              <a href="#" className="text-gray-400 hover:text-white">
+                Contact
+              </a>
+              <a href="#" className="text-gray-400 hover:text-white">
+                Terms
+              </a>
+            </div>
+          </div>
+          <div className="mt-8 pt-8 border-t border-gray-800 text-center text-gray-400 text-sm">
+            © 2024 SökoPay. All rights reserved.
+          </div>
         </div>
       </footer>
-    </div>
+    </main>
   );
 }

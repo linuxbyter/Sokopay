@@ -10,17 +10,17 @@ const config: Config = {
     extend: {
       colors: {
         brand: {
-          50: "#f0faf4",
-          100: "#d9f2e3",
-          200: "#b5e5ca",
-          300: "#84d3a8",
-          400: "#4fba82",
-          500: "#2d9d65",
-          600: "#1e7f50",
-          700: "#196641",
-          800: "#165136",
-          900: "#0D4F3C",
-          950: "#072A1F",
+          50: "#f0f4eb",
+          100: "#d9e8d0",
+          200: "#bddcb5",
+          300: "#a1d09a",
+          400: "#85c47f",
+          500: "#6ab864",  // Muted Basil Green (#8A9A5B adjusted for better accessibility)
+          600: "#559650",
+          700: "#457841",
+          800: "#365b33",
+          900: "#2a4326",
+          950: "#1e2e1a",
         },
         copper: {
           50: "#fdf6ef",
@@ -46,6 +46,12 @@ const config: Config = {
           800: "#514E48",
           900: "#464440",
           950: "#262422",
+        },
+        background: {
+          50: "#F8F6F0",  // Warm White
+        },
+        foreground: {
+          50: "#2D3748",  // Charcoal Gray
         },
       },
       fontFamily: {

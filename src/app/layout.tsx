@@ -1,20 +1,22 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { AuthProvider } from "@/lib/auth/auth-context";
 
 export const metadata: Metadata = {
-  title: "SokoPay — Market Commerce Platform",
-  description:
-    "Discover vendors, order fresh food and goods, and support local markets in Kenya.",
+  title: "SokoPay",
+  description: "Digital operating layer for local commerce in Kenya",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-neutral-50 antialiased">{children}</body>
+      <body className="min-h-screen bg-neutral-50 antialiased">
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }
