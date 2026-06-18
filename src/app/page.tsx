@@ -154,16 +154,16 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Categories Preview */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="text-center mb-12">
-          <h3 className="text-3xl font-bold text-neutral-900 mb-4">
-            Browse Categories
-          </h3>
-          <p className="text-neutral-600 max-w-2xl mx-auto">
-            From fresh produce to essential services, find everything you need
-          </p>
-        </div>
+{/* Categories Preview */}
+<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <div className="text-center mb-12">
+    <h3 className="text-3xl font-bold text-neutral-900 mb-4">
+      Browse Categories TEST
+    </h3>
+    <p className="text-neutral-600 max-w-2xl mx-auto">
+      From fresh produce to essential services, find everything you need
+    </p>
+  </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
           {categories.map((category) => (
             <button
