@@ -1,10 +1,9 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { supabase } from './src/lib/supabase'
+import { auth } from '@clerk/nextjs/server'
 
 export async function middleware(req: NextRequest) {
-  // Get the session from Supabase
-  const { data: { session } } = await supabase.auth.getSession()
+  const { userId } = await auth()
   const { pathname } = req.nextUrl
 
   // Define paths that don't require authentication
@@ -27,14 +26,14 @@ export async function middleware(req: NextRequest) {
   }
 
   // If not authenticated and trying to access a protected route, redirect to login
-  if (!session) {
+  if (!userId) {
     const url = req.nextUrl.clone()
     url.pathname = '/auth/login'
     return NextResponse.redirect(url)
   }
 
   // If authenticated and trying to access auth pages, redirect to home
-  if (session && pathname.startsWith('/auth/')) {
+  if (userId && pathname.startsWith('/auth/')) {
     const url = req.nextUrl.clone()
     url.pathname = '/'
     return NextResponse.redirect(url)
