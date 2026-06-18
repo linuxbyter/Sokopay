@@ -1,20 +1,38 @@
 "use client";
 
 import { useState } from "react";
-import { Search, MapPin, Store, ShoppingBag, ArrowRight, Star, Shield, Zap, Users } from "lucide-react";
+import { 
+  Search, 
+  MapPin, 
+  Store, 
+  ShoppingBag, 
+  ArrowRight, 
+  Star, 
+  Shield, 
+  Zap, 
+  Users,
+  Crop,
+  Scissors,
+  Hair,
+  Droplet,
+  Flame,
+  Cow,
+  Shirt,
+  Utensils
+} from "lucide-react";
 
 const categories = [
-  { id: "mama-baba-mboga", label: "Mama/Baba Mboga", icon: "🥬" },
-  { id: "maasai-shop", label: "Maasai Shop", icon: "🛍️" },
-  { id: "barbers", label: "Barbers", icon: "💈" },
-  { id: "saloonists", label: "Saloonists", icon: "💇‍♀️" },
-  { id: "water-vendors", label: "Water Vendors", icon: "💧" },
-  { id: "gas-refillers", label: "Gas Refillers", icon: "🔥" },
-  { id: "butcheries", label: "Butcheries", icon: "🥩" },
-  { id: "laundry-mart", label: "Laundry Mart", icon: "👕" },
-  { id: "supermarkets", label: "SuperMarkets", icon: "🏪" },
-  { id: "eateries", label: "Eateries", icon: "🍽️" },
-  { id: "quick-snacks", label: "Quick Snacks", icon: "🍟" },
+  { id: "mama-baba-mboga", label: "Mama/Baba Mboga", icon: "Crop" },
+  { id: "maasai-shop", label: "Maasai Shop", icon: "Shop" },
+  { id: "barbers", label: "Barbers", icon: "Scissors" },
+  { id: "saloonists", label: "Saloonists", icon: "Hair" },
+  { id: "water-vendors", label: "Water Vendors", icon: "Droplet" },
+  { id: "gas-refillers", label: "Gas Refillers", icon: "Flame" },
+  { id: "butcheries", label: "Butcheries", icon: "Cow" },
+  { id: "laundry-mart", label: "Laundry Mart", icon: "Shirt" },
+  { id: "supermarkets", label: "SuperMarkets", icon: "Store" },
+  { id: "eateries", label: "Eateries", icon: "Utensils" },
+  { id: "quick-snacks", label: "Quick Snacks", icon: "Zap" },
 ];
 
 export default function HomePage() {
@@ -81,10 +99,14 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <button className="w-full bg-brand-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-brand-700 transition-colors flex items-center justify-center group-hover:shadow-lg">
-                Start Shopping
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </button>
+<button 
+  type="button"
+  className="w-full bg-brand-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-brand-700 transition-colors flex items-center justify-center"
+  onClick={() => console.log('Start Shopping clicked')}
+>
+  Start Shopping
+  <ArrowRight className="ml-2 w-5 h-5" />
+</button>
             </div>
 
             {/* Vendor Card */}
@@ -118,10 +140,14 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <button className="w-full bg-copper-400 text-white py-4 rounded-xl font-semibold text-lg hover:bg-copper-500 transition-colors flex items-center justify-center group-hover:shadow-lg">
-                Open Your Shop
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </button>
+<button 
+  type="button"
+  className="w-full bg-copper-400 text-white py-4 rounded-xl font-semibold text-lg hover:bg-copper-500 transition-colors flex items-center justify-center"
+  onClick={() => console.log('Open Your Shop clicked')}
+>
+  Open Your Shop
+  <ArrowRight className="ml-2 w-5 h-5" />
+</button>
             </div>
           </div>
         </div>
@@ -143,7 +169,18 @@ export default function HomePage() {
               key={category.id}
               className="flex flex-col items-center p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-neutral-100 hover:border-brand-200 group"
             >
-              <span className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">{category.icon}</span>
+                {/* Render icon based on category */}
+  {category.icon === 'Crop' && <Crop className="w-6 h-6" />}
+  {category.icon === 'Shop' && <Shop className="w-6 h-6" />}
+  {category.icon === 'Scissors' && <Scissors className="w-6 h-6" />}
+  {category.icon === 'Hair' && <Hair className="w-6 h-6" />}
+  {category.icon === 'Droplet' && <Droplet className="w-6 h-6" />}
+  {category.icon === 'Flame' && <Flame className="w-6 h-6" />}
+  {category.icon === 'Cow' && <Cow className="w-6 h-6" />}
+  {category.icon === 'Shirt' && <Shirt className="w-6 h-6" />}
+  {category.icon === 'Store' && <Store className="w-6 h-6" />}
+  {category.icon === 'Utensils' && <Utensils className="w-6 h-6" />}
+  {category.icon === 'Zap' && <Zap className="w-6 h-6" />}
               <span className="text-sm font-medium text-neutral-700 text-center group-hover:text-brand-600 transition-colors">
                 {category.label}
               </span>
