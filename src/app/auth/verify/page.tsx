@@ -3,13 +3,13 @@
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/auth/auth-context';
-import { Button } from '@/components/ui/button'; // We'll create this later
+import { Button } from '@/components/ui/button';
 
 export default function VerifyOtpPage() {
   const [otp, setOtp] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { verifyOtp } = useAuth();
+  const { verifyOtp, login } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   
@@ -35,7 +35,6 @@ export default function VerifyOtpPage() {
   const handleResend = async () => {
     setIsLoading(true);
     try {
-      const { login } = useAuth();
       await login(phone);
       alert('New OTP sent!');
     } catch (error) {

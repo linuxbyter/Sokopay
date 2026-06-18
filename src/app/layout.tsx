@@ -3,7 +3,7 @@ import "./globals.css";
 import { AuthProvider } from "@/lib/auth/auth-context";
 
 export const metadata: Metadata = {
-  title: "SokoPay",
+  title: "SökoPay",
   description: "Digital operating layer for local commerce in Kenya",
 };
 

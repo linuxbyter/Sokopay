@@ -2,10 +2,10 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-neutral-50 p-6">
       <h1 className="text-4xl font-bold text-neutral-900 mb-4">
-        About SokoPay
+        About SökoPay
       </h1>
       <p className="text-lg text-neutral-600 max-w-2xl text-center">
-        SokoPay connects customers with local vendors in Kenyan markets, enabling
+        SökoPay connects customers with local vendors in Kenyan markets, enabling
         seamless ordering, payment, and delivery of fresh food and goods.
       </p>
       <a
