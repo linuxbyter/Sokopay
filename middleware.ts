@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { supabase } from './lib/supabase'
+import { supabase } from './src/lib/supabase'
 
 export async function middleware(req: NextRequest) {
   // Get the session from Supabase
