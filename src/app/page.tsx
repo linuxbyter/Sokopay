@@ -18,7 +18,8 @@ import {
   Flame,
   Cow,
   Shirt,
-  Utensils
+  Utensils,
+  Shop
 } from "lucide-react";
 
 const categories = [
