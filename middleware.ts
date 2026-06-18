@@ -8,7 +8,7 @@ export async function middleware(req: NextRequest) {
     const { auth } = await import('@clerk/nextjs/server')
     const { userId: uid } = await auth()
     userId = uid
-  } catch (error) {
+  } catch (error: any) {
     // During build time or if Clerk is not properly initialized,
     // we allow all requests to proceed to avoid blocking the build
     // In production, Clerk should be properly configured
