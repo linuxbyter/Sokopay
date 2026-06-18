@@ -68,17 +68,17 @@ export default function HomePage() {
 
           {/* User Type Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-            {/* Customer Card */}
-            <div className="bg-white rounded-2xl shadow-xl p-8 text-neutral-900 hover:shadow-2xl transition-shadow duration-300 group">
-              <div className="flex items-center mb-6">
-                <div className="w-14 h-14 bg-brand-100 rounded-xl flex items-center justify-center mr-4">
-                  <ShoppingBag className="w-7 h-7 text-brand-600" />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-neutral-900">Shop Local</h3>
-                  <p className="text-neutral-500 text-sm">Find vendors near you</p>
-                </div>
-              </div>
+{/* Customer Card */}
+<div className="bg-white rounded-2xl shadow-xl p-8 text-neutral-900 hover:shadow-2xl transition-shadow duration-300">
+  <div className="flex items-center mb-6">
+    <div className="w-14 h-14 bg-brand-100 rounded-xl flex items-center justify-center mr-4">
+      <ShoppingBag className="w-7 h-7 text-brand-600" />
+    </div>
+    <div>
+      <h3 className="text-2xl font-bold text-neutral-900">Shop Local</h3>
+      <p className="text-neutral-500 text-sm">Find vendors near you</p>
+    </div>
+  </div>
               
               <p className="text-neutral-600 mb-8 leading-relaxed">
                 Discover trusted local vendors, from fresh produce to essential services. Browse categories, compare prices, and get what you need delivered or pick it up nearby.
@@ -109,17 +109,17 @@ export default function HomePage() {
 </button>
             </div>
 
-            {/* Vendor Card */}
-            <div className="bg-white rounded-2xl shadow-xl p-8 text-neutral-900 hover:shadow-2xl transition-shadow duration-300 group">
-              <div className="flex items-center mb-6">
-                <div className="w-14 h-14 bg-copper-100 rounded-xl flex items-center justify-center mr-4">
-                  <Store className="w-7 h-7 text-copper-600" />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-neutral-900">Sell & Grow</h3>
-                  <p className="text-neutral-500 text-sm">Expand your business</p>
-                </div>
-              </div>
+{/* Vendor Card */}
+<div className="bg-white rounded-2xl shadow-xl p-8 text-neutral-900 hover:shadow-2xl transition-shadow duration-300">
+  <div className="flex items-center mb-6">
+    <div className="w-14 h-14 bg-copper-100 rounded-xl flex items-center justify-center mr-4">
+      <Store className="w-7 h-7 text-copper-600" />
+    </div>
+    <div>
+      <h3 className="text-2xl font-bold text-neutral-900">Sell & Grow</h3>
+      <p className="text-neutral-500 text-sm">Expand your business</p>
+    </div>
+  </div>
               
               <p className="text-neutral-600 mb-8 leading-relaxed">
                 Create your digital storefront in minutes. Reach more customers, manage orders, and grow your business with powerful tools designed for Kenyan entrepreneurs.
