@@ -170,7 +170,7 @@ export default function HomePage() {
               key={category.id}
               className="flex flex-col items-center p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-neutral-100 hover:border-brand-200 group"
             >
-{/* Render icon based on category */}
+{/* Render icon based on category - TEST */}
 {category.icon === 'Crop' && <Crop className="w-6 h-6" />}
 /*{category.icon === 'Shop' && <Search className="w-6 h-6" />}{category.icon === 'Scissors' && <Scissors className="w-6 h-6" />}{category.icon === 'Hair' && <Hair className="w-6 h-6" />}{category.icon === 'Droplet' && <Droplet className="w-6 h-6" />}{category.icon === 'Flame' && <Flame className="w-6 h-6" />}{category.icon === 'Cow' && <Cow className="w-6 h-6" />}{category.icon === 'Shirt' && <Shirt className="w-6 h-6" />}{category.icon === 'Store' && <Store className="w-6 h-6" />}{category.icon === 'Utensils' && <Utensils className="w-6 h-6" />}{category.icon === 'Zap' && <Zap className="w-6 h-6" />}
               <span className="text-sm font-medium text-neutral-700 text-center group-hover:text-brand-600 transition-colors">
