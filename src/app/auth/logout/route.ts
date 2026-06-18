@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
-import { auth, signOut } from '@clerk/nextjs/server';
 
 export async function POST() {
-  await signOut();
+  // For Clerk in App Router, sign out is typically handled client-side
+  // Return success and let client handle the actual sign out via Clerk's frontend
   return new NextResponse(JSON.stringify({ status: 'ok' }), {
     status: 200,
     headers: { 'Content-Type': 'application/json' },
