@@ -109,16 +109,22 @@
 ## Development Chunks (Logical Work Units)
 *Ordered for incremental value delivery. Work in parallel where possible.*
 
-### Chunk 1: Foundation & Auth
+### Chunk 1: Foundation & Auth (COMPLETE)
 - Project setup verification (Next.js, TS, Tailwind)
-- Custom color palette in `tailwind.config.js`
+- Custom color palette in `tailwind.config.ts`
 - Supabase project initialization
-- Auth flow: Phone input → OTP verification → session handling
-- Protected routes middleware
-- User context/provider for auth state
-- **Output**: Secure login/signup, working auth state
+- Auth flow: Switched to Clerk authentication (phone OTP via Clerk)
+- Auth context/provider replaced with Clerk's built-in auth
+- Protected routes middleware (Next.js middleware.ts) updated for Clerk
+- Real Supabase project + `.env.local` with credentials (for database only)
+- Fixed `handleResend` bug in verify page (replaced with Clerk's SignIn component)
+- Converted auth routes to catch-all for Clerk compatibility
+- Added `routing="hash"` to Clerk SignIn components
+- Created separate public landing page ('/') and customer dashboard ('/dashboard')
+- Middleware redirects authenticated users to '/dashboard' after login
+- **Output**: Secure login/signup with Clerk, working auth state, separated public landing and authenticated dashboard
 
-### Chunk 2: Vendor Profile System
+### Chunk 2: Vendor Profile System (NOT STARTED)
 - Profile creation multi-step form (all 7 steps)
 - Client-side image compression & preview
 - Location picker: Address search + manual OSM pin adjustment
@@ -128,7 +134,7 @@
 - Profile view page displaying all entered data
 - **Output**: Vendors can create and view complete profiles
 
-### Chunk 3: Customer Discovery & Maps
+### Chunk 3: Customer Discovery & Maps (IN PROGRESS)
 - Home page layout with search bar, location detector
 - Category chips component (tap to filter)
 - Vendor card component (photo, name, category, distance, open badge)
@@ -186,9 +192,11 @@
 *Run after each chunk to ensure direction*
 
 1. **After Chunk 1**: 
-   - Can vendors/customers sign up with phone OTP?
-   - Is auth state persisting correctly?
-   - No security holes in protected routes?
+    - Can users sign up/sign in with phone OTP via Clerk?
+    - Is auth state persisting correctly (checked via middleware and client)?
+    - Are protected routes properly secured (redirecting unauthenticated users to login)?
+    - Is the public landing page ('/') accessible without authentication?
+    - Is the customer dashboard ('/dashboard') accessible only after authentication?
 
 2. **After Chunk 2**:
    - Do vendor profiles capture all required data accurately?

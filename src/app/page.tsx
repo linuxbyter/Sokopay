@@ -1,6 +1,7 @@
 "use client";
-
-import { useState } from "react";
+import { 
+  useState } from "react";
+import { useRouter } from "next/navigation";
 import { 
   Search, 
   MapPin, 
@@ -36,6 +37,7 @@ const categories = [
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [location, setLocation] = useState("");
+  const router = useRouter();
 
   return (
     <main className="min-h-screen bg-neutral-50">
@@ -67,11 +69,11 @@ export default function HomePage() {
           {/* User Type Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
 {/* Customer Card */}
-<div className="bg-white rounded-2xl shadow-xl p-8 text-neutral-900 hover:shadow-2xl transition-shadow duration-300">
-           <div className="flex items-center mb-6">
-     <div className="w-14 h-14 bg-brand-100 rounded-xl flex items-center justify-center mr-4">
-       <ShoppingBag className="w-7 h-7 text-brand-600" />
-     </div>
+            <div className="relative z-10 bg-white rounded-2xl shadow-xl p-8 text-neutral-900 hover:shadow-2xl transition-shadow duration-300">
+            <div className="flex items-center mb-6">
+              <div className="w-14 h-14 bg-brand-100 rounded-xl flex items-center justify-center mr-4">
+                <ShoppingBag className="w-7 h-7 text-brand-600" />
+              </div>
      <div>
        <h3 className="text-2xl font-bold text-neutral-900">Shop Local</h3>
        <p className="text-neutral-500 text-sm">Find vendors near you</p>
@@ -97,22 +99,22 @@ export default function HomePage() {
                  </div>
                </div>
 
-   <button 
-   type="button"
-   className="w-full bg-brand-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-brand-700 transition-colors flex items-center justify-center"
-   onClick={() => console.log('Start Shopping clicked')}
- >
-   Start Shopping
-   <ArrowRight className="ml-2 w-5 h-5" />
- </button>
+    <button 
+    type="button"
+    className="z-20 w-full bg-brand-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-brand-700 transition-colors flex items-center justify-center"
+    onClick={() => router.push('/auth/login')}
+  >
+    Start Shopping
+    <ArrowRight className="ml-2 w-5 h-5" />
+  </button>
             </div>
 
 {/* Vendor Card */}
-<div className="bg-white rounded-2xl shadow-xl p-8 text-neutral-900 hover:shadow-2xl transition-shadow duration-300">
-           <div className="flex items-center mb-6">
-     <div className="w-14 h-14 bg-copper-100 rounded-xl flex items-center justify-center mr-4">
-       <Store className="w-7 h-7 text-copper-600" />
-     </div>
+            <div className="relative z-10 bg-white rounded-2xl shadow-xl p-8 text-neutral-900 hover:shadow-2xl transition-shadow duration-300">
+            <div className="flex items-center mb-6">
+              <div className="w-14 h-14 bg-copper-100 rounded-xl flex items-center justify-center mr-4">
+                <Store className="w-7 h-7 text-copper-600" />
+              </div>
      <div>
        <h3 className="text-2xl font-bold text-neutral-900">Sell & Grow</h3>
        <p className="text-neutral-500 text-sm">Expand your business</p>
@@ -138,14 +140,14 @@ export default function HomePage() {
                  </div>
                </div>
 
-   <button 
-   type="button"
-   className="w-full bg-copper-400 text-white py-4 rounded-xl font-semibold text-lg hover:bg-copper-500 transition-colors flex items-center justify-center"
-   onClick={() => console.log('Open Your Shop clicked')}
- >
-   Open Your Shop
-   <ArrowRight className="ml-2 w-5 h-5" />
- </button>
+    <button 
+    type="button"
+    className="z-20 w-full bg-copper-400 text-white py-4 rounded-xl font-semibold text-lg hover:bg-copper-500 transition-colors flex items-center justify-center"
+    onClick={() => router.push('/auth/login')}
+  >
+    Open Your Shop
+    <ArrowRight className="ml-2 w-5 h-5" />
+  </button>
             </div>
           </div>
         </div>
@@ -245,8 +247,8 @@ export default function HomePage() {
               Search for specific items, vendors, or services
             </p>
           </div>
-          <div className="bg-white rounded-2xl shadow-lg p-4">
-           <div className="flex flex-col sm:flex-row gap-3">
+           <div className="relative z-10 bg-white rounded-2xl shadow-lg p-4">
+            <div className="flex flex-col sm:flex-row gap-3">
                <div className="flex-1 relative">
                   <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-neutral-400 h-5 w-5" />
                  <input
@@ -267,7 +269,11 @@ export default function HomePage() {
                    onChange={(e) => setLocation(e.target.value)}
                  />
                </div>
-              <button className="bg-brand-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-brand-700 transition-colors whitespace-nowrap">
+                <button 
+                type="button"
+                className="z-20 bg-brand-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-brand-700 transition-colors whitespace-nowrap"
+                onClick={() => alert('Search clicked!')}
+              >
                 Search
               </button>
             </div>

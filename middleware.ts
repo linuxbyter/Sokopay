@@ -18,6 +18,13 @@ export async function middleware(req: NextRequest) {
   
   const { pathname } = req.nextUrl
   
+  // If authenticated and trying to access auth pages, redirect to dashboard
+  if (userId && pathname.startsWith('/auth/')) {
+    const url = req.nextUrl.clone()
+    url.pathname = '/dashboard'
+    return NextResponse.redirect(url)
+  }
+  
   // Define paths that don't require authentication
   const publicPaths = [
     '/',
@@ -41,13 +48,6 @@ export async function middleware(req: NextRequest) {
   if (!userId) {
     const url = req.nextUrl.clone()
     url.pathname = '/auth/login'
-    return NextResponse.redirect(url)
-  }
-  
-  // If authenticated and trying to access auth pages, redirect to home
-  if (userId && pathname.startsWith('/auth/')) {
-    const url = req.nextUrl.clone()
-    url.pathname = '/'
     return NextResponse.redirect(url)
   }
   
