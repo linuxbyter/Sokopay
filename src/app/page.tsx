@@ -13,23 +13,20 @@ import {
   Users,
   Crop,
   Scissors,
-  Hair,
   Droplet,
   Flame,
-  Cow,
   Shirt,
-  Utensils,
-  Shop
+  Utensils
 } from "lucide-react";
 
 const categories = [
   { id: "mama-baba-mboga", label: "Mama/Baba Mboga", icon: "Crop" },
-  { id: "maasai-shop", label: "Maasai Shop", icon: "Shop" },
+  { id: "maasai-shop", label: "Maasai Shop", icon: "Store" }, // Use Store for Maasai Shop
   { id: "barbers", label: "Barbers", icon: "Scissors" },
-  { id: "saloonists", label: "Saloonists", icon: "Hair" },
+  { id: "saloonists", label: "Saloonists", icon: "Scissors" }, // Use Scissors for Saloonists
   { id: "water-vendors", label: "Water Vendors", icon: "Droplet" },
   { id: "gas-refillers", label: "Gas Refillers", icon: "Flame" },
-  { id: "butcheries", label: "Butcheries", icon: "Cow" },
+  { id: "butcheries", label: "Butcheries", icon: "Flame" }, // Use Flame for Butcheries (cooking/fire)
   { id: "laundry-mart", label: "Laundry Mart", icon: "Shirt" },
   { id: "supermarkets", label: "SuperMarkets", icon: "Store" },
   { id: "eateries", label: "Eateries", icon: "Utensils" },
@@ -71,84 +68,84 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
 {/* Customer Card */}
 <div className="bg-white rounded-2xl shadow-xl p-8 text-neutral-900 hover:shadow-2xl transition-shadow duration-300">
-  <div className="flex items-center mb-6">
-    <div className="w-14 h-14 bg-brand-100 rounded-xl flex items-center justify-center mr-4">
-      <ShoppingBag className="w-7 h-7 text-brand-600" />
-    </div>
-    <div>
-      <h3 className="text-2xl font-bold text-neutral-900">Shop Local</h3>
-      <p className="text-neutral-500 text-sm">Find vendors near you</p>
-    </div>
-  </div>
+           <div className="flex items-center mb-6">
+     <div className="w-14 h-14 bg-brand-100 rounded-xl flex items-center justify-center mr-4">
+       <ShoppingBag className="w-7 h-7 text-brand-600" />
+     </div>
+     <div>
+       <h3 className="text-2xl font-bold text-neutral-900">Shop Local</h3>
+       <p className="text-neutral-500 text-sm">Find vendors near you</p>
+     </div>
+   </div>
               
               <p className="text-neutral-600 mb-8 leading-relaxed">
                 Discover trusted local vendors, from fresh produce to essential services. Browse categories, compare prices, and get what you need delivered or pick it up nearby.
               </p>
 
-              <div className="space-y-3 mb-8">
-                <div className="flex items-center text-sm text-neutral-600">
-                  <Star className="w-4 h-4 text-copper-400 mr-2" />
-                  <span>Find verified vendors in your area</span>
-                </div>
-                <div className="flex items-center text-sm text-neutral-600">
-                  <Star className="w-4 h-4 text-copper-400 mr-2" />
-                  <span>Compare prices and quality</span>
-                </div>
-                <div className="flex items-center text-sm text-neutral-600">
-                  <Star className="w-4 h-4 text-copper-400 mr-2" />
-                  <span>Chat directly with sellers</span>
-                </div>
-              </div>
+               <div className="space-y-3 mb-8">
+                 <div className="flex items-center text-sm text-neutral-600">
+                   <Star className="w-4 h-4 text-copper-400 mr-2" />
+                   <span>Find verified vendors in your area</span>
+                 </div>
+                 <div className="flex items-center text-sm text-neutral-600">
+                   <Star className="w-4 h-4 text-copper-400 mr-2" />
+                   <span>Compare prices and quality</span>
+                 </div>
+                 <div className="flex items-center text-sm text-neutral-600">
+                   <Star className="w-4 h-4 text-copper-400 mr-2" />
+                   <span>Chat directly with sellers</span>
+                 </div>
+               </div>
 
-<button 
-  type="button"
-  className="w-full bg-brand-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-brand-700 transition-colors flex items-center justify-center"
-  onClick={() => console.log('Start Shopping clicked')}
->
-  Start Shopping
-  <ArrowRight className="ml-2 w-5 h-5" />
-</button>
+   <button 
+   type="button"
+   className="w-full bg-brand-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-brand-700 transition-colors flex items-center justify-center"
+   onClick={() => console.log('Start Shopping clicked')}
+ >
+   Start Shopping
+   <ArrowRight className="ml-2 w-5 h-5" />
+ </button>
             </div>
 
 {/* Vendor Card */}
 <div className="bg-white rounded-2xl shadow-xl p-8 text-neutral-900 hover:shadow-2xl transition-shadow duration-300">
-  <div className="flex items-center mb-6">
-    <div className="w-14 h-14 bg-copper-100 rounded-xl flex items-center justify-center mr-4">
-      <Store className="w-7 h-7 text-copper-600" />
-    </div>
-    <div>
-      <h3 className="text-2xl font-bold text-neutral-900">Sell & Grow</h3>
-      <p className="text-neutral-500 text-sm">Expand your business</p>
-    </div>
-  </div>
+           <div className="flex items-center mb-6">
+     <div className="w-14 h-14 bg-copper-100 rounded-xl flex items-center justify-center mr-4">
+       <Store className="w-7 h-7 text-copper-600" />
+     </div>
+     <div>
+       <h3 className="text-2xl font-bold text-neutral-900">Sell & Grow</h3>
+       <p className="text-neutral-500 text-sm">Expand your business</p>
+     </div>
+   </div>
               
               <p className="text-neutral-600 mb-8 leading-relaxed">
                 Create your digital storefront in minutes. Reach more customers, manage orders, and grow your business with powerful tools designed for Kenyan entrepreneurs.
               </p>
 
-              <div className="space-y-3 mb-8">
-                <div className="flex items-center text-sm text-neutral-600">
-                  <Zap className="w-4 h-4 text-copper-400 mr-2" />
-                  <span>Set up your shop in minutes</span>
-                </div>
-                <div className="flex items-center text-sm text-neutral-600">
-                  <Zap className="w-4 h-4 text-copper-400 mr-2" />
-                  <span>Reach thousands of customers</span>
-                </div>
-                <div className="flex items-center text-sm text-neutral-600">
-                  <Zap className="w-4 h-4 text-copper-400 mr-2" />
-                  <span>Manage orders and payments</span>
-                </div>
-              </div>
+               <div className="space-y-3 mb-8">
+                 <div className="flex items-center text-sm text-neutral-600">
+                   <Zap className="w-4 h-4 text-copper-400 mr-2" />
+                   <span>Set up your shop in minutes</span>
+                 </div>
+                 <div className="flex items-center text-sm text-neutral-600">
+                   <Zap className="w-4 h-4 text-copper-400 mr-2" />
+                   <span>Reach thousands of customers</span>
+                 </div>
+                 <div className="flex items-center text-sm text-neutral-600">
+                   <Zap className="w-4 h-4 text-copper-400 mr-2" />
+                   <span>Manage orders and payments</span>
+                 </div>
+               </div>
 
-<button 
-  type="button"
-  className="w-full bg-copper-400 text-white py-4 rounded-xl font-semibold text-lg hover:bg-copper-500 transition-colors flex items-center justify-center"
-  onClick={() => console.log('Open Your Shop clicked')}
->
-  Open Your Shop
-  <ArrowRight className="ml-2 w-5 h-5" />
-</button>
+   <button 
+   type="button"
+   className="w-full bg-copper-400 text-white py-4 rounded-xl font-semibold text-lg hover:bg-copper-500 transition-colors flex items-center justify-center"
+   onClick={() => console.log('Open Your Shop clicked')}
+ >
+   Open Your Shop
+   <ArrowRight className="ml-2 w-5 h-5" />
+ </button>
             </div>
           </div>
         </div>
@@ -164,21 +161,34 @@ export default function HomePage() {
       From fresh produce to essential services, find everything you need
     </p>
   </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-          {categories.map((category) => (
-            <button
-              key={category.id}
-              className="flex flex-col items-center p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-neutral-100 hover:border-brand-200 group"
-            >
-{/* Render icon based on category - TEST */}
-{category.icon === 'Crop' && <Crop className="w-6 h-6" />}
-/*{category.icon === 'Shop' && <Search className="w-6 h-6" /> TEST}{category.icon === 'Scissors' && <Scissors className="w-6 h-6" /> }{category.icon === 'Hair' && <Hair className="w-6 h-6" } }{category.icon === 'Droplet' && <Droplet className="w-6 h-6" />}{category.icon === 'Flame' && <Flame className="w-6 h-6" />}{category.icon === 'Cow' && <Cow className="w-6 h-6" />}{category.icon === 'Shirt' && <Shirt className="w-6 h-6" */ }{category.icon === 'Store' && <Store className="w-6 h-6" }/*{category.icon === 'Utensils' && <Utensils className="w-6 h-6" />}{category.icon === 'Zap' && <Zap className="w-6 h-6" }*/
-              <span className="text-sm font-medium text-neutral-700 text-center group-hover:text-brand-600 transition-colors">
-                {category.label}
-              </span>
-            </button>
-          ))}
-        </div>
+         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+           {categories.map((category) => (
+             <button
+               key={category.id}
+               className="flex flex-col items-center p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-neutral-100 hover:border-brand-200 group"
+             >
+               {/* Render icon based on category */}
+               {category.icon === 'Search' && <Search className="w-6 h-6" />}
+               {category.icon === 'MapPin' && <MapPin className="w-6 h-6" />}
+               {category.icon === 'Store' && <Store className="w-6 h-6" />}
+               {category.icon === 'ShoppingBag' && <ShoppingBag className="w-6 h-6" />}
+               {category.icon === 'ArrowRight' && <ArrowRight className="w-6 h-6" />}
+               {category.icon === 'Star' && <Star className="w-6 h-6" />}
+               {category.icon === 'Shield' && <Shield className="w-6 h-6" />}
+               {category.icon === 'Zap' && <Zap className="w-6 h-6" />}
+               {category.icon === 'Users' && <Users className="w-6 h-6" />}
+               {category.icon === 'Crop' && <Crop className="w-6 h-6" />}
+               {category.icon === 'Scissors' && <Scissors className="w-6 h-6" />}
+               {category.icon === 'Droplet' && <Droplet className="w-6 h-6" />}
+               {category.icon === 'Flame' && <Flame className="w-6 h-6" />}
+               {category.icon === 'Shirt' && <Shirt className="w-6 h-6" />}
+               {category.icon === 'Utensils' && <Utensils className="w-6 h-6" />}
+               <span className="text-sm font-medium text-neutral-700 text-center group-hover:text-brand-600 transition-colors">
+                 {category.label}
+               </span>
+             </button>
+           ))}
+         </div>
       </div>
 
       {/* How It Works */}
@@ -193,33 +203,33 @@ export default function HomePage() {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center p-6">
-              <div className="w-16 h-16 bg-brand-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <Users className="w-8 h-8 text-brand-600" />
-              </div>
-              <h4 className="text-xl font-bold text-neutral-900 mb-3">1. Sign Up</h4>
-              <p className="text-neutral-600">
-                Create your account in seconds. Choose whether you're shopping or selling.
-              </p>
-            </div>
-            <div className="text-center p-6">
-              <div className="w-16 h-16 bg-brand-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <Search className="w-8 h-8 text-brand-600" />
-              </div>
-              <h4 className="text-xl font-bold text-neutral-900 mb-3">2. Discover</h4>
-              <p className="text-neutral-600">
-                Browse local vendors, compare products, and find exactly what you need.
-              </p>
-            </div>
-            <div className="text-center p-6">
-              <div className="w-16 h-16 bg-brand-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <Shield className="w-8 h-8 text-brand-600" />
-              </div>
-              <h4 className="text-xl font-bold text-neutral-900 mb-3">3. Connect</h4>
-              <p className="text-neutral-600">
-                Chat with vendors, place orders, and enjoy local commerce made easy.
-              </p>
-            </div>
+           <div className="text-center p-6">
+     <div className="w-16 h-16 bg-brand-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+       <Users className="w-8 h-8 text-brand-600" />
+     </div>
+     <h4 className="text-xl font-bold text-neutral-900 mb-3">1. Sign Up</h4>
+     <p className="text-neutral-600">
+       Create your account in seconds. Choose whether you're shopping or selling.
+     </p>
+   </div>
+           <div className="text-center p-6">
+     <div className="w-16 h-16 bg-brand-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+       <Search className="w-8 h-8 text-brand-600" />
+     </div>
+     <h4 className="text-xl font-bold text-neutral-900 mb-3">2. Discover</h4>
+     <p className="text-neutral-600">
+       Browse local vendors, compare products, and find exactly what you need.
+     </p>
+   </div>
+           <div className="text-center p-6">
+     <div className="w-16 h-16 bg-brand-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+       <Shield className="w-8 h-8 text-brand-600" />
+     </div>
+     <h4 className="text-xl font-bold text-neutral-900 mb-3">3. Connect</h4>
+     <p className="text-neutral-600">
+       Chat with vendors, place orders, and enjoy local commerce made easy.
+     </p>
+   </div>
           </div>
         </div>
       </div>
@@ -236,27 +246,27 @@ export default function HomePage() {
             </p>
           </div>
           <div className="bg-white rounded-2xl shadow-lg p-4">
-            <div className="flex flex-col sm:flex-row gap-3">
-              <div className="flex-1 relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-neutral-400 h-5 w-5" />
-                <input
-                  type="text"
-                  placeholder="What do you need? (e.g., sukuma wiki, haircut, water)"
-                  className="w-full pl-12 pr-4 py-4 border border-neutral-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-transparent text-neutral-900 placeholder:text-neutral-400"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
-              <div className="relative sm:w-64">
-                <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-neutral-400 h-5 w-5" />
-                <input
-                  type="text"
-                  placeholder="Enter your location"
-                  className="w-full pl-12 pr-4 py-4 border border-neutral-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-transparent text-neutral-900 placeholder:text-neutral-400"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                />
-              </div>
+           <div className="flex flex-col sm:flex-row gap-3">
+               <div className="flex-1 relative">
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-neutral-400 h-5 w-5" />
+                 <input
+                   type="text"
+                   placeholder="What do you need? (e.g., sukuma wiki, haircut, water)"
+                   className="w-full pl-12 pr-4 py-4 border border-neutral-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-transparent text-neutral-900 placeholder:text-neutral-400"
+                   value={searchQuery}
+                   onChange={(e) => setSearchQuery(e.target.value)}
+                 />
+               </div>
+               <div className="relative sm:w-64">
+                  <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 text-neutral-400 h-5 w-5" />
+                 <input
+                   type="text"
+                   placeholder="Enter your location"
+                   className="w-full pl-12 pr-4 py-4 border border-neutral-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-transparent text-neutral-900 placeholder:text-neutral-400"
+                   value={location}
+                   onChange={(e) => setLocation(e.target.value)}
+                 />
+               </div>
               <button className="bg-brand-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-brand-700 transition-colors whitespace-nowrap">
                 Search
               </button>
