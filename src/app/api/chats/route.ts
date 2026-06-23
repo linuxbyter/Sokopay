@@ -64,7 +64,8 @@ export async function GET(request: NextRequest) {
       params.push(userId)
       sql = `
         SELECT c.*,
-          v.business_name as vendor_name, v.category as vendor_category, v.photos as vendor_photos
+          v.business_name as vendor_name, v.category as vendor_category, v.photos as vendor_photos,
+          c.customer_name
         FROM chats c
         JOIN vendors v ON c.vendor_id = v.id
         WHERE v.user_id = $1

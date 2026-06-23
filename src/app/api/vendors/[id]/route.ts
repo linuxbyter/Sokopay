@@ -70,3 +70,36 @@ export async function PUT(
     return NextResponse.json({ error: 'Failed to update vendor' }, { status: 500 })
   }
 }
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const { id } = params
+
+    // Check if there are active (non-finalized) chats for this vendor
+    const activeChats = await query(
+      'SELECT COUNT(*) FROM chats WHERE vendor_id = $1 AND is_finalized = false',
+      [id]
+    )
+
+    if (parseInt(activeChats.rows[0].count) > 0) {
+      return NextResponse.json(
+        { error: 'Cannot delete shop with active conversations. Complete or finalize all chats first.' },
+        { status: 400 }
+      )
+    }
+
+    const result = await query('DELETE FROM vendors WHERE id = $1 RETURNING id', [id])
+
+    if (result.rows.length === 0) {
+      return NextResponse.json({ error: 'Vendor not found' }, { status: 404 })
+    }
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('DELETE /api/vendors/[id] error:', error)
+    return NextResponse.json({ error: 'Failed to delete vendor' }, { status: 500 })
+  }
+}

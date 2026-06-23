@@ -11,6 +11,7 @@ interface Chat {
   id: string;
   vendor_id: string;
   customer_id: string;
+  customer_name: string | null;
   vendor_name: string;
   vendor_category: string;
   status: string;

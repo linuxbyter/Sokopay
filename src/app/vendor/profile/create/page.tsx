@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import { useUser } from '@clerk/nextjs';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Store, MapPin, Clock, Camera, Wrench, Phone, CheckCircle,
   ArrowRight, ArrowLeft, Search, Plus, X, Upload, Star
@@ -46,10 +46,13 @@ const initialHours = daysOfWeek.reduce((acc, day) => {
   return acc;
 }, {} as { [key: string]: { open: string; close: string; closed: boolean } });
 
-export default function CreateVendorProfilePage() {
+function CreateVendorProfilePage() {
   const { user, isLoaded } = useUser();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const editVendorId = searchParams.get('edit');
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const isEditMode = !!editVendorId;
 
   const [step, setStep] = useState(1);
   const [profile, setProfile] = useState<ProfileData>({
@@ -73,10 +76,60 @@ export default function CreateVendorProfilePage() {
   const [newService, setNewService] = useState({ name: '', priceHint: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [loadingEdit, setLoadingEdit] = useState(!!editVendorId);
+
+  // Load existing vendor data when editing
+  useEffect(() => {
+    if (!editVendorId || !isLoaded) return;
+    (async () => {
+      try {
+        const res = await fetch(`/api/vendors/${editVendorId}`);
+        if (!res.ok) throw new Error('Vendor not found');
+        const data = await res.json();
+        const v = data.vendor;
+        let parsedHours = initialHours;
+        if (v.hours) {
+          try { parsedHours = typeof v.hours === 'string' ? JSON.parse(v.hours) : v.hours; } catch {}
+        }
+        let parsedServices: { name: string; priceHint: string }[] = [];
+        if (v.services) {
+          try { parsedServices = typeof v.services === 'string' ? JSON.parse(v.services) : v.services; } catch {}
+        }
+        setProfile({
+          businessName: v.business_name || '',
+          category: v.category || '',
+          description: v.description || '',
+          address: v.address || '',
+          latitude: v.latitude,
+          longitude: v.longitude,
+          hours: parsedHours,
+          photos: [],
+          photoPreviews: v.photos || [],
+          services: parsedServices,
+          whatsapp: v.whatsapp || '',
+          phone: v.phone || '',
+        });
+        if (v.address) setLocationSearch(v.address);
+      } catch (error) {
+        console.error('Failed to load vendor:', error);
+        setErrors({ submit: 'Failed to load shop data.' });
+      } finally {
+        setLoadingEdit(false);
+      }
+    })();
+  }, [editVendorId, isLoaded]);
 
   if (isLoaded && !user) {
     router.push('/auth/role');
     return null;
+  }
+
+  if (loadingEdit) {
+    return (
+      <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-brand-600 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
   }
 
   const updateProfile = (updates: Partial<ProfileData>) => {
@@ -202,38 +255,47 @@ export default function CreateVendorProfilePage() {
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
-      // Convert images to base64
+      // Convert new images to base64
       const base64Images = await Promise.all(
         profile.photos.map(file => convertToBase64(file))
       );
 
-      const response = await fetch('/api/vendors', {
-        method: 'POST',
+      // Combine existing photo URLs with new base64 images
+      const existingPhotos = profile.photoPreviews.filter(p => p.startsWith('http'));
+      const allPhotos = [...existingPhotos, ...base64Images];
+
+      const payload = {
+        ...(isEditMode ? {} : { userId: user?.id }),
+        businessName: profile.businessName,
+        category: profile.category,
+        description: profile.description,
+        address: profile.address,
+        latitude: profile.latitude,
+        longitude: profile.longitude,
+        hours: profile.hours,
+        services: profile.services,
+        whatsapp: profile.whatsapp,
+        phone: profile.phone,
+        photos: allPhotos.length > 0 ? allPhotos : undefined,
+      };
+
+      const url = isEditMode ? `/api/vendors/${editVendorId}` : '/api/vendors';
+      const method = isEditMode ? 'PUT' : 'POST';
+
+      const response = await fetch(url, {
+        method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: user?.id,
-          businessName: profile.businessName,
-          category: profile.category,
-          description: profile.description,
-          address: profile.address,
-          latitude: profile.latitude,
-          longitude: profile.longitude,
-          hours: profile.hours,
-          services: profile.services,
-          whatsapp: profile.whatsapp,
-          phone: profile.phone,
-          photos: base64Images,
-        }),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to create profile');
+        throw new Error(isEditMode ? 'Failed to update profile' : 'Failed to create profile');
       }
 
       router.push('/vendor/dashboard');
     } catch (error) {
       console.error('Submit error:', error);
-      setErrors({ submit: 'Failed to create profile. Please try again.' });
+      setErrors({ submit: isEditMode ? 'Failed to update profile. Please try again.' : 'Failed to create profile. Please try again.' });
     } finally {
       setIsSubmitting(false);
     }
@@ -766,16 +828,16 @@ export default function CreateVendorProfilePage() {
               className="flex-1 bg-brand-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-brand-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {isSubmitting ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  Submitting...
-                </>
-              ) : (
-                <>
-                  <CheckCircle className="w-4 h-4" />
-                  Create Profile
-                </>
-              )}
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    {isEditMode ? 'Updating...' : 'Submitting...'}
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle className="w-4 h-4" />
+                    {isEditMode ? 'Update Profile' : 'Create Profile'}
+                  </>
+                )}
             </button>
           )}
         </div>
@@ -783,3 +845,17 @@ export default function CreateVendorProfilePage() {
     </div>
   );
 }
+
+function CreateVendorProfileWrapper() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-brand-600 border-t-transparent rounded-full animate-spin" />
+      </div>
+    }>
+      <CreateVendorProfilePage />
+    </Suspense>
+  );
+}
+
+export default CreateVendorProfileWrapper;

@@ -17,6 +17,7 @@ interface Chat {
   id: string;
   vendor_id: string;
   customer_id: string;
+  customer_name: string | null;
   vendor_name: string;
   vendor_category: string;
   status: string;
@@ -370,8 +371,14 @@ export default function ChatDialog({ chat, onBack, onChatUpdate, isVendor }: Cha
           <ArrowLeft className="w-5 h-5 text-neutral-600" />
         </button>
         <div className="flex-1">
-          <h3 className="font-semibold text-neutral-900">{activeChat.vendor_name}</h3>
-          <p className="text-sm text-neutral-500">{activeChat.vendor_category}</p>
+          <h3 className="font-semibold text-neutral-900">
+            {isVendor
+              ? activeChat.customer_name || `Customer ${activeChat.customer_id.slice(-4)}`
+              : activeChat.vendor_name}
+          </h3>
+          <p className="text-sm text-neutral-500">
+            {isVendor ? activeChat.vendor_category : activeChat.vendor_category}
+          </p>
         </div>
         <div className={`px-2 py-1 rounded-full text-xs font-medium ${
           activeChat.status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'
