@@ -2,7 +2,7 @@
 
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
-import { Store, MessageCircle, BarChart3, Plus, Edit3 } from 'lucide-react';
+import { Store, MessageCircle, Settings, Plus, ShoppingBag } from 'lucide-react';
 import Navbar from '@/components/navbar';
 
 export default function VendorDashboardPage() {
@@ -50,14 +50,14 @@ export default function VendorDashboardPage() {
           </div>
 
           <div
-            onClick={() => router.push('/vendor/insights')}
+            onClick={() => router.push('/dashboard')}
             className="bg-white rounded-xl shadow-sm p-6 border border-neutral-100 cursor-pointer hover:shadow-md transition-all hover:border-neutral-200"
           >
             <div className="w-12 h-12 bg-neutral-100 rounded-lg flex items-center justify-center mb-4">
-              <BarChart3 className="w-6 h-6 text-neutral-600" />
+              <ShoppingBag className="w-6 h-6 text-neutral-600" />
             </div>
-            <h3 className="font-bold text-neutral-900 mb-1">Insights</h3>
-            <p className="text-sm text-neutral-500">Track views, messages, and customer activity</p>
+            <h3 className="font-bold text-neutral-900 mb-1">Browse as Customer</h3>
+            <p className="text-sm text-neutral-500">See the marketplace from a customer perspective</p>
           </div>
         </div>
 
@@ -72,11 +72,11 @@ export default function VendorDashboardPage() {
               Set Up Shop
             </button>
             <button
-              onClick={() => router.push('/vendor/profile/edit')}
+              onClick={() => router.push('/vendor/profile/create')}
               className="bg-neutral-100 text-neutral-800 px-4 py-2 rounded-lg text-sm font-medium hover:bg-neutral-200 transition-colors flex items-center gap-2"
             >
-              <Edit3 className="w-4 h-4" />
-              Edit Profile
+              <Settings className="w-4 h-4" />
+              Settings
             </button>
           </div>
         </div>

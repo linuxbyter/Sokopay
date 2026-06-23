@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useUser } from '@clerk/nextjs';
-import { Search, MapPin, List, Users, Zap, SlidersHorizontal } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { Search, MapPin, List, MessageSquare, SlidersHorizontal, Loader2 } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import Navbar from '@/components/navbar';
 
@@ -39,17 +39,47 @@ const allCategories = [
 export default function DashboardPage() {
   const { user, isLoaded } = useUser();
   const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState('');
+  const searchParams = useSearchParams();
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
   const [location, setLocation] = useState('');
   const [filteredVendors, setFilteredVendors] = useState<Vendor[]>([]);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
   const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(searchParams.get('category'));
   const [sortBy, setSortBy] = useState<'distance' | 'rating'>('distance');
   const [showFilters, setShowFilters] = useState(false);
+  const [locationLoading, setLocationLoading] = useState(false);
 
-  if (isLoaded && !user) {
+  // Auto-detect location on mount
+  useEffect(() => {
+    if (!userLocation && navigator.geolocation) {
+      setLocationLoading(true);
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
+          setLocation('My Location');
+          setLocationLoading(false);
+        },
+        () => {
+          // Fallback to Nairobi if geolocation fails
+          setUserLocation({ lat: -1.286389, lng: 36.817223 });
+          setLocation('Nairobi (default)');
+          setLocationLoading(false);
+        }
+      );
+    }
+  }, []);
+
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-brand-600 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!user) {
     router.push('/auth/role');
     return null;
   }
@@ -111,8 +141,44 @@ export default function DashboardPage() {
   }, []);
 
   const handleLocationSearch = () => {
-    setLocation('Nairobi CBD');
-    setUserLocation({ lat: -1.286389, lng: 36.817223 });
+    if (navigator.geolocation) {
+      setLocationLoading(true);
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
+          setLocation('My Location');
+          setLocationLoading(false);
+        },
+        () => {
+          setUserLocation({ lat: -1.286389, lng: 36.817223 });
+          setLocation('Nairobi (default)');
+          setLocationLoading(false);
+        }
+      );
+    }
+  };
+
+  const handleMessageVendor = async () => {
+    if (!selectedVendor || !user) return;
+
+    try {
+      const response = await fetch('/api/chats', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          vendorId: selectedVendor.id,
+          customerId: user.id,
+        }),
+      });
+
+      const data = await response.json();
+      if (data.chat) {
+        setSelectedVendor(null);
+        router.push('/messages');
+      }
+    } catch (error) {
+      console.error('Failed to create chat:', error);
+    }
   };
 
   const listBtnClass = viewMode === 'list'
@@ -151,9 +217,14 @@ export default function DashboardPage() {
                 <button
                   onClick={handleLocationSearch}
                   type="button"
-                  className="bg-brand-600 text-white py-3 px-4 rounded-md hover:bg-brand-700 transition-colors flex items-center gap-2 text-sm whitespace-nowrap"
+                  disabled={locationLoading}
+                  className="bg-brand-600 text-white py-3 px-4 rounded-md hover:bg-brand-700 transition-colors flex items-center gap-2 text-sm whitespace-nowrap disabled:opacity-50"
                 >
-                  <MapPin className="h-4 w-4" />
+                  {locationLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <MapPin className="h-4 w-4" />
+                  )}
                   {location || 'Use My Location'}
                 </button>
                 <button
@@ -245,8 +316,12 @@ export default function DashboardPage() {
                     onClick={() => setSelectedVendor(vendor)}
                   >
                     <div className="flex items-start gap-4">
-                      <div className="flex-shrink-0 h-14 w-14 bg-neutral-200 rounded-lg flex items-center justify-center">
-                        <span className="text-neutral-500 font-medium">{vendor.name.charAt(0)}</span>
+                      <div className="flex-shrink-0 h-14 w-14 bg-neutral-200 rounded-lg flex items-center justify-center overflow-hidden">
+                        {vendor.photoUrl && vendor.photoUrl !== '/placeholder.svg' ? (
+                          <img src={vendor.photoUrl} alt={vendor.name} className="w-full h-full object-cover" />
+                        ) : (
+                          <span className="text-neutral-500 font-medium">{vendor.name.charAt(0)}</span>
+                        )}
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
@@ -305,8 +380,12 @@ export default function DashboardPage() {
               </div>
               <div className="px-6 py-4 space-y-4">
                 <div className="flex items-center gap-4">
-                  <div className="flex-shrink-0 h-20 w-20 bg-neutral-200 rounded-xl flex items-center justify-center">
-                    <span className="text-neutral-400 text-2xl font-bold">{selectedVendor.name.charAt(0)}</span>
+                  <div className="flex-shrink-0 h-20 w-20 bg-neutral-200 rounded-xl flex items-center justify-center overflow-hidden">
+                    {selectedVendor.photoUrl && selectedVendor.photoUrl !== '/placeholder.svg' ? (
+                      <img src={selectedVendor.photoUrl} alt={selectedVendor.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-neutral-400 text-2xl font-bold">{selectedVendor.name.charAt(0)}</span>
+                    )}
                   </div>
                   <div>
                     <p className="font-medium text-neutral-900">{selectedVendor.category}</p>
@@ -332,13 +411,12 @@ export default function DashboardPage() {
                   </p>
                 </div>
                 <div className="space-y-3 pt-2">
-                  <button className="w-full bg-brand-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-brand-700 transition-colors flex items-center justify-center gap-2">
-                    <Users className="h-4 w-4" />
+                  <button
+                    onClick={handleMessageVendor}
+                    className="w-full bg-brand-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-brand-700 transition-colors flex items-center justify-center gap-2"
+                  >
+                    <MessageSquare className="h-4 w-4" />
                     Message Vendor
-                  </button>
-                  <button className="w-full bg-neutral-100 text-neutral-800 py-3 px-4 rounded-lg font-medium hover:bg-neutral-200 transition-colors flex items-center justify-center gap-2">
-                    <Zap className="h-4 w-4" />
-                    Mark as Served
                   </button>
                 </div>
               </div>
