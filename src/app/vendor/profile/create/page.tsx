@@ -200,11 +200,33 @@ export default function CreateVendorProfilePage() {
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
-      console.log('Submitting profile:', profile);
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const response = await fetch('/api/vendors', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user?.id,
+          businessName: profile.businessName,
+          category: profile.category,
+          description: profile.description,
+          address: profile.address,
+          latitude: profile.latitude,
+          longitude: profile.longitude,
+          hours: profile.hours,
+          services: profile.services,
+          whatsapp: profile.whatsapp,
+          phone: profile.phone,
+          photos: [],
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create profile');
+      }
+
       router.push('/vendor/dashboard');
     } catch (error) {
       console.error('Submit error:', error);
+      setErrors({ submit: 'Failed to create profile. Please try again.' });
     } finally {
       setIsSubmitting(false);
     }

@@ -32,20 +32,6 @@ const allCategories = [
   'Quick Snacks',
 ];
 
-const mockVendors: Vendor[] = [
-  { id: '1', name: 'Mama Mboga Stand', category: 'Mama/Baba Mboga', latitude: -1.2921, longitude: 36.8219, distance: 0, isOpen: true, photoUrl: '/placeholder.svg', rating: 4.5, address: 'Mama Lucy Kibaki Market, Nairobi' },
-  { id: '2', name: 'Quick Snacks Corner', category: 'Quick Snacks', latitude: -1.2850, longitude: 36.8180, distance: 0, isOpen: false, photoUrl: '/placeholder.svg', rating: 4.0, address: 'Westlands, Nairobi' },
-  { id: '3', name: 'Barber Shop Express', category: 'Barbers', latitude: -1.2800, longitude: 36.8250, distance: 0, isOpen: true, photoUrl: '/placeholder.svg', rating: 4.8, address: 'Kilimani, Nairobi' },
-  { id: '4', name: 'Water Source', category: 'Water Vendors', latitude: -1.2950, longitude: 36.8250, distance: 0, isOpen: true, photoUrl: '/placeholder.svg', rating: 4.2, address: 'South B, Nairobi' },
-  { id: '5', name: 'Gas Refill Point', category: 'Gas Refillers', latitude: -1.2700, longitude: 36.8300, distance: 0, isOpen: true, photoUrl: '/placeholder.svg', rating: 4.1, address: 'Runda, Nairobi' },
-  { id: '6', name: 'Butcheries Ltd', category: 'Butcheries', latitude: -1.2880, longitude: 36.8150, distance: 0, isOpen: true, photoUrl: '/placeholder.svg', rating: 4.6, address: 'Industrial Area, Nairobi' },
-  { id: '7', name: 'Fresh Mart Supermarket', category: 'SuperMarkets', latitude: -1.2750, longitude: 36.8200, distance: 0, isOpen: true, photoUrl: '/placeholder.svg', rating: 4.7, address: 'Lavington, Nairobi' },
-  { id: '8', name: 'Mama Njeri Eateries', category: 'Eateries', latitude: -1.2830, longitude: 36.8270, distance: 0, isOpen: true, photoUrl: '/placeholder.svg', rating: 4.3, address: 'CBD, Nairobi' },
-  { id: '9', name: 'Fresh Laundry Mart', category: 'Laundry Mart', latitude: -1.2910, longitude: 36.8160, distance: 0, isOpen: false, photoUrl: '/placeholder.svg', rating: 4.4, address: 'Kasarani, Nairobi' },
-  { id: '10', name: 'Saloon Paradise', category: 'Saloonists', latitude: -1.2770, longitude: 36.8310, distance: 0, isOpen: true, photoUrl: '/placeholder.svg', rating: 4.6, address: 'Westlands, Nairobi' },
-  { id: '11', name: 'Maasai General Shop', category: 'Maasai Shop', latitude: -1.2860, longitude: 36.8200, distance: 0, isOpen: true, photoUrl: '/placeholder.svg', rating: 4.2, address: 'CBD, Nairobi' },
-];
-
 export default function DashboardPage() {
   const { user, isLoaded } = useUser();
   const router = useRouter();
@@ -65,30 +51,51 @@ export default function DashboardPage() {
   }
 
   useEffect(() => {
-    if (!userLocation) {
-      setFilteredVendors(mockVendors);
-      return;
-    }
-    const vendorsWithDistance = mockVendors.map(vendor => {
-      const latDiff = vendor.latitude - userLocation.lat;
-      const lngDiff = vendor.longitude - userLocation.lng;
-      const distance = Math.sqrt(latDiff * latDiff + lngDiff * lngDiff) * 111;
-      return { ...vendor, distance };
-    });
-    let results = vendorsWithDistance.filter(vendor =>
-      vendor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      vendor.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      vendor.address.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    if (selectedCategory) {
-      results = results.filter(v => v.category === selectedCategory);
-    }
-    if (sortBy === 'rating') {
-      results.sort((a, b) => b.rating - a.rating);
-    } else {
-      results.sort((a, b) => a.distance - b.distance);
-    }
-    setFilteredVendors(results);
+    const fetchVendors = async () => {
+      try {
+        const params = new URLSearchParams();
+        if (selectedCategory) params.append('category', selectedCategory);
+        if (searchQuery) params.append('search', searchQuery);
+
+        const response = await fetch(`/api/vendors?${params.toString()}`);
+        const data = await response.json();
+
+        let vendors: Vendor[] = (data.vendors || []).map((v: any) => ({
+          id: v.id,
+          name: v.business_name,
+          category: v.category,
+          latitude: v.latitude,
+          longitude: v.longitude,
+          distance: 0,
+          isOpen: v.is_open,
+          photoUrl: v.photos?.[0] || '/placeholder.svg',
+          rating: 4.5,
+          address: v.address || '',
+        }));
+
+        if (userLocation) {
+          vendors = vendors.map(vendor => {
+            const latDiff = vendor.latitude - userLocation.lat;
+            const lngDiff = vendor.longitude - userLocation.lng;
+            const distance = Math.sqrt(latDiff * latDiff + lngDiff * lngDiff) * 111;
+            return { ...vendor, distance };
+          });
+        }
+
+        if (sortBy === 'rating') {
+          vendors.sort((a, b) => b.rating - a.rating);
+        } else {
+          vendors.sort((a, b) => a.distance - b.distance);
+        }
+
+        setFilteredVendors(vendors);
+      } catch (error) {
+        console.error('Failed to fetch vendors:', error);
+        setFilteredVendors([]);
+      }
+    };
+
+    fetchVendors();
   }, [searchQuery, userLocation, selectedCategory, sortBy]);
 
   const handleSearch = (e: React.FormEvent) => {
