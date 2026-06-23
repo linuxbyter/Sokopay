@@ -102,7 +102,7 @@ export default function NotificationBell() {
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 rounded-lg hover:bg-neutral-100 transition-colors"
+        className="relative p-3 rounded-lg hover:bg-neutral-100 transition-colors min-h-[48px] min-w-[48px] flex items-center justify-center"
       >
         <Bell className="w-5 h-5 text-neutral-600" />
         {unreadCount > 0 && (
@@ -115,16 +115,16 @@ export default function NotificationBell() {
       {isOpen && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-          <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-lg border border-neutral-100 z-50 max-h-[70vh] flex flex-col">
+          <div className="absolute right-0 mt-2 w-80 max-w-[calc(100vw-2rem)] bg-white rounded-xl shadow-lg border border-neutral-100 z-50 max-h-[70vh] flex flex-col">
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-3 border-b border-neutral-100">
               <h3 className="font-semibold text-neutral-900 text-sm">Notifications</h3>
               {unreadCount > 0 && (
                 <button
                   onClick={markAllAsRead}
-                  className="text-xs text-brand-600 hover:text-brand-700 flex items-center gap-1"
+                  className="text-xs text-brand-600 hover:text-brand-700 flex items-center gap-1 px-2 py-1.5 rounded min-h-[36px]"
                 >
-                  <CheckCheck className="w-3 h-3" />
+                  <CheckCheck className="w-4 h-4" />
                   Mark all read
                 </button>
               )}

@@ -182,12 +182,12 @@ function DashboardContent() {
   };
 
   const listBtnClass = viewMode === 'list'
-    ? 'px-3 py-2 text-sm font-medium bg-brand-600 text-white rounded-lg transition-colors'
-    : 'px-3 py-2 text-sm font-medium bg-neutral-100 text-neutral-800 rounded-lg transition-colors hover:bg-neutral-200';
+    ? 'px-4 py-2.5 text-sm font-medium bg-brand-600 text-white rounded-lg transition-colors min-h-[44px]'
+    : 'px-4 py-2.5 text-sm font-medium bg-neutral-100 text-neutral-800 rounded-lg transition-colors hover:bg-neutral-200 min-h-[44px]';
 
   const mapBtnClass = viewMode === 'map'
-    ? 'px-3 py-2 text-sm font-medium bg-brand-600 text-white rounded-lg transition-colors'
-    : 'px-3 py-2 text-sm font-medium bg-neutral-100 text-neutral-800 rounded-lg transition-colors hover:bg-neutral-200';
+    ? 'px-4 py-2.5 text-sm font-medium bg-brand-600 text-white rounded-lg transition-colors min-h-[44px]'
+    : 'px-4 py-2.5 text-sm font-medium bg-neutral-100 text-neutral-800 rounded-lg transition-colors hover:bg-neutral-200 min-h-[44px]';
 
   return (
     <div className="min-h-screen bg-neutral-50">
@@ -218,7 +218,7 @@ function DashboardContent() {
                   onClick={handleLocationSearch}
                   type="button"
                   disabled={locationLoading}
-                  className="bg-brand-600 text-white py-3 px-4 rounded-md hover:bg-brand-700 transition-colors flex items-center gap-2 text-sm whitespace-nowrap disabled:opacity-50"
+                  className="bg-brand-600 text-white py-3 px-4 rounded-md hover:bg-brand-700 transition-colors flex items-center gap-2 text-sm disabled:opacity-50 min-h-[48px]"
                 >
                   {locationLoading ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -243,14 +243,14 @@ function DashboardContent() {
                 <button
                   type="button"
                   onClick={() => setSortBy('distance')}
-                  className={`px-3 py-1 text-xs rounded-full transition-colors ${sortBy === 'distance' ? 'bg-brand-600 text-white' : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'}`}
+                  className={`px-4 py-2 text-xs rounded-full transition-colors min-h-[40px] ${sortBy === 'distance' ? 'bg-brand-600 text-white' : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'}`}
                 >
                   Distance
                 </button>
                 <button
                   type="button"
                   onClick={() => setSortBy('rating')}
-                  className={`px-3 py-1 text-xs rounded-full transition-colors ${sortBy === 'rating' ? 'bg-brand-600 text-white' : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'}`}
+                  className={`px-4 py-2 text-xs rounded-full transition-colors min-h-[40px] ${sortBy === 'rating' ? 'bg-brand-600 text-white' : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'}`}
                 >
                   Rating
                 </button>
@@ -258,7 +258,7 @@ function DashboardContent() {
                   <button
                     type="button"
                     onClick={() => setSelectedCategory(null)}
-                    className="px-3 py-1 text-xs rounded-full bg-copper-100 text-copper-700 hover:bg-copper-200 transition-colors"
+                    className="px-4 py-2 text-xs rounded-full bg-copper-100 text-copper-700 hover:bg-copper-200 transition-colors min-h-[40px]"
                   >
                     Clear: {selectedCategory}
                   </button>
@@ -272,7 +272,7 @@ function DashboardContent() {
           <div className="flex flex-wrap gap-2">
             <button
               onClick={() => setSelectedCategory(null)}
-              className={`px-3 py-1.5 text-sm rounded-full transition-colors ${!selectedCategory ? 'bg-brand-600 text-white' : 'bg-neutral-100 text-neutral-800 hover:bg-neutral-200'}`}
+              className={`px-4 py-2.5 text-sm rounded-full transition-colors min-h-[44px] ${!selectedCategory ? 'bg-brand-600 text-white' : 'bg-neutral-100 text-neutral-800 hover:bg-neutral-200'}`}
             >
               All
             </button>
@@ -280,7 +280,7 @@ function DashboardContent() {
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(selectedCategory === cat ? null : cat)}
-                className={`px-3 py-1.5 text-sm rounded-full transition-colors ${selectedCategory === cat ? 'bg-brand-600 text-white' : 'bg-neutral-100 text-neutral-800 hover:bg-neutral-200'}`}
+                className={`px-4 py-2.5 text-sm rounded-full transition-colors min-h-[44px] ${selectedCategory === cat ? 'bg-brand-600 text-white' : 'bg-neutral-100 text-neutral-800 hover:bg-neutral-200'}`}
               >
                 {cat}
               </button>
@@ -357,7 +357,7 @@ function DashboardContent() {
         )}
 
         {viewMode === 'map' && (
-          <div className="bg-white rounded-lg shadow-md overflow-hidden h-[500px]">
+          <div className="bg-white rounded-lg shadow-md overflow-hidden h-[400px] sm:h-[500px]">
             <MapView
               vendors={filteredVendors}
               userLocation={userLocation}
@@ -373,7 +373,7 @@ function DashboardContent() {
                 <h2 className="text-xl font-bold text-neutral-900">{selectedVendor.name}</h2>
                 <button
                   onClick={() => setSelectedVendor(null)}
-                  className="text-neutral-400 hover:text-neutral-600 text-2xl leading-none"
+                  className="text-neutral-400 hover:text-neutral-600 text-2xl leading-none min-h-[48px] min-w-[48px] flex items-center justify-center"
                 >
                   &times;
                 </button>

@@ -205,7 +205,7 @@ export default function ChatDialog({ chat, onBack, onChatUpdate, isVendor }: Cha
         <div className="flex gap-2 flex-wrap p-3 bg-neutral-50 border-t border-neutral-200">
           <button
             onClick={handleBuyAgain}
-            className="flex items-center gap-2 px-3 py-2 bg-brand-100 text-brand-700 rounded-lg text-sm font-medium hover:bg-brand-200 transition-colors"
+            className="flex items-center gap-2 px-4 py-3 bg-brand-100 text-brand-700 rounded-lg text-sm font-medium hover:bg-brand-200 transition-colors min-h-[48px]"
           >
             <RotateCcw className="w-4 h-4" />
             Buy Again
@@ -215,7 +215,7 @@ export default function ChatDialog({ chat, onBack, onChatUpdate, isVendor }: Cha
               setFeedbackType(isVendor ? 'vendor' : 'customer');
               setShowFeedback(true);
             }}
-            className="flex items-center gap-2 px-3 py-2 bg-copper-100 text-copper-700 rounded-lg text-sm font-medium hover:bg-copper-200 transition-colors"
+            className="flex items-center gap-2 px-4 py-3 bg-copper-100 text-copper-700 rounded-lg text-sm font-medium hover:bg-copper-200 transition-colors min-h-[48px]"
           >
             <Star className="w-4 h-4" />
             Leave Feedback
@@ -231,7 +231,7 @@ export default function ChatDialog({ chat, onBack, onChatUpdate, isVendor }: Cha
           <div className="flex gap-2 flex-wrap p-3 bg-neutral-50 border-t border-neutral-200">
             <button
               onClick={() => handleTransactionAction('confirm_payment')}
-              className="flex items-center gap-2 px-3 py-2 bg-green-100 text-green-700 rounded-lg text-sm font-medium hover:bg-green-200 transition-colors"
+              className="flex items-center gap-2 px-4 py-3 bg-green-100 text-green-700 rounded-lg text-sm font-medium hover:bg-green-200 transition-colors min-h-[48px]"
             >
               <CheckCircle className="w-4 h-4" />
               Confirm Payment
@@ -245,7 +245,7 @@ export default function ChatDialog({ chat, onBack, onChatUpdate, isVendor }: Cha
           <div className="flex gap-2 flex-wrap p-3 bg-neutral-50 border-t border-neutral-200">
             <button
               onClick={() => handleTransactionAction('dispatch')}
-              className="flex items-center gap-2 px-3 py-2 bg-blue-100 text-blue-700 rounded-lg text-sm font-medium hover:bg-blue-200 transition-colors"
+              className="flex items-center gap-2 px-4 py-3 bg-blue-100 text-blue-700 rounded-lg text-sm font-medium hover:bg-blue-200 transition-colors min-h-[48px]"
             >
               <Package className="w-4 h-4" />
               Mark as Dispatched
@@ -259,7 +259,7 @@ export default function ChatDialog({ chat, onBack, onChatUpdate, isVendor }: Cha
           <div className="flex gap-2 flex-wrap p-3 bg-neutral-50 border-t border-neutral-200">
             <button
               onClick={() => handleTransactionAction('vendor_serve')}
-              className="flex items-center gap-2 px-3 py-2 bg-purple-100 text-purple-700 rounded-lg text-sm font-medium hover:bg-purple-200 transition-colors"
+              className="flex items-center gap-2 px-4 py-3 bg-purple-100 text-purple-700 rounded-lg text-sm font-medium hover:bg-purple-200 transition-colors min-h-[48px]"
             >
               <Truck className="w-4 h-4" />
               Mark as Served
@@ -273,7 +273,7 @@ export default function ChatDialog({ chat, onBack, onChatUpdate, isVendor }: Cha
           <div className="flex gap-2 flex-wrap p-3 bg-neutral-50 border-t border-neutral-200">
             <button
               onClick={() => handleTransactionAction('finalize')}
-              className="flex items-center gap-2 px-3 py-2 bg-brand-100 text-brand-700 rounded-lg text-sm font-medium hover:bg-brand-200 transition-colors"
+              className="flex items-center gap-2 px-4 py-3 bg-brand-100 text-brand-700 rounded-lg text-sm font-medium hover:bg-brand-200 transition-colors min-h-[48px]"
             >
               <CheckCircle className="w-4 h-4" />
               Finalize Order
@@ -288,7 +288,7 @@ export default function ChatDialog({ chat, onBack, onChatUpdate, isVendor }: Cha
           <div className="flex gap-2 flex-wrap p-3 bg-neutral-50 border-t border-neutral-200">
             <button
               onClick={() => handleTransactionAction('mark_paid')}
-              className="flex items-center gap-2 px-3 py-2 bg-green-100 text-green-700 rounded-lg text-sm font-medium hover:bg-green-200 transition-colors"
+              className="flex items-center gap-2 px-4 py-3 bg-green-100 text-green-700 rounded-lg text-sm font-medium hover:bg-green-200 transition-colors min-h-[48px]"
             >
               <CheckCircle className="w-4 h-4" />
               Mark as Paid
@@ -302,7 +302,7 @@ export default function ChatDialog({ chat, onBack, onChatUpdate, isVendor }: Cha
           <div className="flex gap-2 flex-wrap p-3 bg-neutral-50 border-t border-neutral-200">
             <button
               onClick={() => handleTransactionAction('customer_serve')}
-              className="flex items-center gap-2 px-3 py-2 bg-purple-100 text-purple-700 rounded-lg text-sm font-medium hover:bg-purple-200 transition-colors"
+              className="flex items-center gap-2 px-4 py-3 bg-purple-100 text-purple-700 rounded-lg text-sm font-medium hover:bg-purple-200 transition-colors min-h-[48px]"
             >
               <Truck className="w-4 h-4" />
               Confirm Received
@@ -316,7 +316,7 @@ export default function ChatDialog({ chat, onBack, onChatUpdate, isVendor }: Cha
           <div className="flex gap-2 flex-wrap p-3 bg-neutral-50 border-t border-neutral-200">
             <button
               onClick={() => handleTransactionAction('finalize')}
-              className="flex items-center gap-2 px-3 py-2 bg-brand-100 text-brand-700 rounded-lg text-sm font-medium hover:bg-brand-200 transition-colors"
+              className="flex items-center gap-2 px-4 py-3 bg-brand-100 text-brand-700 rounded-lg text-sm font-medium hover:bg-brand-200 transition-colors min-h-[48px]"
             >
               <CheckCircle className="w-4 h-4" />
               Finalize Order
@@ -365,7 +365,7 @@ export default function ChatDialog({ chat, onBack, onChatUpdate, isVendor }: Cha
       <div className="flex items-center gap-3 p-4 border-b border-neutral-200 bg-white">
         <button
           onClick={onBack}
-          className="p-2 hover:bg-neutral-100 rounded-lg transition-colors"
+          className="p-3 hover:bg-neutral-100 rounded-lg transition-colors min-h-[48px] min-w-[48px] flex items-center justify-center"
         >
           <ArrowLeft className="w-5 h-5 text-neutral-600" />
         </button>
@@ -446,13 +446,13 @@ export default function ChatDialog({ chat, onBack, onChatUpdate, isVendor }: Cha
               onChange={(e) => setNewMessage(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && sendMessage(newMessage)}
               placeholder="Type a message..."
-              className="flex-1 px-4 py-2 border border-neutral-200 rounded-full focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
+              className="flex-1 px-4 py-3 border border-neutral-200 rounded-full focus:ring-2 focus:ring-brand-500 focus:border-brand-500 min-h-[48px]"
               disabled={sending}
             />
             <button
               onClick={() => sendMessage(newMessage)}
               disabled={!newMessage.trim() || sending}
-              className="p-2 bg-brand-600 text-white rounded-full hover:bg-brand-700 transition-colors disabled:opacity-50"
+              className="p-3 bg-brand-600 text-white rounded-full hover:bg-brand-700 transition-colors disabled:opacity-50 min-h-[48px] min-w-[48px] flex items-center justify-center"
             >
               <Send className="w-5 h-5" />
             </button>
