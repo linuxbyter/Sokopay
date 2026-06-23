@@ -19,7 +19,7 @@ export default function NotFound() {
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
-            href="/"
+            href="/dashboard"
             className="inline-flex items-center justify-center gap-2 bg-brand-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-brand-700 transition-colors"
           >
             <Home className="w-4 h-4" />

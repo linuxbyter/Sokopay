@@ -91,7 +91,7 @@ export default function Navbar({ title = 'SökoPay' }: NavbarProps) {
           {/* Left: Brand + RoleToggle (hidden on mobile, shown in dropdown) */}
           <div className="flex items-center gap-2 sm:gap-4 min-w-0">
             <button
-              onClick={() => router.push('/')}
+              onClick={() => router.push(user ? '/dashboard' : '/')}
               className="text-xl sm:text-2xl font-bold text-brand-700 hover:text-brand-800 transition-colors flex-shrink-0"
             >
               {title}

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useUser } from '@clerk/nextjs';
 import { ChevronDown, ChevronUp, MessageSquare, Store, Search, Shield, CreditCard, HelpCircle } from 'lucide-react';
 
 const faqs = [
@@ -81,7 +82,10 @@ const faqs = [
 
 export default function SupportPage() {
   const router = useRouter();
+  const { user } = useUser();
   const [openItems, setOpenItems] = useState<Record<string, boolean>>({});
+
+  const goHome = () => router.push(user ? '/dashboard' : '/');
 
   const toggleItem = (key: string) => {
     setOpenItems(prev => ({ ...prev, [key]: !prev[key] }));
@@ -93,7 +97,7 @@ export default function SupportPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <button
-              onClick={() => router.push('/')}
+              onClick={goHome}
               className="text-2xl font-bold text-brand-700 hover:text-brand-800 transition-colors"
             >
               SökoPay

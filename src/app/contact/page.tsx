@@ -1,10 +1,14 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useUser } from '@clerk/nextjs';
 import { Mail, MessageCircle, ExternalLink } from 'lucide-react';
 
 export default function ContactPage() {
   const router = useRouter();
+  const { user } = useUser();
+
+  const goHome = () => router.push(user ? '/dashboard' : '/');
 
   return (
     <div className="min-h-screen bg-neutral-50">
@@ -12,7 +16,7 @@ export default function ContactPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <button
-              onClick={() => router.push('/')}
+              onClick={goHome}
               className="text-2xl font-bold text-brand-700 hover:text-brand-800 transition-colors"
             >
               SökoPay
@@ -30,7 +34,7 @@ export default function ContactPage() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">
           <h1 className="text-3xl font-bold text-neutral-900 mb-2">Get in Touch</h1>
-          <p className="text-neutral-600">We'd love to hear from you</p>
+          <p className="text-neutral-600">We&apos;d love to hear from you</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
