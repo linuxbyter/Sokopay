@@ -6,12 +6,16 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const category = searchParams.get('category')
     const search = searchParams.get('search')
-    const lat = searchParams.get('lat')
-    const lng = searchParams.get('lng')
+    const userId = searchParams.get('userId')
 
     let sql = 'SELECT * FROM vendors'
     const conditions: string[] = []
     const params: unknown[] = []
+
+    if (userId) {
+      params.push(userId)
+      conditions.push(`user_id = $${params.length}`)
+    }
 
     if (category) {
       params.push(category)

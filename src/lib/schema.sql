@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS chats (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   vendor_id UUID REFERENCES vendors(id) ON DELETE CASCADE NOT NULL,
   customer_id TEXT NOT NULL,
+  customer_name TEXT,
   status TEXT DEFAULT 'active' CHECK (status IN ('active', 'completed', 'archived')),
   customer_paid BOOLEAN DEFAULT false,
   vendor_confirmed_payment BOOLEAN DEFAULT false,
@@ -63,6 +64,19 @@ CREATE TABLE IF NOT EXISTS feedback (
   UNIQUE(chat_id, customer_id)
 );
 
+-- Notifications table
+CREATE TABLE IF NOT EXISTS notifications (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id TEXT NOT NULL,
+  type TEXT NOT NULL CHECK (type IN ('message', 'feedback', 'transaction', 'system')),
+  title TEXT NOT NULL,
+  body TEXT,
+  reference_id UUID,
+  reference_type TEXT,
+  is_read BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- Indexes for performance
 CREATE INDEX IF NOT EXISTS idx_vendors_user_id ON vendors(user_id);
 CREATE INDEX IF NOT EXISTS idx_vendors_category ON vendors(category);
@@ -73,3 +87,4 @@ CREATE INDEX IF NOT EXISTS idx_messages_chat_id ON messages(chat_id);
 CREATE INDEX IF NOT EXISTS idx_messages_sender_id ON messages(sender_id);
 CREATE INDEX IF NOT EXISTS idx_feedback_vendor_id ON feedback(vendor_id);
 CREATE INDEX IF NOT EXISTS idx_feedback_customer_id ON feedback(customer_id);
+CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id, is_read);

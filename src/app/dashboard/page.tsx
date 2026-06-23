@@ -158,12 +158,14 @@ function DashboardContent() {
     if (!selectedVendor || !user) return;
 
     try {
+      const customerName = [user.firstName, user.lastName].filter(Boolean).join(' ') || user.emailAddresses?.[0]?.emailAddress || null;
       const response = await fetch('/api/chats', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           vendorId: selectedVendor.id,
           customerId: user.id,
+          customerName,
         }),
       });
 

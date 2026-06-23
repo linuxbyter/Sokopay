@@ -266,10 +266,12 @@ export default function HomePage() {
           </div>
           <div className="border-t border-neutral-800 pt-8 flex flex-col sm:flex-row justify-between items-center">
             <p className="text-neutral-400 text-sm">
-              © 2024 SökoPay. All rights reserved.
+              &copy; 2024 SökoPay. All rights reserved.
             </p>
             <div className="flex space-x-6 mt-4 sm:mt-0">
               <a href="/about" className="text-neutral-400 hover:text-white text-sm transition-colors">About</a>
+              <a href="/support" className="text-neutral-400 hover:text-white text-sm transition-colors">Support</a>
+              <a href="/contact" className="text-neutral-400 hover:text-white text-sm transition-colors">Contact</a>
             </div>
           </div>
         </div>

@@ -31,10 +31,11 @@ interface Chat {
 interface ChatDialogProps {
   chat: Chat;
   onBack: () => void;
+  onChatUpdate?: (chat: Chat) => void;
   isVendor: boolean;
 }
 
-export default function ChatDialog({ chat, onBack, isVendor }: ChatDialogProps) {
+export default function ChatDialog({ chat, onBack, onChatUpdate, isVendor }: ChatDialogProps) {
   const { user } = useUser();
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
@@ -42,11 +43,17 @@ export default function ChatDialog({ chat, onBack, isVendor }: ChatDialogProps) 
   const [sending, setSending] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
   const [feedbackType, setFeedbackType] = useState<'customer' | 'vendor'>('customer');
+  const [activeChat, setActiveChat] = useState<Chat>(chat);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Sync activeChat when prop changes (e.g., parent updates selectedChat)
+  useEffect(() => {
+    setActiveChat(chat);
+  }, [activeChat.id]);
 
   useEffect(() => {
     fetchMessages();
-  }, [chat.id]);
+  }, [activeChat.id]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -54,7 +61,7 @@ export default function ChatDialog({ chat, onBack, isVendor }: ChatDialogProps) 
 
   const fetchMessages = async () => {
     try {
-      const response = await fetch(`/api/chats/${chat.id}/messages`);
+      const response = await fetch(`/api/chats/${activeChat.id}/messages`);
       if (response.ok) {
         const data = await response.json();
         setMessages(data.messages || []);
@@ -71,7 +78,7 @@ export default function ChatDialog({ chat, onBack, isVendor }: ChatDialogProps) 
 
     setSending(true);
     try {
-      const response = await fetch(`/api/chats/${chat.id}/messages`, {
+      const response = await fetch(`/api/chats/${activeChat.id}/messages`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -95,7 +102,7 @@ export default function ChatDialog({ chat, onBack, isVendor }: ChatDialogProps) 
 
   const handleTransactionAction = async (action: string) => {
     try {
-      const response = await fetch(`/api/chats/${chat.id}/status`, {
+      const response = await fetch(`/api/chats/${activeChat.id}/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action, userId: user?.id }),
@@ -123,9 +130,9 @@ export default function ChatDialog({ chat, onBack, isVendor }: ChatDialogProps) 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          chatId: chat.id,
-          vendorId: chat.vendor_id,
-          customerId: chat.customer_id,
+          chatId: activeChat.id,
+          vendorId: activeChat.vendor_id,
+          customerId: activeChat.customer_id,
           rating: feedbackType === 'customer' ? feedback.rating : undefined,
           transactionRating: feedbackType === 'vendor' ? feedback.rating : undefined,
           comment: feedbackType === 'customer' ? feedback.comment : undefined,
@@ -149,6 +156,36 @@ export default function ChatDialog({ chat, onBack, isVendor }: ChatDialogProps) 
     }
   };
 
+  const handleBuyAgain = async () => {
+    try {
+      const response = await fetch('/api/chats', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          vendorId: activeChat.vendor_id,
+          customerId: activeChat.customer_id,
+          newChat: true,
+        }),
+      });
+
+      const data = await response.json();
+      if (data.chat) {
+        const newChat: Chat = {
+          ...data.chat,
+          vendor_name: activeChat.vendor_name,
+          vendor_category: activeChat.vendor_category,
+        };
+        setActiveChat(newChat);
+        setMessages([]);
+        if (onChatUpdate) {
+          onChatUpdate(newChat);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to create new chat:', error);
+    }
+  };
+
   const getActionMessage = (action: string) => {
     switch (action) {
       case 'mark_paid': return 'Customer has marked this order as paid'
@@ -162,11 +199,11 @@ export default function ChatDialog({ chat, onBack, isVendor }: ChatDialogProps) 
   };
 
   const renderQuickActions = () => {
-    if (chat.is_finalized) {
+    if (activeChat.is_finalized) {
       return (
         <div className="flex gap-2 flex-wrap p-3 bg-neutral-50 border-t border-neutral-200">
           <button
-            onClick={() => sendMessage('I would like to place another order')}
+            onClick={handleBuyAgain}
             className="flex items-center gap-2 px-3 py-2 bg-brand-100 text-brand-700 rounded-lg text-sm font-medium hover:bg-brand-200 transition-colors"
           >
             <RotateCcw className="w-4 h-4" />
@@ -188,7 +225,7 @@ export default function ChatDialog({ chat, onBack, isVendor }: ChatDialogProps) 
 
     if (isVendor) {
       // Vendor actions
-      if (!chat.vendor_confirmed_payment && chat.customer_paid) {
+      if (!activeChat.vendor_confirmed_payment && activeChat.customer_paid) {
         return (
           <div className="flex gap-2 flex-wrap p-3 bg-neutral-50 border-t border-neutral-200">
             <button
@@ -202,7 +239,7 @@ export default function ChatDialog({ chat, onBack, isVendor }: ChatDialogProps) 
         );
       }
 
-      if (chat.vendor_confirmed_payment && !chat.goods_dispatched) {
+      if (activeChat.vendor_confirmed_payment && !activeChat.goods_dispatched) {
         return (
           <div className="flex gap-2 flex-wrap p-3 bg-neutral-50 border-t border-neutral-200">
             <button
@@ -216,7 +253,7 @@ export default function ChatDialog({ chat, onBack, isVendor }: ChatDialogProps) 
         );
       }
 
-      if (chat.goods_dispatched && !chat.vendor_marked_served) {
+      if (activeChat.goods_dispatched && !activeChat.vendor_marked_served) {
         return (
           <div className="flex gap-2 flex-wrap p-3 bg-neutral-50 border-t border-neutral-200">
             <button
@@ -230,7 +267,7 @@ export default function ChatDialog({ chat, onBack, isVendor }: ChatDialogProps) 
         );
       }
 
-      if (chat.vendor_marked_served && chat.customer_marked_served && !chat.is_finalized) {
+      if (activeChat.vendor_marked_served && activeChat.customer_marked_served && !activeChat.is_finalized) {
         return (
           <div className="flex gap-2 flex-wrap p-3 bg-neutral-50 border-t border-neutral-200">
             <button
@@ -245,7 +282,7 @@ export default function ChatDialog({ chat, onBack, isVendor }: ChatDialogProps) 
       }
     } else {
       // Customer actions
-      if (!chat.customer_paid) {
+      if (!activeChat.customer_paid) {
         return (
           <div className="flex gap-2 flex-wrap p-3 bg-neutral-50 border-t border-neutral-200">
             <button
@@ -259,7 +296,7 @@ export default function ChatDialog({ chat, onBack, isVendor }: ChatDialogProps) 
         );
       }
 
-      if (chat.vendor_marked_served && !chat.customer_marked_served) {
+      if (activeChat.vendor_marked_served && !activeChat.customer_marked_served) {
         return (
           <div className="flex gap-2 flex-wrap p-3 bg-neutral-50 border-t border-neutral-200">
             <button
@@ -273,7 +310,7 @@ export default function ChatDialog({ chat, onBack, isVendor }: ChatDialogProps) 
         );
       }
 
-      if (chat.vendor_marked_served && chat.customer_marked_served && !chat.is_finalized) {
+      if (activeChat.vendor_marked_served && activeChat.customer_marked_served && !activeChat.is_finalized) {
         return (
           <div className="flex gap-2 flex-wrap p-3 bg-neutral-50 border-t border-neutral-200">
             <button
@@ -293,11 +330,11 @@ export default function ChatDialog({ chat, onBack, isVendor }: ChatDialogProps) 
 
   const renderTransactionStatus = () => {
     const steps = [
-      { label: 'Paid', done: chat.customer_paid },
-      { label: 'Confirmed', done: chat.vendor_confirmed_payment },
-      { label: 'Dispatched', done: chat.goods_dispatched },
-      { label: 'Served', done: chat.vendor_marked_served && chat.customer_marked_served },
-      { label: 'Finalized', done: chat.is_finalized },
+      { label: 'Paid', done: activeChat.customer_paid },
+      { label: 'Confirmed', done: activeChat.vendor_confirmed_payment },
+      { label: 'Dispatched', done: activeChat.goods_dispatched },
+      { label: 'Served', done: activeChat.vendor_marked_served && activeChat.customer_marked_served },
+      { label: 'Finalized', done: activeChat.is_finalized },
     ];
 
     return (
@@ -332,13 +369,13 @@ export default function ChatDialog({ chat, onBack, isVendor }: ChatDialogProps) 
           <ArrowLeft className="w-5 h-5 text-neutral-600" />
         </button>
         <div className="flex-1">
-          <h3 className="font-semibold text-neutral-900">{chat.vendor_name}</h3>
-          <p className="text-sm text-neutral-500">{chat.vendor_category}</p>
+          <h3 className="font-semibold text-neutral-900">{activeChat.vendor_name}</h3>
+          <p className="text-sm text-neutral-500">{activeChat.vendor_category}</p>
         </div>
         <div className={`px-2 py-1 rounded-full text-xs font-medium ${
-          chat.status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'
+          activeChat.status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'
         }`}>
-          {chat.status === 'completed' ? 'Completed' : 'Active'}
+          {activeChat.status === 'completed' ? 'Completed' : 'Active'}
         </div>
       </div>
 
@@ -399,7 +436,7 @@ export default function ChatDialog({ chat, onBack, isVendor }: ChatDialogProps) 
       {renderQuickActions()}
 
       {/* Message Input */}
-      {!chat.is_finalized && (
+      {!activeChat.is_finalized && (
         <div className="p-4 border-t border-neutral-200 bg-white">
           <div className="flex items-center gap-2">
             <input
@@ -428,7 +465,7 @@ export default function ChatDialog({ chat, onBack, isVendor }: ChatDialogProps) 
         onClose={() => setShowFeedback(false)}
         onSubmit={handleFeedbackSubmit}
         type={feedbackType}
-        vendorName={chat.vendor_name}
+        vendorName={activeChat.vendor_name}
       />
     </div>
   );

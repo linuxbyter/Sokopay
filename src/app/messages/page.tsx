@@ -66,6 +66,7 @@ export default function MessagesPage() {
           <ChatDialog
             chat={selectedChat}
             onBack={() => setSelectedChat(null)}
+            onChatUpdate={(updatedChat) => setSelectedChat(updatedChat)}
             isVendor={isVendor}
           />
         </div>
