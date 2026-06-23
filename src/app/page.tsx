@@ -46,7 +46,10 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <h1 className="text-2xl font-bold text-brand-700">SökoPay</h1>
-            <button className="text-sm text-brand-600 hover:text-brand-700 font-medium px-4 py-2 rounded-lg hover:bg-brand-50 transition-colors">
+            <button
+              onClick={() => router.push('/auth/role')}
+              className="text-sm text-brand-600 hover:text-brand-700 font-medium px-4 py-2 rounded-lg hover:bg-brand-50 transition-colors"
+            >
               Sign In
             </button>
           </div>
@@ -58,7 +61,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto">
 <h2 className="text-4xl sm:text-5xl font-bold mb-6 leading-tight">
-  Your Local Market TEST, <br className="hidden sm:block" />
+  Your Local Market, <br className="hidden sm:block" />
   <span className="text-brand-100">Digitally Connected</span>
 </h2>
             <p className="text-lg sm:text-xl text-brand-100 mb-12 max-w-2xl mx-auto">
@@ -102,7 +105,7 @@ export default function HomePage() {
     <button 
     type="button"
     className="z-20 w-full bg-brand-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-brand-700 transition-colors flex items-center justify-center"
-    onClick={() => router.push('/auth/login')}
+    onClick={() => router.push('/auth/login/customer')}
   >
     Start Shopping
     <ArrowRight className="ml-2 w-5 h-5" />
@@ -143,7 +146,7 @@ export default function HomePage() {
     <button 
     type="button"
     className="z-20 w-full bg-copper-400 text-white py-4 rounded-xl font-semibold text-lg hover:bg-copper-500 transition-colors flex items-center justify-center"
-    onClick={() => router.push('/auth/login')}
+    onClick={() => router.push('/auth/login/vendor')}
   >
     Open Your Shop
     <ArrowRight className="ml-2 w-5 h-5" />
@@ -157,7 +160,7 @@ export default function HomePage() {
 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
   <div className="text-center mb-12">
     <h3 className="text-3xl font-bold text-neutral-900 mb-4">
-      Browse Categories TEST
+      Browse Categories
     </h3>
     <p className="text-neutral-600 max-w-2xl mx-auto">
       From fresh produce to essential services, find everything you need

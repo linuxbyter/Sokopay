@@ -1,0 +1,85 @@
+'use client';
+
+import { useUser } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation';
+import { Store, Settings, Package, MessageCircle, LogOut, BarChart3 } from 'lucide-react';
+
+export default function VendorDashboardPage() {
+  const { user, isLoaded } = useUser();
+  const router = useRouter();
+
+  if (isLoaded && !user) {
+    router.push('/auth/role');
+    return null;
+  }
+
+  return (
+    <div className="min-h-screen bg-neutral-50">
+      <nav className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <h1 className="text-2xl font-bold text-brand-700">SökoPay</h1>
+            <div className="flex items-center gap-4">
+              <span className="text-sm text-neutral-600">Vendor Dashboard</span>
+              <form action="/auth/logout" method="post">
+                <button type="submit" className="text-sm text-neutral-500 hover:text-neutral-700">
+                  Sign Out
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <h2 className="text-2xl font-bold text-neutral-900 mb-2">Welcome, Vendor!</h2>
+        <p className="text-neutral-600 mb-8">Set up your shop and start reaching customers.</p>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div
+            onClick={() => router.push('/vendor/profile/create')}
+            className="bg-white rounded-xl shadow-sm p-6 border border-neutral-100 cursor-pointer hover:shadow-md transition-shadow"
+          >
+            <div className="w-12 h-12 bg-brand-100 rounded-lg flex items-center justify-center mb-4">
+              <Store className="w-6 h-6 text-brand-600" />
+            </div>
+            <h3 className="font-bold text-neutral-900 mb-1">Create Your Profile</h3>
+            <p className="text-sm text-neutral-500">Set up your shop with photos, services, and location</p>
+          </div>
+          <div className="bg-white rounded-xl shadow-sm p-6 border border-neutral-100">
+            <div className="w-12 h-12 bg-copper-100 rounded-lg flex items-center justify-center mb-4">
+              <MessageCircle className="w-6 h-6 text-copper-600" />
+            </div>
+            <h3 className="font-bold text-neutral-900 mb-1">Messages</h3>
+            <p className="text-sm text-neutral-500">Chat with customers and answer their questions</p>
+          </div>
+          <div className="bg-white rounded-xl shadow-sm p-6 border border-neutral-100">
+            <div className="w-12 h-12 bg-neutral-100 rounded-lg flex items-center justify-center mb-4">
+              <BarChart3 className="w-6 h-6 text-neutral-600" />
+            </div>
+            <h3 className="font-bold text-neutral-900 mb-1">Insights</h3>
+            <p className="text-sm text-neutral-500">Track views, messages, and customer activity</p>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-sm p-6 border border-neutral-100">
+          <h3 className="font-bold text-neutral-900 mb-4">Quick Actions</h3>
+          <div className="flex flex-wrap gap-3">
+            <button
+              onClick={() => router.push('/vendor/profile/create')}
+              className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-brand-700 transition-colors"
+            >
+              Set Up Shop
+            </button>
+            <button className="bg-neutral-100 text-neutral-800 px-4 py-2 rounded-lg text-sm font-medium hover:bg-neutral-200 transition-colors">
+              View Messages
+            </button>
+            <button className="bg-neutral-100 text-neutral-800 px-4 py-2 rounded-lg text-sm font-medium hover:bg-neutral-200 transition-colors">
+              Edit Profile
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
