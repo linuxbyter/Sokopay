@@ -26,6 +26,7 @@ interface Chat {
   vendor_marked_served: boolean;
   customer_marked_served: boolean;
   is_finalized: boolean;
+  updated_at: string;
 }
 
 interface ChatDialogProps {
