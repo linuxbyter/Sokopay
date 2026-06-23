@@ -40,6 +40,8 @@ function DashboardContent() {
   const { user, isLoaded } = useUser();
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  // --- ALL useState hooks FIRST, before any conditional returns ---
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
   const [location, setLocation] = useState('');
   const [filteredVendors, setFilteredVendors] = useState<Vendor[]>([]);
@@ -51,39 +53,8 @@ function DashboardContent() {
   const [showFilters, setShowFilters] = useState(false);
   const [locationLoading, setLocationLoading] = useState(false);
 
-  // Auto-detect location on mount
-  useEffect(() => {
-    if (!userLocation && navigator.geolocation) {
-      setLocationLoading(true);
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setUserLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
-          setLocation('My Location');
-          setLocationLoading(false);
-        },
-        () => {
-          // Fallback to Nairobi if geolocation fails
-          setUserLocation({ lat: -1.286389, lng: 36.817223 });
-          setLocation('Nairobi (default)');
-          setLocationLoading(false);
-        }
-      );
-    }
-  }, []);
-
-  if (!isLoaded) {
-    return (
-      <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-brand-600 animate-spin" />
-      </div>
-    );
-  }
-
-  if (!user) {
-    router.push('/auth/role');
-    return null;
-  }
-
+  // --- ALL useEffect hooks BEFORE conditional returns ---
+  // Fetch vendors when search/category/sort changes. No location dependency for the fetch itself.
   useEffect(() => {
     const fetchVendors = async () => {
       try {
@@ -107,6 +78,7 @@ function DashboardContent() {
           address: v.address || '',
         }));
 
+        // Calculate distance client-side if we have user location
         if (userLocation) {
           vendors = vendors.map(vendor => {
             const latDiff = vendor.latitude - userLocation.lat;
@@ -129,33 +101,57 @@ function DashboardContent() {
       }
     };
 
-    fetchVendors();
-  }, [searchQuery, userLocation, selectedCategory, sortBy]);
+    // Only fetch vendors after Clerk auth is loaded
+    if (isLoaded) {
+      fetchVendors();
+    }
+  }, [searchQuery, userLocation, selectedCategory, sortBy, isLoaded]);
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-  };
-
+  // --- ALL useCallback hooks BEFORE conditional returns ---
   const handleVendorClick = useCallback((vendor: Vendor) => {
     setSelectedVendor(vendor);
   }, []);
 
+  // --- Conditional returns AFTER all hooks ---
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-brand-600 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    router.push('/auth/role');
+    return null;
+  }
+
+  // --- Regular functions AFTER all hooks and conditional returns ---
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+  };
+
   const handleLocationSearch = () => {
-    if (navigator.geolocation) {
-      setLocationLoading(true);
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setUserLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
-          setLocation('My Location');
-          setLocationLoading(false);
-        },
-        () => {
-          setUserLocation({ lat: -1.286389, lng: 36.817223 });
-          setLocation('Nairobi (default)');
-          setLocationLoading(false);
-        }
-      );
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported by your browser');
+      return;
     }
+
+    setLocationLoading(true);
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setUserLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
+        setLocation('My Location');
+        setLocationLoading(false);
+      },
+      (error) => {
+        // Location denied or unavailable — fall back to Nairobi, don't crash
+        console.warn('Geolocation error:', error.message);
+        setUserLocation({ lat: -1.286389, lng: 36.817223 });
+        setLocation('Nairobi (default)');
+        setLocationLoading(false);
+      }
+    );
   };
 
   const handleMessageVendor = async () => {
@@ -175,6 +171,8 @@ function DashboardContent() {
       if (data.chat) {
         setSelectedVendor(null);
         router.push('/messages');
+      } else {
+        console.error('Failed to create chat:', data.error);
       }
     } catch (error) {
       console.error('Failed to create chat:', error);
@@ -291,7 +289,7 @@ function DashboardContent() {
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-medium text-neutral-800">
             {selectedCategory ? selectedCategory : 'All Vendors'}
-            {userLocation && <span className="text-sm text-neutral-500 ml-2">({filteredVendors.length} found)</span>}
+            <span className="text-sm text-neutral-500 ml-2">({filteredVendors.length} found)</span>
           </h2>
           <div className="flex items-center gap-2">
             <button onClick={() => setViewMode('list')} className={listBtnClass}>
@@ -348,7 +346,7 @@ function DashboardContent() {
                   <p className="text-neutral-500">
                     {userLocation
                       ? 'No vendors found. Try adjusting your search or filters.'
-                      : 'Tap "Use My Location" to find nearby vendors.'}
+                      : 'No vendors found. Try a different search or category.'}
                   </p>
                 </div>
               )}

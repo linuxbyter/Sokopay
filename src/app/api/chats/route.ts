@@ -28,8 +28,12 @@ export async function POST(request: NextRequest) {
     )
 
     return NextResponse.json({ chat: result.rows[0] }, { status: 201 })
-  } catch (error) {
+  } catch (error: any) {
     console.error('POST /api/chats error:', error)
+    // Return specific error if table doesn't exist
+    if (error.code === '42P01') {
+      return NextResponse.json({ error: 'Chats table not found. Please run the database schema.' }, { status: 500 })
+    }
     return NextResponse.json({ error: 'Failed to create chat' }, { status: 500 })
   }
 }
@@ -51,19 +55,17 @@ export async function GET(request: NextRequest) {
     if (role === 'vendor') {
       params.push(userId)
       sql = `
-        SELECT c.*, 
-          v.business_name as vendor_name, v.category as vendor_category, v.photos as vendor_photos,
-          u.id as customer_id
+        SELECT c.*,
+          v.business_name as vendor_name, v.category as vendor_category, v.photos as vendor_photos
         FROM chats c
         JOIN vendors v ON c.vendor_id = v.id
-        LEFT JOIN auth.users u ON c.customer_id = u.id
         WHERE v.user_id = $1
         ORDER BY c.updated_at DESC
       `
     } else {
       params.push(userId)
       sql = `
-        SELECT c.*, 
+        SELECT c.*,
           v.business_name as vendor_name, v.category as vendor_category, v.photos as vendor_photos,
           v.id as vendor_id, v.user_id as vendor_user_id
         FROM chats c
@@ -75,8 +77,11 @@ export async function GET(request: NextRequest) {
 
     const result = await query(sql, params)
     return NextResponse.json({ chats: result.rows })
-  } catch (error) {
+  } catch (error: any) {
     console.error('GET /api/chats error:', error)
+    if (error.code === '42P01') {
+      return NextResponse.json({ error: 'Chats table not found. Please run the database schema.' }, { status: 500 })
+    }
     return NextResponse.json({ error: 'Failed to fetch chats' }, { status: 500 })
   }
 }
