@@ -1,9 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useUser, UserButton } from '@clerk/nextjs';
 import { Search, MapPin, List, Users, Zap, SlidersHorizontal } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
+
+const MapView = dynamic(() => import('@/components/map-view'), { ssr: false });
 
 interface Vendor {
   id: string;
@@ -101,6 +104,10 @@ export default function DashboardPage() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
   };
+
+  const handleVendorClick = useCallback((vendor: Vendor) => {
+    setSelectedVendor(vendor);
+  }, []);
 
   const handleLocationSearch = () => {
     setLocation('Nairobi CBD');
@@ -287,13 +294,11 @@ export default function DashboardPage() {
 
         {viewMode === 'map' && (
           <div className="bg-white rounded-lg shadow-md overflow-hidden h-[500px]">
-            <div className="w-full h-full flex items-center justify-center text-neutral-500">
-              <div className="text-center">
-                <MapPin className="h-12 w-12 mb-4 text-brand-600" />
-                <p className="text-lg font-medium">Map View</p>
-                <p className="text-sm">Interactive map coming soon</p>
-              </div>
-            </div>
+            <MapView
+              vendors={filteredVendors}
+              userLocation={userLocation}
+              onVendorClick={handleVendorClick}
+            />
           </div>
         )}
 
