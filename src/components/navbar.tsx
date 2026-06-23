@@ -4,7 +4,6 @@ import { useUser, useClerk } from '@clerk/nextjs';
 import { useRouter, usePathname } from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';
 import { Menu, X, Store, MessageCircle, ShoppingBag, HelpCircle, Mail, Info, LogOut, ChevronDown, ArrowLeftRight } from 'lucide-react';
-import RoleToggle from './role-toggle';
 import NotificationBell from './notification-bell';
 
 interface NavbarProps {
@@ -88,7 +87,7 @@ export default function Navbar({ title = 'SökoPay' }: NavbarProps) {
     <nav className="bg-white shadow-sm sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-14 sm:h-16">
-          {/* Left: Brand + RoleToggle (hidden on mobile, shown in dropdown) */}
+          {/* Left: Brand */}
           <div className="flex items-center gap-2 sm:gap-4 min-w-0">
             <button
               onClick={() => router.push(user ? '/dashboard' : '/')}
@@ -96,9 +95,6 @@ export default function Navbar({ title = 'SökoPay' }: NavbarProps) {
             >
               {title}
             </button>
-            <div className="hidden sm:block">
-              <RoleToggle />
-            </div>
           </div>
 
           {/* Right: Notification bell + Profile dropdown */}
@@ -129,11 +125,6 @@ export default function Navbar({ title = 'SökoPay' }: NavbarProps) {
                     <p className="text-xs text-neutral-500 truncate">
                       {user?.emailAddresses?.[0]?.emailAddress}
                     </p>
-                  </div>
-
-                  {/* Role toggle - visible on mobile only */}
-                  <div className="sm:hidden px-4 py-3 border-b border-neutral-100">
-                    <RoleToggle />
                   </div>
 
                   {/* Menu items */}
