@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { query } from '@/lib/db'
-import { triggerNotification } from '@/lib/pusher'
+import { triggerNotification } from '@/lib/ably'
 
 // Submit feedback
 export async function POST(request: NextRequest) {

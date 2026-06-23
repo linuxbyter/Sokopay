@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { query } from '@/lib/db'
-import { pusher, triggerNotification } from '@/lib/pusher'
+import { getAbly, triggerNotification } from '@/lib/ably'
 
 // Get notifications for a user
 export async function GET(request: NextRequest) {
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
 
     const notification = result.rows[0]
 
-    // Trigger real-time notification via Pusher
+    // Trigger real-time notification via Ably
     await triggerNotification(userId, {
       id: notification.id,
       type: notification.type,

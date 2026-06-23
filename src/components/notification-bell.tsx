@@ -3,7 +3,7 @@
 import { useUser } from '@clerk/nextjs';
 import { useState, useEffect, useCallback } from 'react';
 import { Bell, MessageSquare, Star, Zap, Info, CheckCheck } from 'lucide-react';
-import { subscribeToNotifications } from '@/lib/pusher-client';
+import { subscribeToNotifications } from '@/lib/ably-client';
 
 interface Notification {
   id: string;
