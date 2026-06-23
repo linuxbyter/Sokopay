@@ -2,7 +2,8 @@
 
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
-import { Store, Settings, Package, MessageCircle, LogOut, BarChart3 } from 'lucide-react';
+import { Store, MessageCircle, BarChart3, Plus, Edit3 } from 'lucide-react';
+import Navbar from '@/components/navbar';
 
 export default function VendorDashboardPage() {
   const { user, isLoaded } = useUser();
@@ -15,30 +16,20 @@ export default function VendorDashboardPage() {
 
   return (
     <div className="min-h-screen bg-neutral-50">
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <h1 className="text-2xl font-bold text-brand-700">SökoPay</h1>
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-neutral-600">Vendor Dashboard</span>
-              <form action="/auth/logout" method="post">
-                <button type="submit" className="text-sm text-neutral-500 hover:text-neutral-700">
-                  Sign Out
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Navbar title="SökoPay" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h2 className="text-2xl font-bold text-neutral-900 mb-2">Welcome, Vendor!</h2>
-        <p className="text-neutral-600 mb-8">Set up your shop and start reaching customers.</p>
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-neutral-900 mb-2">
+            Welcome{user?.firstName ? `, ${user.firstName}` : ''}!
+          </h2>
+          <p className="text-neutral-600">Set up your shop and start reaching customers.</p>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div
             onClick={() => router.push('/vendor/profile/create')}
-            className="bg-white rounded-xl shadow-sm p-6 border border-neutral-100 cursor-pointer hover:shadow-md transition-shadow"
+            className="bg-white rounded-xl shadow-sm p-6 border border-neutral-100 cursor-pointer hover:shadow-md transition-all hover:border-brand-200"
           >
             <div className="w-12 h-12 bg-brand-100 rounded-lg flex items-center justify-center mb-4">
               <Store className="w-6 h-6 text-brand-600" />
@@ -46,14 +37,22 @@ export default function VendorDashboardPage() {
             <h3 className="font-bold text-neutral-900 mb-1">Create Your Profile</h3>
             <p className="text-sm text-neutral-500">Set up your shop with photos, services, and location</p>
           </div>
-          <div className="bg-white rounded-xl shadow-sm p-6 border border-neutral-100">
+
+          <div
+            onClick={() => router.push('/vendor/messages')}
+            className="bg-white rounded-xl shadow-sm p-6 border border-neutral-100 cursor-pointer hover:shadow-md transition-all hover:border-copper-200"
+          >
             <div className="w-12 h-12 bg-copper-100 rounded-lg flex items-center justify-center mb-4">
               <MessageCircle className="w-6 h-6 text-copper-600" />
             </div>
             <h3 className="font-bold text-neutral-900 mb-1">Messages</h3>
             <p className="text-sm text-neutral-500">Chat with customers and answer their questions</p>
           </div>
-          <div className="bg-white rounded-xl shadow-sm p-6 border border-neutral-100">
+
+          <div
+            onClick={() => router.push('/vendor/insights')}
+            className="bg-white rounded-xl shadow-sm p-6 border border-neutral-100 cursor-pointer hover:shadow-md transition-all hover:border-neutral-200"
+          >
             <div className="w-12 h-12 bg-neutral-100 rounded-lg flex items-center justify-center mb-4">
               <BarChart3 className="w-6 h-6 text-neutral-600" />
             </div>
@@ -67,14 +66,16 @@ export default function VendorDashboardPage() {
           <div className="flex flex-wrap gap-3">
             <button
               onClick={() => router.push('/vendor/profile/create')}
-              className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-brand-700 transition-colors"
+              className="bg-brand-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-brand-700 transition-colors flex items-center gap-2"
             >
+              <Plus className="w-4 h-4" />
               Set Up Shop
             </button>
-            <button className="bg-neutral-100 text-neutral-800 px-4 py-2 rounded-lg text-sm font-medium hover:bg-neutral-200 transition-colors">
-              View Messages
-            </button>
-            <button className="bg-neutral-100 text-neutral-800 px-4 py-2 rounded-lg text-sm font-medium hover:bg-neutral-200 transition-colors">
+            <button
+              onClick={() => router.push('/vendor/profile/edit')}
+              className="bg-neutral-100 text-neutral-800 px-4 py-2 rounded-lg text-sm font-medium hover:bg-neutral-200 transition-colors flex items-center gap-2"
+            >
+              <Edit3 className="w-4 h-4" />
               Edit Profile
             </button>
           </div>

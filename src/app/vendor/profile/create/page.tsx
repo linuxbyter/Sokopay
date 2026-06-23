@@ -7,6 +7,7 @@ import {
   Store, MapPin, Clock, Camera, Wrench, Phone, CheckCircle,
   ArrowRight, ArrowLeft, Search, Plus, X, Upload, Star
 } from 'lucide-react';
+import Navbar from '@/components/navbar';
 
 const categories = [
   'Mama/Baba Mboga',

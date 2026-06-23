@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useUser, UserButton } from '@clerk/nextjs';
+import { useUser } from '@clerk/nextjs';
 import { Search, MapPin, List, Users, Zap, SlidersHorizontal } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
+import Navbar from '@/components/navbar';
 
 const MapView = dynamic(() => import('@/components/map-view'), { ssr: false });
 
@@ -124,19 +125,7 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-neutral-50">
-      <nav className="bg-white shadow-sm sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <h1 className="text-2xl font-bold text-brand-700">SökoPay</h1>
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-neutral-600 hidden sm:block">
-                {user?.firstName ? `Hi, ${user.firstName}` : 'Dashboard'}
-              </span>
-              <UserButton afterSignOutUrl="/" />
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
