@@ -55,8 +55,10 @@ export default function ChatDialog({ chat, onBack, isVendor }: ChatDialogProps) 
   const fetchMessages = async () => {
     try {
       const response = await fetch(`/api/chats/${chat.id}/messages`);
-      const data = await response.json();
-      setMessages(data.messages || []);
+      if (response.ok) {
+        const data = await response.json();
+        setMessages(data.messages || []);
+      }
     } catch (error) {
       console.error('Failed to fetch messages:', error);
     } finally {
@@ -80,8 +82,10 @@ export default function ChatDialog({ chat, onBack, isVendor }: ChatDialogProps) 
       });
 
       const data = await response.json();
-      setMessages(prev => [...prev, data.message]);
-      setNewMessage('');
+      if (data.message) {
+        setMessages(prev => [...prev, data.message]);
+        setNewMessage('');
+      }
     } catch (error) {
       console.error('Failed to send message:', error);
     } finally {
@@ -97,17 +101,17 @@ export default function ChatDialog({ chat, onBack, isVendor }: ChatDialogProps) 
         body: JSON.stringify({ action, userId: user?.id }),
       });
 
-      const data = await response.json();
-      
-      // Add system message to UI
-      const systemMessage: Message = {
-        id: Date.now().toString(),
-        sender_id: 'system',
-        content: getActionMessage(action),
-        message_type: 'system',
-        created_at: new Date().toISOString(),
-      };
-      setMessages(prev => [...prev, systemMessage]);
+      if (response.ok) {
+        // Add system message to UI
+        const systemMessage: Message = {
+          id: Date.now().toString(),
+          sender_id: 'system',
+          content: getActionMessage(action),
+          message_type: 'system',
+          created_at: new Date().toISOString(),
+        };
+        setMessages(prev => [...prev, systemMessage]);
+      }
     } catch (error) {
       console.error('Failed to update status:', error);
     }
