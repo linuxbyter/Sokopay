@@ -8,6 +8,7 @@ import {
   ArrowRight, ArrowLeft, Search, Plus, X, Upload, Star
 } from 'lucide-react';
 import Navbar from '@/components/navbar';
+import ImageUpload from '@/components/image-upload';
 
 const categories = [
   'Mama/Baba Mboga',
@@ -201,6 +202,11 @@ export default function CreateVendorProfilePage() {
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
+      // Convert images to base64
+      const base64Images = await Promise.all(
+        profile.photos.map(file => convertToBase64(file))
+      );
+
       const response = await fetch('/api/vendors', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -216,7 +222,7 @@ export default function CreateVendorProfilePage() {
           services: profile.services,
           whatsapp: profile.whatsapp,
           phone: profile.phone,
-          photos: [],
+          photos: base64Images,
         }),
       });
 
@@ -231,6 +237,15 @@ export default function CreateVendorProfilePage() {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const convertToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = error => reject(error);
+    });
   };
 
   const renderStepIndicator = () => (
@@ -473,46 +488,14 @@ export default function CreateVendorProfilePage() {
         <p className="text-sm text-neutral-600 mb-6">Upload up to 3 photos of your business</p>
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
-        {profile.photoPreviews.map((preview, index) => (
-          <div key={index} className="relative aspect-square rounded-lg overflow-hidden bg-neutral-100">
-            <img src={preview} alt={`Photo ${index + 1}`} className="w-full h-full object-cover" />
-            <button
-              type="button"
-              onClick={() => removePhoto(index)}
-              className="absolute top-2 right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-        ))}
-
-        {profile.photos.length < 3 && (
-          <button
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
-            className="aspect-square rounded-lg border-2 border-dashed border-neutral-300 flex flex-col items-center justify-center text-neutral-500 hover:border-brand-500 hover:text-brand-600 transition-colors"
-          >
-            <Upload className="w-8 h-8 mb-2" />
-            <span className="text-sm">Add Photo</span>
-          </button>
-        )}
-      </div>
-
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        multiple
-        onChange={handlePhotoUpload}
-        className="hidden"
+      <ImageUpload
+        images={profile.photos}
+        previews={profile.photoPreviews}
+        onImagesChange={(photos, photoPreviews) => updateProfile({ photos, photoPreviews })}
+        maxImages={3}
       />
 
       {errors.photos && <p className="text-red-500 text-sm">{errors.photos}</p>}
-
-      <p className="text-xs text-neutral-500">
-        Photos should be in JPG, PNG, or WebP format. Maximum file size: 5MB each.
-      </p>
     </div>
   );
 

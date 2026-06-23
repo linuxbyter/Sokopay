@@ -22,11 +22,18 @@ CREATE TABLE IF NOT EXISTS vendors (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Chats table
+-- Chats table (with transaction status tracking)
 CREATE TABLE IF NOT EXISTS chats (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   vendor_id UUID REFERENCES vendors(id) ON DELETE CASCADE NOT NULL,
   customer_id TEXT NOT NULL,
+  status TEXT DEFAULT 'active' CHECK (status IN ('active', 'completed', 'archived')),
+  customer_paid BOOLEAN DEFAULT false,
+  vendor_confirmed_payment BOOLEAN DEFAULT false,
+  goods_dispatched BOOLEAN DEFAULT false,
+  vendor_marked_served BOOLEAN DEFAULT false,
+  customer_marked_served BOOLEAN DEFAULT false,
+  is_finalized BOOLEAN DEFAULT false,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -37,6 +44,7 @@ CREATE TABLE IF NOT EXISTS messages (
   chat_id UUID REFERENCES chats(id) ON DELETE CASCADE NOT NULL,
   sender_id TEXT NOT NULL,
   content TEXT NOT NULL,
+  message_type TEXT DEFAULT 'text' CHECK (message_type IN ('text', 'system', 'action')),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   read_at TIMESTAMPTZ
 );
@@ -51,7 +59,8 @@ CREATE TABLE IF NOT EXISTS feedback (
   transaction_rating INTEGER CHECK (transaction_rating BETWEEN 1 AND 5),
   comment TEXT,
   vendor_notes TEXT,
-  created_at TIMESTAMPTZ DEFAULT NOW()
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(chat_id, customer_id)
 );
 
 -- Indexes for performance

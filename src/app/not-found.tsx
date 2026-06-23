@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import { MapPin, Home, ArrowLeft } from 'lucide-react';
 
@@ -12,7 +14,7 @@ export default function NotFound() {
         <h1 className="text-6xl font-bold text-brand-600 mb-4">404</h1>
         <h2 className="text-2xl font-bold text-neutral-900 mb-2">Page Not Found</h2>
         <p className="text-neutral-600 mb-8">
-          Samahani! The page you're looking for doesn't exist or has been moved.
+          Samahani! The page you are looking for does not exist or has been moved.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
