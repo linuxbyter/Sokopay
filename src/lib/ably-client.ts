@@ -23,3 +23,17 @@ export function subscribeToNotifications(userId: string, onNotification: (notifi
     channel.unsubscribe('notification')
   }
 }
+
+export function subscribeToChatMessages(chatId: string, onMessage: (message: any) => void) {
+  if (!ablyClient) return () => {}
+
+  const channel = ablyClient.channels.get(`chat-${chatId}`)
+
+  channel.subscribe('message', (message) => {
+    onMessage(message.data)
+  })
+
+  return () => {
+    channel.unsubscribe('message')
+  }
+}

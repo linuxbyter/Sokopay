@@ -20,7 +20,7 @@ export default function VendorLoginPage() {
         <h1 className="text-2xl font-bold text-brand-700 mb-2">SökoPay</h1>
         <p className="text-neutral-600">Sign in as a vendor</p>
       </div>
-      <SignIn routing="hash" afterSignInUrl="/vendor/dashboard" />
+      <SignIn routing="hash" afterSignInUrl="/auth/setup?role=vendor" />
     </div>
   );
 }

@@ -88,3 +88,10 @@ CREATE INDEX IF NOT EXISTS idx_messages_sender_id ON messages(sender_id);
 CREATE INDEX IF NOT EXISTS idx_feedback_vendor_id ON feedback(vendor_id);
 CREATE INDEX IF NOT EXISTS idx_feedback_customer_id ON feedback(customer_id);
 CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id, is_read);
+
+-- User roles table (one-time role selection)
+CREATE TABLE IF NOT EXISTS user_roles (
+  user_id TEXT PRIMARY KEY,
+  role TEXT NOT NULL CHECK (role IN ('customer', 'vendor')),
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);

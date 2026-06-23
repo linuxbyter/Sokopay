@@ -3,7 +3,7 @@
 import { useUser, useClerk } from '@clerk/nextjs';
 import { useRouter, usePathname } from 'next/navigation';
 import { useState, useRef, useEffect } from 'react';
-import { Menu, X, Store, MessageCircle, ShoppingBag, HelpCircle, Mail, Info, LogOut, ChevronDown, ArrowLeftRight } from 'lucide-react';
+import { Store, MessageCircle, ShoppingBag, HelpCircle, Mail, Info, LogOut, ChevronDown } from 'lucide-react';
 import NotificationBell from './notification-bell';
 
 interface NavbarProps {
@@ -16,12 +16,11 @@ export default function Navbar({ title = 'SökoPay' }: NavbarProps) {
   const router = useRouter();
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   const isVendor = pathname.startsWith('/vendor');
 
-  // Close menu on outside click (works for both mouse and touch)
+  // Close menu on outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -38,41 +37,36 @@ export default function Navbar({ title = 'SökoPay' }: NavbarProps) {
 
   const handleSignOut = async () => {
     setMenuOpen(false);
-    setMobileMenuOpen(false);
     await signOut({ redirectUrl: '/' });
   };
 
-  const menuItems = [
-    ...(isVendor ? [{
-      icon: Store,
-      label: 'My Shop',
-      onClick: () => { setMenuOpen(false); setMobileMenuOpen(false); router.push('/vendor/dashboard'); },
-    }] : []),
-    {
-      icon: ShoppingBag,
-      label: 'Browse as Customer',
-      onClick: () => { setMenuOpen(false); setMobileMenuOpen(false); router.push('/dashboard'); },
-    },
+  const navigate = (path: string) => {
+    setMenuOpen(false);
+    router.push(path);
+  };
+
+  // Role-specific menu items
+  const customerMenuItems = [
     {
       icon: MessageCircle,
       label: 'Messages',
-      onClick: () => { setMenuOpen(false); setMobileMenuOpen(false); router.push(isVendor ? '/vendor/messages' : '/messages'); },
+      onClick: () => navigate('/messages'),
     },
     { type: 'divider' as const },
     {
       icon: HelpCircle,
       label: 'Support',
-      onClick: () => { setMenuOpen(false); setMobileMenuOpen(false); router.push('/support'); },
+      onClick: () => navigate('/support'),
     },
     {
       icon: Mail,
       label: 'Contact',
-      onClick: () => { setMenuOpen(false); setMobileMenuOpen(false); router.push('/contact'); },
+      onClick: () => navigate('/contact'),
     },
     {
       icon: Info,
       label: 'About',
-      onClick: () => { setMenuOpen(false); setMobileMenuOpen(false); router.push('/about'); },
+      onClick: () => navigate('/about'),
     },
     { type: 'divider' as const },
     {
@@ -83,14 +77,58 @@ export default function Navbar({ title = 'SökoPay' }: NavbarProps) {
     },
   ];
 
+  const vendorMenuItems = [
+    {
+      icon: Store,
+      label: 'My Shop',
+      onClick: () => navigate('/vendor/dashboard'),
+    },
+    {
+      icon: MessageCircle,
+      label: 'Messages',
+      onClick: () => navigate('/vendor/messages'),
+    },
+    { type: 'divider' as const },
+    {
+      icon: ShoppingBag,
+      label: 'Browse as Customer',
+      onClick: () => navigate('/dashboard'),
+    },
+    { type: 'divider' as const },
+    {
+      icon: HelpCircle,
+      label: 'Support',
+      onClick: () => navigate('/support'),
+    },
+    {
+      icon: Mail,
+      label: 'Contact',
+      onClick: () => navigate('/contact'),
+    },
+    {
+      icon: Info,
+      label: 'About',
+      onClick: () => navigate('/about'),
+    },
+    { type: 'divider' as const },
+    {
+      icon: LogOut,
+      label: 'Sign Out',
+      onClick: handleSignOut,
+      danger: true,
+    },
+  ];
+
+  const menuItems = isVendor ? vendorMenuItems : customerMenuItems;
+
   return (
     <nav className="bg-white shadow-sm sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-14 sm:h-16">
-          {/* Left: Brand */}
+          {/* Left: Brand — routes to correct dashboard per role */}
           <div className="flex items-center gap-2 sm:gap-4 min-w-0">
             <button
-              onClick={() => router.push(user ? '/dashboard' : '/')}
+              onClick={() => navigate(user ? (isVendor ? '/vendor/dashboard' : '/dashboard') : '/')}
               className="text-xl sm:text-2xl font-bold text-brand-700 hover:text-brand-800 transition-colors flex-shrink-0"
             >
               {title}
@@ -125,6 +163,9 @@ export default function Navbar({ title = 'SökoPay' }: NavbarProps) {
                     <p className="text-xs text-neutral-500 truncate">
                       {user?.emailAddresses?.[0]?.emailAddress}
                     </p>
+                    <span className="inline-block mt-1 px-2 py-0.5 text-xs font-medium rounded-full bg-brand-100 text-brand-700">
+                      {isVendor ? 'Vendor' : 'Customer'}
+                    </span>
                   </div>
 
                   {/* Menu items */}

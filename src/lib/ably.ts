@@ -39,3 +39,22 @@ export async function triggerNotification(userId: string, notification: {
     console.error('Failed to publish Ably notification:', error)
   }
 }
+
+export async function publishChatMessage(chatId: string, message: {
+  id: string
+  chat_id: string
+  sender_id: string
+  content: string
+  message_type: string
+  created_at: string
+}) {
+  const client = getAbly()
+  if (!client) return
+
+  try {
+    const channel = client.channels.get(`chat-${chatId}`)
+    await channel.publish('message', message)
+  } catch (error) {
+    console.error('Failed to publish chat message:', error)
+  }
+}

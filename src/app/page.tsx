@@ -29,15 +29,11 @@ export default function HomePage() {
   const router = useRouter();
 
   const handleCategoryClick = (dbCategory: string) => {
-    router.push(`/dashboard?category=${encodeURIComponent(dbCategory)}`);
+    router.push(`/auth/role`);
   };
 
   const handleSearch = () => {
-    if (searchQuery.trim()) {
-      router.push(`/dashboard?search=${encodeURIComponent(searchQuery.trim())}`);
-    } else {
-      router.push('/dashboard');
-    }
+    router.push('/auth/role');
   };
 
   return (
@@ -65,84 +61,27 @@ export default function HomePage() {
               Your Local Market, <br className="hidden sm:block" />
               <span className="text-brand-100">Digitally Connected</span>
             </h2>
-            <p className="text-lg sm:text-xl text-brand-100 mb-12 max-w-2xl mx-auto">
-              Join Kenya's growing digital marketplace. Whether you're selling fresh produce or looking for local services, SökoPay connects you.
+            <p className="text-lg sm:text-xl text-brand-100 mb-8 max-w-2xl mx-auto">
+              Join Kenya's growing digital marketplace. Discover trusted local vendors, from fresh produce to essential services.
             </p>
-          </div>
-
-          {/* User Type Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-            <div className="relative z-10 bg-white rounded-2xl shadow-xl p-8 text-neutral-900 hover:shadow-2xl transition-shadow duration-300">
-              <div className="flex items-center mb-6">
-                <div className="w-14 h-14 bg-brand-100 rounded-xl flex items-center justify-center mr-4">
-                  <ShoppingBag className="w-7 h-7 text-brand-600" />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-neutral-900">Shop Local</h3>
-                  <p className="text-neutral-500 text-sm">Find vendors near you</p>
-                </div>
-              </div>
-              <p className="text-neutral-600 mb-8 leading-relaxed">
-                Discover trusted local vendors, from fresh produce to essential services. Browse categories, compare prices, and get what you need delivered or pick it up nearby.
-              </p>
-              <div className="space-y-3 mb-8">
-                <div className="flex items-center text-sm text-neutral-600">
-                  <Star className="w-4 h-4 text-copper-400 mr-2" />
-                  <span>Find verified vendors in your area</span>
-                </div>
-                <div className="flex items-center text-sm text-neutral-600">
-                  <Star className="w-4 h-4 text-copper-400 mr-2" />
-                  <span>Compare prices and quality</span>
-                </div>
-                <div className="flex items-center text-sm text-neutral-600">
-                  <Star className="w-4 h-4 text-copper-400 mr-2" />
-                  <span>Chat directly with sellers</span>
-                </div>
-              </div>
-              <button 
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <button
                 type="button"
-                className="z-20 w-full bg-brand-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-brand-700 transition-colors flex items-center justify-center"
-                onClick={() => router.push('/auth/login/customer')}
+                className="z-20 bg-white text-brand-700 px-10 py-4 rounded-xl font-bold text-lg hover:bg-brand-50 transition-colors flex items-center shadow-lg"
+                onClick={() => router.push('/auth/role')}
               >
-                Start Shopping
+                Get Started
                 <ArrowRight className="ml-2 w-5 h-5" />
               </button>
-            </div>
-
-            <div className="relative z-10 bg-white rounded-2xl shadow-xl p-8 text-neutral-900 hover:shadow-2xl transition-shadow duration-300">
-              <div className="flex items-center mb-6">
-                <div className="w-14 h-14 bg-copper-100 rounded-xl flex items-center justify-center mr-4">
-                  <Store className="w-7 h-7 text-copper-600" />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-neutral-900">Sell & Grow</h3>
-                  <p className="text-neutral-500 text-sm">Expand your business</p>
-                </div>
-              </div>
-              <p className="text-neutral-600 mb-8 leading-relaxed">
-                Create your digital storefront in minutes. Reach more customers, manage orders, and grow your business with powerful tools designed for Kenyan entrepreneurs.
-              </p>
-              <div className="space-y-3 mb-8">
-                <div className="flex items-center text-sm text-neutral-600">
-                  <Zap className="w-4 h-4 text-copper-400 mr-2" />
-                  <span>Set up your shop in minutes</span>
-                </div>
-                <div className="flex items-center text-sm text-neutral-600">
-                  <Zap className="w-4 h-4 text-copper-400 mr-2" />
-                  <span>Reach thousands of customers</span>
-                </div>
-                <div className="flex items-center text-sm text-neutral-600">
-                  <Zap className="w-4 h-4 text-copper-400 mr-2" />
-                  <span>Manage orders and payments</span>
-                </div>
-              </div>
-              <button 
+              <button
                 type="button"
-                className="z-20 w-full bg-copper-400 text-white py-4 rounded-xl font-semibold text-lg hover:bg-copper-500 transition-colors flex items-center justify-center"
-                onClick={() => router.push('/auth/login/vendor')}
+                className="z-20 border-2 border-white/40 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white/10 transition-colors"
+                onClick={() => {
+                  const el = document.getElementById('categories');
+                  el?.scrollIntoView({ behavior: 'smooth' });
+                }}
               >
-                Open Your Shop
-                <ArrowRight className="ml-2 w-5 h-5" />
+                Browse Categories
               </button>
             </div>
           </div>
@@ -252,15 +191,15 @@ export default function HomePage() {
             <div>
               <h5 className="font-semibold mb-4">For Customers</h5>
               <ul className="space-y-2 text-neutral-400">
-                <li><button onClick={() => router.push('/dashboard')} className="hover:text-white transition-colors">Find Vendors</button></li>
-                <li><button onClick={() => router.push('/messages')} className="hover:text-white transition-colors">My Orders</button></li>
+                <li><button onClick={() => router.push('/auth/role')} className="hover:text-white transition-colors">Find Vendors</button></li>
+                <li><button onClick={() => router.push('/auth/role')} className="hover:text-white transition-colors">My Orders</button></li>
               </ul>
             </div>
             <div>
               <h5 className="font-semibold mb-4">For Vendors</h5>
               <ul className="space-y-2 text-neutral-400">
-                <li><button onClick={() => router.push('/auth/login/vendor')} className="hover:text-white transition-colors">Start Selling</button></li>
-                <li><button onClick={() => router.push('/vendor/dashboard')} className="hover:text-white transition-colors">Vendor Dashboard</button></li>
+                <li><button onClick={() => router.push('/auth/role')} className="hover:text-white transition-colors">Start Selling</button></li>
+                <li><button onClick={() => router.push('/auth/role')} className="hover:text-white transition-colors">Vendor Dashboard</button></li>
               </ul>
             </div>
           </div>

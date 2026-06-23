@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { query } from '@/lib/db'
-import { triggerNotification } from '@/lib/ably'
+import { triggerNotification, publishChatMessage } from '@/lib/ably'
 
 // Get messages for a chat
 export async function GET(
@@ -52,6 +52,16 @@ export async function POST(
 
     // Update chat's updated_at timestamp
     await query('UPDATE chats SET updated_at = NOW() WHERE id = $1', [id])
+
+    // Publish message to chat channel for real-time delivery to both parties
+    await publishChatMessage(id, {
+      id: result.rows[0].id,
+      chat_id: result.rows[0].chat_id,
+      sender_id: result.rows[0].sender_id,
+      content: result.rows[0].content,
+      message_type: result.rows[0].message_type,
+      created_at: result.rows[0].created_at,
+    })
 
     // Notify the other party (skip for system messages)
     if (messageType !== 'system') {

@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { Send, ArrowLeft, CheckCircle, Package, Truck, MessageSquare, Star, RotateCcw } from 'lucide-react';
 import FeedbackModal from './feedback-modal';
+import { subscribeToChatMessages } from '@/lib/ably-client';
 
 interface Message {
   id: string;
@@ -51,12 +52,31 @@ export default function ChatDialog({ chat, onBack, onChatUpdate, isVendor }: Cha
   // Sync activeChat when prop changes (e.g., parent updates selectedChat)
   useEffect(() => {
     setActiveChat(chat);
-  }, [activeChat.id]);
+  }, [chat.id]);
 
   useEffect(() => {
     fetchMessages();
   }, [activeChat.id]);
 
+  // Real-time: subscribe to Ably chat channel for incoming messages
+  useEffect(() => {
+    if (!activeChat.id) return;
+
+    const unsubscribe = subscribeToChatMessages(activeChat.id, (message: Message) => {
+      // Only add if it's not our own message (we already added it optimistically)
+      if (message.sender_id !== user?.id) {
+        setMessages(prev => {
+          // Deduplicate by id
+          if (prev.some(m => m.id === message.id)) return prev;
+          return [...prev, message];
+        });
+      }
+    });
+
+    return unsubscribe;
+  }, [activeChat.id, user?.id]);
+
+  // Auto-scroll on new messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
@@ -78,7 +98,19 @@ export default function ChatDialog({ chat, onBack, onChatUpdate, isVendor }: Cha
   const sendMessage = async (content: string, type: string = 'text') => {
     if (!content.trim() && type === 'text') return;
 
+    const optimisticMessage = {
+      id: `temp-${Date.now()}`,
+      sender_id: user?.id || '',
+      content,
+      message_type: type,
+      created_at: new Date().toISOString(),
+    };
+
+    // Optimistic: show message immediately
+    setMessages(prev => [...prev, optimisticMessage]);
+    setNewMessage('');
     setSending(true);
+
     try {
       const response = await fetch(`/api/chats/${activeChat.id}/messages`, {
         method: 'POST',
@@ -92,11 +124,15 @@ export default function ChatDialog({ chat, onBack, onChatUpdate, isVendor }: Cha
 
       const data = await response.json();
       if (data.message) {
-        setMessages(prev => [...prev, data.message]);
-        setNewMessage('');
+        // Replace optimistic message with real one
+        setMessages(prev => prev.map(m =>
+          m.id === optimisticMessage.id ? { ...data.message } : m
+        ));
       }
     } catch (error) {
       console.error('Failed to send message:', error);
+      // Remove optimistic message on failure
+      setMessages(prev => prev.filter(m => m.id !== optimisticMessage.id));
     } finally {
       setSending(false);
     }
@@ -160,12 +196,14 @@ export default function ChatDialog({ chat, onBack, onChatUpdate, isVendor }: Cha
 
   const handleBuyAgain = async () => {
     try {
+      const customerName = activeChat.customer_name || null;
       const response = await fetch('/api/chats', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           vendorId: activeChat.vendor_id,
           customerId: activeChat.customer_id,
+          customerName,
           newChat: true,
         }),
       });
@@ -373,7 +411,7 @@ export default function ChatDialog({ chat, onBack, onChatUpdate, isVendor }: Cha
         <div className="flex-1">
           <h3 className="font-semibold text-neutral-900">
             {isVendor
-              ? activeChat.customer_name || `Customer ${activeChat.customer_id.slice(-4)}`
+              ? activeChat.customer_name || 'Customer'
               : activeChat.vendor_name}
           </h3>
           <p className="text-sm text-neutral-500">

@@ -97,13 +97,13 @@ export default function VendorMessagesPage() {
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 bg-copper-100 rounded-full flex items-center justify-center">
                     <span className="text-copper-600 font-semibold">
-                      {chat.customer_name?.charAt(0)?.toUpperCase() || chat.customer_id.slice(-2).toUpperCase()}
+                      {chat.customer_name?.charAt(0)?.toUpperCase() || 'C'}
                     </span>
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
                       <h4 className="font-semibold text-neutral-900 truncate">
-                        {chat.customer_name || `Customer ${chat.customer_id.slice(-4)}`}
+                        {chat.customer_name || 'Customer'}
                       </h4>
                       <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
                         chat.status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'

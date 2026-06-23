@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useUser } from '@clerk/nextjs';
-import { Search, MapPin, List, MessageSquare, SlidersHorizontal, Loader2 } from 'lucide-react';
+import { Search, MapPin, List, SlidersHorizontal, Loader2 } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import Navbar from '@/components/navbar';
@@ -47,7 +47,6 @@ function DashboardContent() {
   const [filteredVendors, setFilteredVendors] = useState<Vendor[]>([]);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
-  const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(searchParams.get('category'));
   const [sortBy, setSortBy] = useState<'distance' | 'rating'>('distance');
   const [showFilters, setShowFilters] = useState(false);
@@ -109,8 +108,8 @@ function DashboardContent() {
 
   // --- ALL useCallback hooks BEFORE conditional returns ---
   const handleVendorClick = useCallback((vendor: Vendor) => {
-    setSelectedVendor(vendor);
-  }, []);
+    router.push(`/vendor/${vendor.id}`);
+  }, [router]);
 
   // --- Conditional returns AFTER all hooks ---
   if (!isLoaded) {
@@ -152,33 +151,6 @@ function DashboardContent() {
         setLocationLoading(false);
       }
     );
-  };
-
-  const handleMessageVendor = async () => {
-    if (!selectedVendor || !user) return;
-
-    try {
-      const customerName = [user.firstName, user.lastName].filter(Boolean).join(' ') || user.emailAddresses?.[0]?.emailAddress || null;
-      const response = await fetch('/api/chats', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          vendorId: selectedVendor.id,
-          customerId: user.id,
-          customerName,
-        }),
-      });
-
-      const data = await response.json();
-      if (data.chat) {
-        setSelectedVendor(null);
-        router.push('/messages');
-      } else {
-        console.error('Failed to create chat:', data.error);
-      }
-    } catch (error) {
-      console.error('Failed to create chat:', error);
-    }
   };
 
   const listBtnClass = viewMode === 'list'
@@ -313,7 +285,7 @@ function DashboardContent() {
                   <div
                     key={vendor.id}
                     className="p-4 cursor-pointer hover:bg-neutral-50 transition-colors"
-                    onClick={() => setSelectedVendor(vendor)}
+                    onClick={() => router.push(`/vendor/${vendor.id}`)}
                   >
                     <div className="flex items-start gap-4">
                       <div className="flex-shrink-0 h-14 w-14 bg-neutral-200 rounded-lg flex items-center justify-center overflow-hidden">
@@ -363,64 +335,6 @@ function DashboardContent() {
               userLocation={userLocation}
               onVendorClick={handleVendorClick}
             />
-          </div>
-        )}
-
-        {selectedVendor && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end sm:items-center justify-center z-50">
-            <div className="bg-white rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-md max-h-[90vh] overflow-y-auto">
-              <div className="px-6 py-4 border-b border-neutral-100 flex justify-between items-center sticky top-0 bg-white">
-                <h2 className="text-xl font-bold text-neutral-900">{selectedVendor.name}</h2>
-                <button
-                  onClick={() => setSelectedVendor(null)}
-                  className="text-neutral-400 hover:text-neutral-600 text-2xl leading-none min-h-[48px] min-w-[48px] flex items-center justify-center"
-                >
-                  &times;
-                </button>
-              </div>
-              <div className="px-6 py-4 space-y-4">
-                <div className="flex items-center gap-4">
-                  <div className="flex-shrink-0 h-20 w-20 bg-neutral-200 rounded-xl flex items-center justify-center overflow-hidden">
-                    {selectedVendor.photoUrl && selectedVendor.photoUrl !== '/placeholder.svg' ? (
-                      <img src={selectedVendor.photoUrl} alt={selectedVendor.name} className="w-full h-full object-cover" />
-                    ) : (
-                      <span className="text-neutral-400 text-2xl font-bold">{selectedVendor.name.charAt(0)}</span>
-                    )}
-                  </div>
-                  <div>
-                    <p className="font-medium text-neutral-900">{selectedVendor.category}</p>
-                    <p className="text-sm text-neutral-500">{selectedVendor.address}</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-sm text-neutral-600">{selectedVendor.rating} stars</span>
-                      {selectedVendor.isOpen && (
-                        <span className="px-1.5 py-0.5 text-xs bg-green-100 text-green-700 rounded">Open now</span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-                {userLocation && (
-                  <div className="bg-neutral-50 rounded-lg p-3">
-                    <p className="text-sm text-neutral-500">Distance from you</p>
-                    <p className="text-lg font-bold text-brand-600">{selectedVendor.distance.toFixed(1)} km</p>
-                  </div>
-                )}
-                <div>
-                  <p className="text-sm font-medium text-neutral-700 mb-1">About</p>
-                  <p className="text-sm text-neutral-600">
-                    {selectedVendor.name} is a trusted {selectedVendor.category.toLowerCase()} serving the local community with quality products and services.
-                  </p>
-                </div>
-                <div className="space-y-3 pt-2">
-                  <button
-                    onClick={handleMessageVendor}
-                    className="w-full bg-brand-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-brand-700 transition-colors flex items-center justify-center gap-2"
-                  >
-                    <MessageSquare className="h-4 w-4" />
-                    Message Vendor
-                  </button>
-                </div>
-              </div>
-            </div>
           </div>
         )}
       </div>
