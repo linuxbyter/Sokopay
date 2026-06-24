@@ -24,17 +24,18 @@ interface Vendor {
 }
 
 const allCategories = [
-  { emoji: '🥬', label: 'Mama Mboga',    db: 'Mama/Baba Mboga' },
-  { emoji: '🏪', label: 'Maasai Shop',   db: 'Maasai Shop' },
-  { emoji: '✂️', label: 'Barbers',       db: 'Barbers' },
-  { emoji: '💇', label: 'Saloonists',    db: 'Saloonists' },
-  { emoji: '💧', label: 'Water',         db: 'Water Vendors' },
-  { emoji: '🔥', label: 'Gas',           db: 'Gas Refillers' },
-  { emoji: '🥩', label: 'Butcheries',    db: 'Butcheries' },
-  { emoji: '👕', label: 'Laundry',       db: 'Laundry Mart' },
-  { emoji: '🛒', label: 'Supermarkets',  db: 'SuperMarkets' },
-  { emoji: '🍽️', label: 'Eateries',      db: 'Eateries' },
-  { emoji: '🧆', label: 'Snacks',        db: 'Quick Snacks' },
+  { emoji: '🧆', label: 'Grab Ka-Snacko', db: 'Quick Snacks' },
+  { emoji: '🛵', label: 'Quick Rides',    db: 'Quick Rides' },
+  { emoji: '🥬', label: 'Mama Mboga',     db: 'Mama/Baba Mboga' },
+  { emoji: '🏪', label: 'Maasai Shop',    db: 'Maasai Shop' },
+  { emoji: '✂️', label: 'Barbers',        db: 'Barbers' },
+  { emoji: '💇', label: 'Saloonists',     db: 'Saloonists' },
+  { emoji: '💧', label: 'Water',          db: 'Water Vendors' },
+  { emoji: '🔥', label: 'Gas',            db: 'Gas Refillers' },
+  { emoji: '🥩', label: 'Butcheries',     db: 'Butcheries' },
+  { emoji: '👕', label: 'Laundry',        db: 'Laundry Mart' },
+  { emoji: '🛒', label: 'Supermarkets',   db: 'SuperMarkets' },
+  { emoji: '🍽️', label: 'Eateries',       db: 'Eateries' },
 ];
 
 // ── Skeleton card ──────────────────────────────────────────────────────────
@@ -276,7 +277,7 @@ function DashboardContent() {
 
   return (
     <div className="min-h-screen bg-neutral-50">
-      <Navbar />
+      <Navbar glass />
 
       <div className="max-w-5xl mx-auto px-4 pb-10">
 
@@ -427,7 +428,24 @@ function DashboardContent() {
         {/* ── Grid view ─────────────────────────────────── */}
         {viewMode === 'grid' && (
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {fetchLoading
+            {/* Grab Ka-Snacko feature banner — shown when browsing All */}
+          {!fetchLoading && !selectedCategory && !searchQuery && (
+            <button
+              onClick={() => setSelectedCategory('Quick Snacks')}
+              className="col-span-2 sm:col-span-3 bg-gradient-to-r from-copper-600 to-copper-400 rounded-2xl p-5 text-left text-white hover:opacity-95 transition-opacity"
+            >
+              <div className="text-3xl mb-2">🧆</div>
+              <h3 className="font-extrabold text-lg leading-tight">Grab Ka-Snacko</h3>
+              <p className="text-copper-100 text-sm mt-1">
+                Smocha, Chapati, Viazi — find top-rated street food stalls near you
+              </p>
+              <span className="inline-block mt-3 bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                Browse now →
+              </span>
+            </button>
+          )}
+
+          {fetchLoading
               ? Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
               : vendors.length === 0
                 ? <EmptyState search={searchQuery} category={selectedCategory} onClear={clearFilters} />

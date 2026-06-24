@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { useRouter, useParams } from 'next/navigation';
 import {
-  ArrowLeft, MapPin, Clock, MessageSquare, Phone, Star, ChevronLeft, ChevronRight,
-  ExternalLink, Loader2, Store, Share2
+  ArrowLeft, MapPin, MessageSquare, Phone, Star, ChevronLeft, ChevronRight,
+  Loader2, Store, Share2, PhoneCall
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 
@@ -328,30 +328,37 @@ export default function VendorProfilePage() {
           </div>
         )}
 
-        {/* Contact */}
+        {/* Contact — click-to-call, stays in app */}
         {(vendor.whatsapp || vendor.phone) && (
           <div className="bg-white px-5 py-5 border-b border-neutral-100">
-            <h3 className="font-semibold text-neutral-900 mb-3">Contact</h3>
+            <h3 className="font-semibold text-neutral-900 mb-3">Call vendor</h3>
             <div className="space-y-2">
-              {vendor.whatsapp && (
+              {(vendor.whatsapp || vendor.phone) && (
                 <a
-                  href={`https://wa.me/${vendor.whatsapp.replace(/[^0-9]/g, '')}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-3 py-2 text-neutral-700 hover:text-green-600 transition-colors"
+                  href={`tel:${(vendor.whatsapp || vendor.phone)!.replace(/[^0-9+]/g, '')}`}
+                  className="flex items-center gap-3 py-3 px-4 bg-brand-50 hover:bg-brand-100 rounded-xl transition-colors"
                 >
-                  <Phone className="w-4 h-4" />
-                  <span className="text-sm">{vendor.whatsapp}</span>
-                  <ExternalLink className="w-3 h-3 ml-auto" />
+                  <div className="w-9 h-9 bg-brand-600 rounded-full flex items-center justify-center flex-shrink-0">
+                    <PhoneCall className="w-4 h-4 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">Call now</p>
+                    <p className="text-xs text-neutral-500">{vendor.whatsapp || vendor.phone}</p>
+                  </div>
                 </a>
               )}
-              {vendor.phone && (
+              {vendor.phone && vendor.phone !== vendor.whatsapp && (
                 <a
-                  href={`tel:${vendor.phone}`}
-                  className="flex items-center gap-3 py-2 text-neutral-700 hover:text-brand-600 transition-colors"
+                  href={`tel:${vendor.phone.replace(/[^0-9+]/g, '')}`}
+                  className="flex items-center gap-3 py-3 px-4 bg-neutral-50 hover:bg-neutral-100 rounded-xl transition-colors"
                 >
-                  <Phone className="w-4 h-4" />
-                  <span className="text-sm">{vendor.phone}</span>
+                  <div className="w-9 h-9 bg-neutral-200 rounded-full flex items-center justify-center flex-shrink-0">
+                    <Phone className="w-4 h-4 text-neutral-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-neutral-900">Alternative number</p>
+                    <p className="text-xs text-neutral-500">{vendor.phone}</p>
+                  </div>
                 </a>
               )}
             </div>
@@ -361,11 +368,22 @@ export default function VendorProfilePage() {
 
       {/* Sticky CTA */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-neutral-200 p-4 z-40">
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-3xl mx-auto flex gap-3">
+          {/* Click-to-call */}
+          {(vendor.whatsapp || vendor.phone) && (
+            <a
+              href={`tel:${(vendor.whatsapp || vendor.phone)!.replace(/[^0-9+]/g, '')}`}
+              className="flex items-center justify-center gap-2 px-4 py-3.5 bg-neutral-100 hover:bg-neutral-200 rounded-xl font-semibold text-neutral-700 transition-colors min-h-[52px]"
+            >
+              <PhoneCall className="w-5 h-5" />
+              Call
+            </a>
+          )}
+          {/* Message — primary CTA */}
           <button
             onClick={handleMessageVendor}
             disabled={creatingChat}
-            className="w-full bg-brand-600 text-white py-3.5 rounded-xl font-semibold text-base hover:bg-brand-700 transition-colors flex items-center justify-center gap-2 min-h-[52px] disabled:opacity-50"
+            className="flex-1 bg-brand-600 text-white py-3.5 rounded-xl font-semibold text-base hover:bg-brand-700 transition-colors flex items-center justify-center gap-2 min-h-[52px] disabled:opacity-50"
           >
             {creatingChat ? (
               <Loader2 className="w-5 h-5 animate-spin" />

@@ -158,14 +158,22 @@ export default function SupportPage() {
           })}
         </div>
 
-        <div className="mt-12 text-center">
-          <p className="text-neutral-500 mb-4">Still need help?</p>
-          <button
-            onClick={() => router.push('/contact')}
-            className="bg-brand-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-brand-700 transition-colors"
+        <div className="mt-12 bg-green-50 border border-green-100 rounded-2xl p-6 text-center">
+          <div className="text-3xl mb-3">💬</div>
+          <h3 className="font-bold text-neutral-900 mb-1">Still need help?</h3>
+          <p className="text-sm text-neutral-500 mb-4">
+            WhatsApp us directly — complaints, feedback, or anything at all.
+            We respond fast.
+          </p>
+          <a
+            href="https://wa.me/254755948148"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold px-6 py-3 rounded-xl transition-colors text-sm"
           >
-            Contact Support
-          </button>
+            WhatsApp Support
+          </a>
+          <p className="text-xs text-neutral-400 mt-2">+254 755 948 148</p>
         </div>
       </div>
     </div>

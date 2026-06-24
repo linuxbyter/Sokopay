@@ -51,6 +51,7 @@ export default function ChatDialog({ chat, onBack, onChatUpdate, isVendor }: Cha
   const [feedbackType, setFeedbackType] = useState<'customer' | 'vendor'>('customer');
   const [activeChat, setActiveChat] = useState<Chat>(chat);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // Sync activeChat when prop changes (e.g., parent updates selectedChat)
   useEffect(() => {
@@ -114,6 +115,7 @@ export default function ChatDialog({ chat, onBack, onChatUpdate, isVendor }: Cha
   };
 
   const sendMessage = async (content: string, type: string = 'text') => {
+    if (sending) return;
     if (!content.trim() && type === 'text') return;
 
     const optimisticMessage = {
@@ -149,10 +151,11 @@ export default function ChatDialog({ chat, onBack, onChatUpdate, isVendor }: Cha
       }
     } catch (error) {
       console.error('Failed to send message:', error);
-      // Remove optimistic message on failure
       setMessages(prev => prev.filter(m => m.id !== optimisticMessage.id));
     } finally {
       setSending(false);
+      // Re-focus input so user can keep typing immediately
+      setTimeout(() => inputRef.current?.focus(), 0);
     }
   };
 
@@ -509,13 +512,14 @@ export default function ChatDialog({ chat, onBack, onChatUpdate, isVendor }: Cha
         <div className="p-4 border-t border-neutral-200 bg-white">
           <div className="flex items-center gap-2">
             <input
+              ref={inputRef}
               type="text"
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && sendMessage(newMessage)}
+              onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && sendMessage(newMessage)}
               placeholder="Type a message..."
               className="flex-1 px-4 py-3 border border-neutral-200 rounded-full focus:ring-2 focus:ring-brand-500 focus:border-brand-500 min-h-[48px]"
-              disabled={sending}
+              autoComplete="off"
             />
             <button
               onClick={() => sendMessage(newMessage)}

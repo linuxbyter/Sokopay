@@ -8,9 +8,10 @@ import NotificationBell from './notification-bell';
 
 interface NavbarProps {
   title?: string;
+  glass?: boolean;
 }
 
-export default function Navbar({ title = 'SökoPay' }: NavbarProps) {
+export default function Navbar({ title = 'SökoPay', glass = false }: NavbarProps) {
   const { user } = useUser();
   const { signOut } = useClerk();
   const router = useRouter();
@@ -121,36 +122,45 @@ export default function Navbar({ title = 'SökoPay' }: NavbarProps) {
 
   const menuItems = isVendor ? vendorMenuItems : customerMenuItems;
 
+  const navBase = glass
+    ? 'bg-brand-700/75 backdrop-blur-md border-b border-white/10'
+    : 'bg-white border-b border-neutral-100 shadow-sm';
+
+  const brandColor = glass ? 'text-white hover:text-brand-100' : 'text-brand-700 hover:text-brand-800';
+  const avatarBg = glass ? 'bg-white/20' : 'bg-brand-100';
+  const avatarText = glass ? 'text-white' : 'text-brand-700';
+  const menuHover = glass ? 'hover:bg-white/10' : 'hover:bg-neutral-100';
+
   return (
-    <nav className="bg-white shadow-sm sticky top-0 z-40">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-14 sm:h-16">
-          {/* Left: Brand — routes to correct dashboard per role */}
-          <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+    <nav className={`sticky top-0 z-40 ${navBase}`}>
+      <div className="max-w-5xl mx-auto px-4 sm:px-6">
+        <div className="flex items-center justify-between h-14">
+          {/* Left: Brand */}
+          <div className="flex items-center min-w-0">
             <button
               onClick={() => navigate(user ? (isVendor ? '/vendor/dashboard' : '/dashboard') : '/')}
-              className="text-xl sm:text-2xl font-bold text-brand-700 hover:text-brand-800 transition-colors flex-shrink-0"
+              className={`text-xl font-bold transition-colors flex-shrink-0 ${brandColor}`}
             >
               {title}
             </button>
           </div>
 
           {/* Right: Notification bell + Profile dropdown */}
-          <div className="flex items-center gap-1 sm:gap-3">
+          <div className="flex items-center gap-1">
             <NotificationBell />
 
             {/* Profile dropdown */}
             <div className="relative" ref={menuRef}>
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
-                className="flex items-center gap-1.5 p-2 rounded-lg hover:bg-neutral-100 transition-colors min-h-[44px] min-w-[44px] justify-center"
+                className={`flex items-center gap-1.5 p-2 rounded-lg transition-colors min-h-[44px] min-w-[44px] justify-center ${menuHover}`}
               >
-                <div className="w-8 h-8 bg-brand-100 rounded-full flex items-center justify-center">
-                  <span className="text-sm font-medium text-brand-700">
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${avatarBg}`}>
+                  <span className={`text-sm font-semibold ${avatarText}`}>
                     {user?.firstName?.charAt(0) || user?.emailAddresses?.[0]?.emailAddress?.charAt(0) || '?'}
                   </span>
                 </div>
-                <ChevronDown className={`w-4 h-4 text-neutral-500 transition-transform hidden sm:block ${menuOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`w-4 h-4 transition-transform hidden sm:block ${glass ? 'text-white/70' : 'text-neutral-500'} ${menuOpen ? 'rotate-180' : ''}`} />
               </button>
 
               {menuOpen && (

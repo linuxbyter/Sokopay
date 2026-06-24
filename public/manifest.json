@@ -1,0 +1,18 @@
+{
+  "name": "SökoPay",
+  "short_name": "SökoPay",
+  "description": "Your hood's vendors, one tap away",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#F8F6F0",
+  "theme_color": "#457841",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

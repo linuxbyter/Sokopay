@@ -3,32 +3,33 @@ import { useRouter } from "next/navigation";
 import { ArrowRight, MapPin, Star, MessageSquare } from "lucide-react";
 
 const categories = [
-  { emoji: "🥬", label: "Mama Mboga", db: "Mama/Baba Mboga" },
-  { emoji: "🏪", label: "Maasai Shop", db: "Maasai Shop" },
-  { emoji: "✂️", label: "Barbers", db: "Barbers" },
-  { emoji: "💇", label: "Saloonists", db: "Saloonists" },
-  { emoji: "💧", label: "Water Vendors", db: "Water Vendors" },
-  { emoji: "🔥", label: "Gas Refillers", db: "Gas Refillers" },
-  { emoji: "🥩", label: "Butcheries", db: "Butcheries" },
-  { emoji: "👕", label: "Laundry Mart", db: "Laundry Mart" },
-  { emoji: "🛒", label: "Supermarkets", db: "SuperMarkets" },
-  { emoji: "🍽️", label: "Eateries", db: "Eateries" },
-  { emoji: "🧆", label: "Quick Snacks", db: "Quick Snacks" },
+  { emoji: "🧆", label: "Grab Ka-Snacko", db: "Quick Snacks" },
+  { emoji: "🛵", label: "Quick Rides",    db: "Quick Rides" },
+  { emoji: "🥬", label: "Mama Mboga",     db: "Mama/Baba Mboga" },
+  { emoji: "🏪", label: "Maasai Shop",    db: "Maasai Shop" },
+  { emoji: "✂️", label: "Barbers",        db: "Barbers" },
+  { emoji: "💇", label: "Saloonists",     db: "Saloonists" },
+  { emoji: "💧", label: "Water Vendors",  db: "Water Vendors" },
+  { emoji: "🔥", label: "Gas Refillers",  db: "Gas Refillers" },
+  { emoji: "🥩", label: "Butcheries",     db: "Butcheries" },
+  { emoji: "👕", label: "Laundry Mart",   db: "Laundry Mart" },
+  { emoji: "🛒", label: "Supermarkets",   db: "SuperMarkets" },
+  { emoji: "🍽️", label: "Eateries",       db: "Eateries" },
 ];
 
 const steps = [
   {
-    n: "01",
+    emoji: "👤",
     title: "Pick your role",
     body: "Shopping for yourself or selling to your neighbourhood? Takes 30 seconds.",
   },
   {
-    n: "02",
+    emoji: "📍",
     title: "Discover nearby",
     body: "Browse vendors on a map or list. Filter by category, rating, or who's open right now.",
   },
   {
-    n: "03",
+    emoji: "💬",
     title: "Message & transact",
     body: "Chat directly, agree on price, pay via M-Pesa or cash, and mark it done.",
   },
@@ -57,10 +58,10 @@ export default function HomePage() {
       <section className="bg-brand-700 text-white">
         <div className="max-w-5xl mx-auto px-4 py-16 sm:py-24 text-center">
           <div className="inline-flex items-center gap-2 bg-brand-600 text-brand-100 text-xs font-semibold px-3 py-1.5 rounded-full mb-6 uppercase tracking-wide">
-            <MapPin className="w-3 h-3" /> Nairobi-first marketplace
+            SökoPay · Changing the ecommerce game
           </div>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-5">
-            Your hood's vendors,<br className="hidden sm:block" />
+            Local vendors,<br className="hidden sm:block" />
             <span className="text-brand-300"> one tap away</span>
           </h1>
           <p className="text-brand-100 text-lg sm:text-xl max-w-xl mx-auto mb-8 leading-relaxed">
@@ -85,20 +86,17 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Trust strip ── */}
+      {/* ── Feature strip ── */}
       <section className="bg-brand-600 text-white">
-        <div className="max-w-5xl mx-auto px-4 py-4 flex flex-wrap justify-center gap-8 text-sm font-medium">
+        <div className="max-w-5xl mx-auto px-4 py-3 flex flex-wrap justify-center gap-6 text-sm font-medium">
           <div className="flex items-center gap-2 text-brand-100">
-            <Star className="w-4 h-4 fill-brand-300 text-brand-300" />
-            Rated 4.8 by early users
+            <MessageSquare className="w-4 h-4" /> Real-time chat with vendors
           </div>
           <div className="flex items-center gap-2 text-brand-100">
-            <MessageSquare className="w-4 h-4" />
-            Real-time chat with vendors
+            <MapPin className="w-4 h-4" /> Works on slow data
           </div>
           <div className="flex items-center gap-2 text-brand-100">
-            <MapPin className="w-4 h-4" />
-            Works on 2G / slow data
+            <Star className="w-4 h-4" /> Free for vendors & customers
           </div>
         </div>
       </section>
@@ -130,8 +128,8 @@ export default function HomePage() {
           <p className="text-neutral-500 text-center mb-10 text-sm">Simple enough to use on a boda stage</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {steps.map((s) => (
-              <div key={s.n} className="bg-white rounded-2xl p-6 border border-neutral-100 shadow-sm">
-                <div className="text-4xl font-black text-brand-100 mb-3">{s.n}</div>
+              <div key={s.title} className="bg-white rounded-2xl p-6 border border-neutral-100 shadow-sm">
+                <div className="text-3xl mb-3">{s.emoji}</div>
                 <h3 className="font-bold text-neutral-900 mb-2">{s.title}</h3>
                 <p className="text-sm text-neutral-500 leading-relaxed">{s.body}</p>
               </div>
