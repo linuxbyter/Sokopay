@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useUser } from '@clerk/nextjs';
-import { Search, MapPin, List, SlidersHorizontal, Loader2, Star } from 'lucide-react';
+import { Search, MapPin, SlidersHorizontal, Loader2, Star, X } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import Navbar from '@/components/navbar';
@@ -24,54 +24,176 @@ interface Vendor {
 }
 
 const allCategories = [
-  'Mama/Baba Mboga',
-  'Maasai Shop',
-  'Barbers',
-  'Saloonists',
-  'Water Vendors',
-  'Gas Refillers',
-  'Butcheries',
-  'Laundry Mart',
-  'SuperMarkets',
-  'Eateries',
-  'Quick Snacks',
+  { emoji: '🥬', label: 'Mama Mboga',    db: 'Mama/Baba Mboga' },
+  { emoji: '🏪', label: 'Maasai Shop',   db: 'Maasai Shop' },
+  { emoji: '✂️', label: 'Barbers',       db: 'Barbers' },
+  { emoji: '💇', label: 'Saloonists',    db: 'Saloonists' },
+  { emoji: '💧', label: 'Water',         db: 'Water Vendors' },
+  { emoji: '🔥', label: 'Gas',           db: 'Gas Refillers' },
+  { emoji: '🥩', label: 'Butcheries',    db: 'Butcheries' },
+  { emoji: '👕', label: 'Laundry',       db: 'Laundry Mart' },
+  { emoji: '🛒', label: 'Supermarkets',  db: 'SuperMarkets' },
+  { emoji: '🍽️', label: 'Eateries',      db: 'Eateries' },
+  { emoji: '🧆', label: 'Snacks',        db: 'Quick Snacks' },
 ];
 
+// ── Skeleton card ──────────────────────────────────────────────────────────
+function SkeletonCard() {
+  return (
+    <div className="bg-white rounded-2xl overflow-hidden border border-neutral-100 animate-pulse">
+      <div className="h-40 bg-neutral-200" />
+      <div className="p-3 space-y-2">
+        <div className="h-4 bg-neutral-200 rounded w-3/4" />
+        <div className="h-3 bg-neutral-100 rounded w-1/2" />
+        <div className="flex gap-2 pt-1">
+          <div className="h-5 bg-neutral-100 rounded-full w-16" />
+          <div className="h-5 bg-neutral-100 rounded-full w-12" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Vendor card ────────────────────────────────────────────────────────────
+function VendorCard({ vendor, onClick, userLocation }: {
+  vendor: Vendor;
+  onClick: () => void;
+  userLocation: { lat: number; lng: number } | null;
+}) {
+  const cat = allCategories.find(c => c.db === vendor.category);
+
+  return (
+    <button
+      onClick={onClick}
+      className="bg-white rounded-2xl overflow-hidden border border-neutral-100 hover:shadow-md hover:border-neutral-200 transition-all text-left w-full"
+    >
+      {/* Photo */}
+      <div className="h-40 bg-neutral-100 relative overflow-hidden">
+        {vendor.photoUrl && vendor.photoUrl !== '/placeholder.svg' ? (
+          <img
+            src={vendor.photoUrl}
+            alt={vendor.name}
+            className="w-full h-full object-cover"
+            loading="lazy"
+          />
+        ) : (
+          <div className="w-full h-full flex flex-col items-center justify-center gap-1">
+            <span className="text-4xl">{cat?.emoji ?? '🏪'}</span>
+            <span className="text-xs text-neutral-400">{vendor.category}</span>
+          </div>
+        )}
+        {/* Open badge overlay */}
+        <div className="absolute top-2 left-2">
+          <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
+            vendor.isOpen
+              ? 'bg-green-500 text-white'
+              : 'bg-black/40 text-white/90'
+          }`}>
+            {vendor.isOpen ? 'Open' : 'Closed'}
+          </span>
+        </div>
+        {/* Distance badge overlay */}
+        {userLocation && vendor.distance > 0 && (
+          <div className="absolute top-2 right-2">
+            <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-black/40 text-white">
+              {vendor.distance < 1
+                ? `${Math.round(vendor.distance * 1000)}m`
+                : `${vendor.distance.toFixed(1)}km`}
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Info */}
+      <div className="p-3">
+        <div className="font-semibold text-neutral-900 text-sm truncate">{vendor.name}</div>
+        <div className="text-xs text-neutral-400 mt-0.5 truncate">{vendor.address || vendor.category}</div>
+        <div className="flex items-center gap-2 mt-2">
+          {vendor.rating > 0 ? (
+            <div className="flex items-center gap-1">
+              <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+              <span className="text-xs font-medium text-neutral-700">{vendor.rating.toFixed(1)}</span>
+              <span className="text-xs text-neutral-400">({vendor.feedbackCount})</span>
+            </div>
+          ) : (
+            <span className="text-xs text-neutral-400">No reviews yet</span>
+          )}
+        </div>
+      </div>
+    </button>
+  );
+}
+
+// ── Empty state ────────────────────────────────────────────────────────────
+function EmptyState({ search, category, onClear }: {
+  search: string;
+  category: string | null;
+  onClear: () => void;
+}) {
+  return (
+    <div className="col-span-2 sm:col-span-3 flex flex-col items-center justify-center py-16 text-center px-4">
+      <div className="text-5xl mb-4">🔍</div>
+      <h3 className="font-bold text-neutral-800 mb-1">
+        {search ? `No results for "${search}"` : category ? `No ${category} vendors yet` : 'No vendors found'}
+      </h3>
+      <p className="text-sm text-neutral-500 mb-5 max-w-xs">
+        {search
+          ? 'Try a different search — maybe "sukuma", "chips", or your vendor\'s name'
+          : 'Be the first in this area or try another category'}
+      </p>
+      {(search || category) && (
+        <button
+          onClick={onClear}
+          className="flex items-center gap-2 px-4 py-2.5 bg-brand-50 text-brand-700 rounded-lg text-sm font-medium hover:bg-brand-100 transition-colors"
+        >
+          <X className="w-4 h-4" /> Clear filters
+        </button>
+      )}
+    </div>
+  );
+}
+
+// ── Main dashboard ─────────────────────────────────────────────────────────
 function DashboardContent() {
   const { user, isLoaded } = useUser();
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // --- ALL useState hooks FIRST, before any conditional returns ---
   const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
-  const [location, setLocation] = useState('');
-  const [filteredVendors, setFilteredVendors] = useState<Vendor[]>([]);
+  const [draftQuery, setDraftQuery] = useState(searchParams.get('search') || '');
+  const [vendors, setVendors] = useState<Vendor[]>([]);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
-  const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
+  const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(searchParams.get('category'));
   const [sortBy, setSortBy] = useState<'distance' | 'rating'>('distance');
   const [showFilters, setShowFilters] = useState(false);
   const [locationLoading, setLocationLoading] = useState(false);
   const [openNowOnly, setOpenNowOnly] = useState(false);
+  const [fetchLoading, setFetchLoading] = useState(true);
 
-  // --- ALL useEffect hooks BEFORE conditional returns ---
-  // Fetch vendors when search/category/sort changes. No location dependency for the fetch itself.
+  // Fetch vendors — cache-friendly via stale-while-revalidate pattern
   useEffect(() => {
+    if (!isLoaded) return;
+
     const fetchVendors = async () => {
+      setFetchLoading(true);
       try {
         const params = new URLSearchParams();
         if (selectedCategory) params.append('category', selectedCategory);
         if (searchQuery) params.append('search', searchQuery);
 
-        const response = await fetch(`/api/vendors?${params.toString()}`);
+        const response = await fetch(`/api/vendors?${params.toString()}`, {
+          // Cache for 60s in browser, stale-while-revalidate for 5 min
+          next: { revalidate: 60 },
+        } as RequestInit);
         const data = await response.json();
 
-        let vendors: Vendor[] = (data.vendors || []).map((v: any) => ({
+        let list: Vendor[] = (data.vendors || []).map((v: any) => ({
           id: v.id,
           name: v.business_name,
           category: v.category,
-          latitude: v.latitude,
-          longitude: v.longitude,
+          latitude: parseFloat(v.latitude) || 0,
+          longitude: parseFloat(v.longitude) || 0,
           distance: 0,
           isOpen: v.is_open,
           photoUrl: v.photos?.[0] || '/placeholder.svg',
@@ -80,9 +202,8 @@ function DashboardContent() {
           address: v.address || '',
         }));
 
-        // Calculate distance client-side if we have user location
         if (userLocation) {
-          vendors = vendors.map(vendor => {
+          list = list.map(vendor => {
             const R = 6371;
             const dLat = (vendor.latitude - userLocation.lat) * (Math.PI / 180);
             const dLng = (vendor.longitude - userLocation.lng) * (Math.PI / 180);
@@ -96,39 +217,51 @@ function DashboardContent() {
           });
         }
 
-        if (openNowOnly) {
-          vendors = vendors.filter(v => v.isOpen);
-        }
+        if (openNowOnly) list = list.filter(v => v.isOpen);
+        list.sort((a, b) => sortBy === 'rating' ? b.rating - a.rating : a.distance - b.distance);
 
-        if (sortBy === 'rating') {
-          vendors.sort((a, b) => b.rating - a.rating);
-        } else {
-          vendors.sort((a, b) => a.distance - b.distance);
-        }
-
-        setFilteredVendors(vendors);
-      } catch (error) {
-        console.error('Failed to fetch vendors:', error);
-        setFilteredVendors([]);
+        setVendors(list);
+      } catch {
+        setVendors([]);
+      } finally {
+        setFetchLoading(false);
       }
     };
 
-    // Only fetch vendors after Clerk auth is loaded
-    if (isLoaded) {
-      fetchVendors();
-    }
+    fetchVendors();
   }, [searchQuery, userLocation, selectedCategory, sortBy, openNowOnly, isLoaded]);
 
-  // --- ALL useCallback hooks BEFORE conditional returns ---
   const handleVendorClick = useCallback((vendor: Vendor) => {
     router.push(`/vendor/${vendor.id}`);
   }, [router]);
 
-  // --- Conditional returns AFTER all hooks ---
+  const handleLocationSearch = () => {
+    if (!navigator.geolocation) return;
+    setLocationLoading(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        setLocationLoading(false);
+      },
+      () => {
+        setUserLocation({ lat: -1.286389, lng: 36.817223 });
+        setLocationLoading(false);
+      },
+      { timeout: 8000 }
+    );
+  };
+
+  const clearFilters = () => {
+    setSearchQuery('');
+    setDraftQuery('');
+    setSelectedCategory(null);
+    setOpenNowOnly(false);
+  };
+
   if (!isLoaded) {
     return (
       <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-brand-600 animate-spin" />
+        <Loader2 className="w-7 h-7 text-brand-600 animate-spin" />
       </div>
     );
   }
@@ -138,233 +271,206 @@ function DashboardContent() {
     return null;
   }
 
-  // --- Regular functions AFTER all hooks and conditional returns ---
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-  };
-
-  const handleLocationSearch = () => {
-    if (!navigator.geolocation) {
-      alert('Geolocation is not supported by your browser');
-      return;
-    }
-
-    setLocationLoading(true);
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setUserLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
-        setLocation('My Location');
-        setLocationLoading(false);
-      },
-      (error) => {
-        // Location denied or unavailable — fall back to Nairobi, don't crash
-        console.warn('Geolocation error:', error.message);
-        setUserLocation({ lat: -1.286389, lng: 36.817223 });
-        setLocation('Nairobi (default)');
-        setLocationLoading(false);
-      }
-    );
-  };
-
-  const listBtnClass = viewMode === 'list'
-    ? 'px-4 py-2.5 text-sm font-medium bg-brand-600 text-white rounded-lg transition-colors min-h-[44px]'
-    : 'px-4 py-2.5 text-sm font-medium bg-neutral-100 text-neutral-800 rounded-lg transition-colors hover:bg-neutral-200 min-h-[44px]';
-
-  const mapBtnClass = viewMode === 'map'
-    ? 'px-4 py-2.5 text-sm font-medium bg-brand-600 text-white rounded-lg transition-colors min-h-[44px]'
-    : 'px-4 py-2.5 text-sm font-medium bg-neutral-100 text-neutral-800 rounded-lg transition-colors hover:bg-neutral-200 min-h-[44px]';
+  const firstName = user.firstName || 'there';
+  const activeFilters = [selectedCategory, openNowOnly ? 'Open Now' : null].filter(Boolean);
 
   return (
     <div className="min-h-screen bg-neutral-50">
       <Navbar />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <form onSubmit={handleSearch} className="flex flex-col gap-4">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div className="flex-1 min-w-0">
-                <label htmlFor="search" className="sr-only">Search vendors</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Search className="h-5 w-5 text-neutral-400" />
-                  </div>
-                  <input
-                    id="search"
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="What do you need? (e.g., sukuma wiki, haircut, water)"
-                    className="block w-full pl-10 pr-3 py-3 border border-neutral-200 rounded-md text-sm focus:ring-2 focus:ring-brand-500 focus:border-brand-500"
-                  />
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <button
-                  onClick={handleLocationSearch}
-                  type="button"
-                  disabled={locationLoading}
-                  className="bg-brand-600 text-white py-3 px-4 rounded-md hover:bg-brand-700 transition-colors flex items-center gap-2 text-sm disabled:opacity-50 min-h-[48px]"
-                >
-                  {locationLoading ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <MapPin className="h-4 w-4" />
-                  )}
-                  {location || 'Use My Location'}
-                </button>
-                <button
-                  onClick={() => setShowFilters(!showFilters)}
-                  type="button"
-                  className="bg-neutral-100 text-neutral-800 py-3 px-4 rounded-md hover:bg-neutral-200 transition-colors flex items-center gap-2 text-sm"
-                >
-                  <SlidersHorizontal className="h-4 w-4" />
-                  Filters
-                </button>
-              </div>
-            </div>
-            {showFilters && (
-              <div className="flex flex-wrap gap-3 items-center pt-2 border-t border-neutral-100">
-                <span className="text-sm text-neutral-500">Sort by:</span>
-                <button
-                  type="button"
-                  onClick={() => setSortBy('distance')}
-                  className={`px-4 py-2 text-xs rounded-full transition-colors min-h-[40px] ${sortBy === 'distance' ? 'bg-brand-600 text-white' : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'}`}
-                >
-                  Distance
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSortBy('rating')}
-                  className={`px-4 py-2 text-xs rounded-full transition-colors min-h-[40px] ${sortBy === 'rating' ? 'bg-brand-600 text-white' : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'}`}
-                >
-                  Rating
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setOpenNowOnly(v => !v)}
-                  className={`px-4 py-2 text-xs rounded-full transition-colors min-h-[40px] ${openNowOnly ? 'bg-green-600 text-white' : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'}`}
-                >
-                  Open Now
-                </button>
-                {selectedCategory && (
-                  <button
-                    type="button"
-                    onClick={() => setSelectedCategory(null)}
-                    className="px-4 py-2 text-xs rounded-full bg-copper-100 text-copper-700 hover:bg-copper-200 transition-colors min-h-[40px]"
-                  >
-                    Clear: {selectedCategory}
-                  </button>
-                )}
-              </div>
+      <div className="max-w-5xl mx-auto px-4 pb-10">
+
+        {/* ── Greeting + location ───────────────────────── */}
+        <div className="pt-5 pb-3 flex items-center justify-between">
+          <div>
+            <h1 className="text-xl font-bold text-neutral-900">Habari, {firstName}! 👋</h1>
+            <p className="text-sm text-neutral-500 mt-0.5">What do you need today?</p>
+          </div>
+          <button
+            onClick={handleLocationSearch}
+            disabled={locationLoading}
+            className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-full border transition-colors min-h-[36px] ${
+              userLocation
+                ? 'bg-brand-600 text-white border-brand-600'
+                : 'bg-white text-neutral-600 border-neutral-200 hover:border-brand-300 hover:text-brand-600'
+            }`}
+          >
+            {locationLoading
+              ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              : <MapPin className="w-3.5 h-3.5" />}
+            {userLocation ? 'Near me' : 'Use location'}
+          </button>
+        </div>
+
+        {/* ── Search bar ────────────────────────────────── */}
+        <div className="flex gap-2 mb-4">
+          <form
+            onSubmit={e => { e.preventDefault(); setSearchQuery(draftQuery); }}
+            className="flex-1 relative"
+          >
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400 pointer-events-none" />
+            <input
+              type="search"
+              value={draftQuery}
+              onChange={e => setDraftQuery(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && setSearchQuery(draftQuery)}
+              placeholder="Search vendors, sukuma wiki, barber…"
+              className="w-full pl-9 pr-3 py-3 bg-white border border-neutral-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:border-transparent min-h-[48px]"
+            />
+            {draftQuery && (
+              <button
+                type="button"
+                onClick={() => { setDraftQuery(''); setSearchQuery(''); }}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600"
+              >
+                <X className="w-4 h-4" />
+              </button>
             )}
           </form>
+          <button
+            onClick={() => setShowFilters(v => !v)}
+            className={`flex items-center gap-1.5 px-3 py-3 rounded-xl border text-sm font-medium transition-colors min-h-[48px] ${
+              showFilters || activeFilters.length > 0
+                ? 'bg-brand-600 text-white border-brand-600'
+                : 'bg-white text-neutral-600 border-neutral-200 hover:border-brand-300'
+            }`}
+          >
+            <SlidersHorizontal className="w-4 h-4" />
+            {activeFilters.length > 0 ? `Filters (${activeFilters.length})` : 'Filter'}
+          </button>
         </div>
 
-        <div className="mb-6">
-          <div className="flex flex-wrap gap-2">
-            <button
-              onClick={() => setSelectedCategory(null)}
-              className={`px-4 py-2.5 text-sm rounded-full transition-colors min-h-[44px] ${!selectedCategory ? 'bg-brand-600 text-white' : 'bg-neutral-100 text-neutral-800 hover:bg-neutral-200'}`}
-            >
-              All
-            </button>
-            {allCategories.map(cat => (
+        {/* ── Filter panel ──────────────────────────────── */}
+        {showFilters && (
+          <div className="bg-white border border-neutral-100 rounded-2xl p-4 mb-4 space-y-3 shadow-sm">
+            <div>
+              <p className="text-xs font-semibold text-neutral-500 uppercase tracking-wide mb-2">Sort by</p>
+              <div className="flex gap-2">
+                {(['distance', 'rating'] as const).map(s => (
+                  <button
+                    key={s}
+                    onClick={() => setSortBy(s)}
+                    className={`px-4 py-2 text-sm rounded-full font-medium transition-colors ${
+                      sortBy === s ? 'bg-brand-600 text-white' : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+                    }`}
+                  >
+                    {s === 'distance' ? '📍 Nearest' : '⭐ Top rated'}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-neutral-500 uppercase tracking-wide mb-2">Availability</p>
               <button
-                key={cat}
-                onClick={() => setSelectedCategory(selectedCategory === cat ? null : cat)}
-                className={`px-4 py-2.5 text-sm rounded-full transition-colors min-h-[44px] ${selectedCategory === cat ? 'bg-brand-600 text-white' : 'bg-neutral-100 text-neutral-800 hover:bg-neutral-200'}`}
+                onClick={() => setOpenNowOnly(v => !v)}
+                className={`px-4 py-2 text-sm rounded-full font-medium transition-colors ${
+                  openNowOnly ? 'bg-green-500 text-white' : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+                }`}
               >
-                {cat}
+                🟢 Open now only
               </button>
-            ))}
+            </div>
+            {activeFilters.length > 0 && (
+              <button onClick={clearFilters} className="text-xs text-red-500 hover:text-red-700 font-medium">
+                Clear all filters
+              </button>
+            )}
           </div>
+        )}
+
+        {/* ── Category chips ────────────────────────────── */}
+        <div className="flex gap-2 overflow-x-auto pb-2 mb-5 scrollbar-hide">
+          <button
+            onClick={() => setSelectedCategory(null)}
+            className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-medium transition-colors min-h-[36px] ${
+              !selectedCategory ? 'bg-brand-600 text-white' : 'bg-white text-neutral-600 border border-neutral-200 hover:border-brand-300'
+            }`}
+          >
+            All
+          </button>
+          {allCategories.map(cat => (
+            <button
+              key={cat.db}
+              onClick={() => setSelectedCategory(selectedCategory === cat.db ? null : cat.db)}
+              className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-medium transition-colors min-h-[36px] ${
+                selectedCategory === cat.db
+                  ? 'bg-brand-600 text-white'
+                  : 'bg-white text-neutral-600 border border-neutral-200 hover:border-brand-300'
+              }`}
+            >
+              {cat.emoji} {cat.label}
+            </button>
+          ))}
         </div>
 
+        {/* ── View toggle + count ───────────────────────── */}
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-medium text-neutral-800">
-            {selectedCategory ? selectedCategory : 'All Vendors'}
-            <span className="text-sm text-neutral-500 ml-2">({filteredVendors.length} found)</span>
-          </h2>
-          <div className="flex items-center gap-2">
-            <button onClick={() => setViewMode('list')} className={listBtnClass}>
-              <List className="mr-1 h-4 w-4" />
-              List
+          <p className="text-sm text-neutral-500">
+            {fetchLoading ? 'Loading…' : `${vendors.length} vendor${vendors.length !== 1 ? 's' : ''} found`}
+          </p>
+          <div className="flex items-center bg-white border border-neutral-200 rounded-lg overflow-hidden">
+            <button
+              onClick={() => setViewMode('grid')}
+              className={`px-3 py-2 text-sm font-medium transition-colors ${viewMode === 'grid' ? 'bg-brand-600 text-white' : 'text-neutral-500 hover:text-neutral-700'}`}
+            >
+              Grid
             </button>
-            <button onClick={() => setViewMode('map')} className={mapBtnClass}>
-              <MapPin className="mr-1 h-4 w-4" />
+            <button
+              onClick={() => setViewMode('map')}
+              className={`px-3 py-2 text-sm font-medium transition-colors ${viewMode === 'map' ? 'bg-brand-600 text-white' : 'text-neutral-500 hover:text-neutral-700'}`}
+            >
               Map
             </button>
           </div>
         </div>
 
-        {viewMode === 'list' && (
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="divide-y divide-neutral-100">
-              {filteredVendors.length > 0 ? (
-                filteredVendors.map(vendor => (
-                  <div
-                    key={vendor.id}
-                    className="p-4 cursor-pointer hover:bg-neutral-50 transition-colors"
-                    onClick={() => router.push(`/vendor/${vendor.id}`)}
-                  >
-                    <div className="flex items-start gap-4">
-                      <div className="flex-shrink-0 h-14 w-14 bg-neutral-200 rounded-lg flex items-center justify-center overflow-hidden">
-                        {vendor.photoUrl && vendor.photoUrl !== '/placeholder.svg' ? (
-                          <img src={vendor.photoUrl} alt={vendor.name} className="w-full h-full object-cover" />
-                        ) : (
-                          <span className="text-neutral-500 font-medium">{vendor.name.charAt(0)}</span>
-                        )}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-medium text-neutral-900 truncate">{vendor.name}</h3>
-                          {vendor.isOpen && (
-                            <span className="px-1.5 py-0.5 text-xs bg-green-100 text-green-700 rounded">Open</span>
-                          )}
-                        </div>
-                        <p className="text-sm text-neutral-500 mt-0.5">{vendor.category}</p>
-                        <p className="text-sm text-neutral-400 mt-0.5 truncate">{vendor.address}</p>
-                      </div>
-                      <div className="flex-shrink-0 text-right">
-                        {userLocation && (
-                          <p className="text-sm font-medium text-neutral-700">{vendor.distance.toFixed(1)} km</p>
-                        )}
-                        <div className="flex items-center gap-1">
-                          {vendor.rating > 0 ? (
-                            <>
-                              <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-                              <span className="text-xs text-neutral-600">{vendor.rating}</span>
-                              <span className="text-xs text-neutral-400">({vendor.feedbackCount})</span>
-                            </>
-                          ) : (
-                            <span className="text-xs text-neutral-400">No reviews</span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="p-8 text-center">
-                  <Search className="h-10 w-10 text-neutral-300 mx-auto mb-3" />
-                  <p className="text-neutral-500">
-                    {userLocation
-                      ? 'No vendors found. Try adjusting your search or filters.'
-                      : 'No vendors found. Try a different search or category.'}
-                  </p>
-                </div>
-              )}
-            </div>
+        {/* ── Grid view ─────────────────────────────────── */}
+        {viewMode === 'grid' && (
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {fetchLoading
+              ? Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
+              : vendors.length === 0
+                ? <EmptyState search={searchQuery} category={selectedCategory} onClear={clearFilters} />
+                : vendors.map(vendor => (
+                    <VendorCard
+                      key={vendor.id}
+                      vendor={vendor}
+                      onClick={() => handleVendorClick(vendor)}
+                      userLocation={userLocation}
+                    />
+                  ))
+            }
           </div>
         )}
 
+        {/* ── Map view ──────────────────────────────────── */}
         {viewMode === 'map' && (
-          <div className="bg-white rounded-lg shadow-md overflow-hidden h-[400px] sm:h-[500px]">
-            <MapView
-              vendors={filteredVendors}
-              userLocation={userLocation}
-              onVendorClick={handleVendorClick}
-            />
+          <div className="bg-white rounded-2xl border border-neutral-100 overflow-hidden h-[70vh] min-h-[400px]">
+            {fetchLoading ? (
+              <div className="w-full h-full flex items-center justify-center bg-neutral-100 animate-pulse">
+                <div className="text-center">
+                  <MapPin className="w-8 h-8 text-neutral-300 mx-auto mb-2" />
+                  <p className="text-sm text-neutral-400">Loading map…</p>
+                </div>
+              </div>
+            ) : vendors.length === 0 ? (
+              <div className="w-full h-full flex items-center justify-center">
+                <div className="text-center px-6">
+                  <div className="text-4xl mb-3">🗺️</div>
+                  <h3 className="font-semibold text-neutral-800 mb-1">No vendors on the map</h3>
+                  <p className="text-sm text-neutral-500">Try removing filters or searching a different area</p>
+                  <button onClick={clearFilters} className="mt-4 px-4 py-2 bg-brand-600 text-white text-sm rounded-lg hover:bg-brand-700 transition-colors">
+                    Clear filters
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <MapView
+                vendors={vendors}
+                userLocation={userLocation}
+                onVendorClick={handleVendorClick}
+              />
+            )}
           </div>
         )}
       </div>
@@ -375,7 +481,7 @@ function DashboardContent() {
 function LoadingFallback() {
   return (
     <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
-      <Loader2 className="w-8 h-8 text-brand-600 animate-spin" />
+      <Loader2 className="w-7 h-7 text-brand-600 animate-spin" />
     </div>
   );
 }

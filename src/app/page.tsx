@@ -1,217 +1,182 @@
 "use client";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { 
-  Search, MapPin, Store, ShoppingBag, ArrowRight, Star, Shield, Zap, Users,
-  Crop, Scissors, Droplet, Flame, Shirt, Utensils
-} from "lucide-react";
+import { ArrowRight, MapPin, Star, MessageSquare } from "lucide-react";
 
 const categories = [
-  { id: "mama-baba-mboga", label: "Mama/Baba Mboga", icon: "Crop", dbCategory: "Mama/Baba Mboga" },
-  { id: "maasai-shop", label: "Maasai Shop", icon: "Store", dbCategory: "Maasai Shop" },
-  { id: "barbers", label: "Barbers", icon: "Scissors", dbCategory: "Barbers" },
-  { id: "saloonists", label: "Saloonists", icon: "Scissors", dbCategory: "Saloonists" },
-  { id: "water-vendors", label: "Water Vendors", icon: "Droplet", dbCategory: "Water Vendors" },
-  { id: "gas-refillers", label: "Gas Refillers", icon: "Flame", dbCategory: "Gas Refillers" },
-  { id: "butcheries", label: "Butcheries", icon: "Flame", dbCategory: "Butcheries" },
-  { id: "laundry-mart", label: "Laundry Mart", icon: "Shirt", dbCategory: "Laundry Mart" },
-  { id: "supermarkets", label: "SuperMarkets", icon: "Store", dbCategory: "SuperMarkets" },
-  { id: "eateries", label: "Eateries", icon: "Utensils", dbCategory: "Eateries" },
-  { id: "quick-snacks", label: "Quick Snacks", icon: "Zap", dbCategory: "Quick Snacks" },
+  { emoji: "🥬", label: "Mama Mboga", db: "Mama/Baba Mboga" },
+  { emoji: "🏪", label: "Maasai Shop", db: "Maasai Shop" },
+  { emoji: "✂️", label: "Barbers", db: "Barbers" },
+  { emoji: "💇", label: "Saloonists", db: "Saloonists" },
+  { emoji: "💧", label: "Water Vendors", db: "Water Vendors" },
+  { emoji: "🔥", label: "Gas Refillers", db: "Gas Refillers" },
+  { emoji: "🥩", label: "Butcheries", db: "Butcheries" },
+  { emoji: "👕", label: "Laundry Mart", db: "Laundry Mart" },
+  { emoji: "🛒", label: "Supermarkets", db: "SuperMarkets" },
+  { emoji: "🍽️", label: "Eateries", db: "Eateries" },
+  { emoji: "🧆", label: "Quick Snacks", db: "Quick Snacks" },
 ];
 
-const iconMap: Record<string, any> = {
-  Crop, Scissors, Droplet, Flame, Shirt, Utensils, Store, Zap
-};
+const steps = [
+  {
+    n: "01",
+    title: "Pick your role",
+    body: "Shopping for yourself or selling to your neighbourhood? Takes 30 seconds.",
+  },
+  {
+    n: "02",
+    title: "Discover nearby",
+    body: "Browse vendors on a map or list. Filter by category, rating, or who's open right now.",
+  },
+  {
+    n: "03",
+    title: "Message & transact",
+    body: "Chat directly, agree on price, pay via M-Pesa or cash, and mark it done.",
+  },
+];
 
 export default function HomePage() {
-  const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
-
-  const handleCategoryClick = (dbCategory: string) => {
-    router.push(`/auth/role`);
-  };
-
-  const handleSearch = () => {
-    router.push('/auth/role');
-  };
+  const go = () => router.push("/auth/role");
 
   return (
-    <main className="min-h-screen bg-neutral-50">
-      {/* Navigation */}
-      <nav className="bg-white shadow-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <h1 className="text-2xl font-bold text-brand-700">SökoPay</h1>
-            <button
-              onClick={() => router.push('/auth/role')}
-              className="text-sm text-brand-600 hover:text-brand-700 font-medium px-4 py-2 rounded-lg hover:bg-brand-50 transition-colors"
-            >
-              Sign In
-            </button>
-          </div>
+    <main className="min-h-screen bg-white">
+      {/* ── Nav ── */}
+      <nav className="bg-white border-b border-neutral-100 sticky top-0 z-50">
+        <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
+          <span className="text-xl font-bold text-brand-700 tracking-tight">SökoPay</span>
+          <button
+            onClick={go}
+            className="text-sm font-semibold text-brand-600 hover:text-brand-700 px-4 py-2 rounded-lg hover:bg-brand-50 transition-colors min-h-[44px]"
+          >
+            Sign in
+          </button>
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <div className="bg-brand-600 text-white py-16 sm:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-4xl mx-auto">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-6 leading-tight">
-              Your Local Market, <br className="hidden sm:block" />
-              <span className="text-brand-100">Digitally Connected</span>
-            </h2>
-            <p className="text-lg sm:text-xl text-brand-100 mb-8 max-w-2xl mx-auto">
-              Join Kenya's growing digital marketplace. Discover trusted local vendors, from fresh produce to essential services.
+      {/* ── Hero ── */}
+      <section className="bg-brand-700 text-white">
+        <div className="max-w-5xl mx-auto px-4 py-16 sm:py-24 text-center">
+          <div className="inline-flex items-center gap-2 bg-brand-600 text-brand-100 text-xs font-semibold px-3 py-1.5 rounded-full mb-6 uppercase tracking-wide">
+            <MapPin className="w-3 h-3" /> Nairobi-first marketplace
+          </div>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-5">
+            Your hood's vendors,<br className="hidden sm:block" />
+            <span className="text-brand-300"> one tap away</span>
+          </h1>
+          <p className="text-brand-100 text-lg sm:text-xl max-w-xl mx-auto mb-8 leading-relaxed">
+            Mama mbogas, barbers, eateries, water vendors — discover and message them
+            instantly. No middlemen, no delivery fees.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <button
+              onClick={go}
+              className="bg-white text-brand-700 font-bold px-8 py-4 rounded-xl text-base hover:bg-brand-50 transition-colors flex items-center justify-center gap-2 shadow-lg min-h-[52px]"
+            >
+              Get started — it's free
+              <ArrowRight className="w-5 h-5" />
+            </button>
+            <button
+              onClick={go}
+              className="border-2 border-white/30 text-white font-semibold px-8 py-4 rounded-xl text-base hover:bg-white/10 transition-colors min-h-[52px]"
+            >
+              I'm a vendor →
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Trust strip ── */}
+      <section className="bg-brand-600 text-white">
+        <div className="max-w-5xl mx-auto px-4 py-4 flex flex-wrap justify-center gap-8 text-sm font-medium">
+          <div className="flex items-center gap-2 text-brand-100">
+            <Star className="w-4 h-4 fill-brand-300 text-brand-300" />
+            Rated 4.8 by early users
+          </div>
+          <div className="flex items-center gap-2 text-brand-100">
+            <MessageSquare className="w-4 h-4" />
+            Real-time chat with vendors
+          </div>
+          <div className="flex items-center gap-2 text-brand-100">
+            <MapPin className="w-4 h-4" />
+            Works on 2G / slow data
+          </div>
+        </div>
+      </section>
+
+      {/* ── Categories ── */}
+      <section className="max-w-5xl mx-auto px-4 py-14">
+        <h2 className="text-2xl font-bold text-neutral-900 mb-2 text-center">What do you need?</h2>
+        <p className="text-neutral-500 text-center mb-8 text-sm">11 categories of local vendors, all in one place</p>
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
+          {categories.map((cat) => (
+            <button
+              key={cat.db}
+              onClick={go}
+              className="flex flex-col items-center gap-2 p-4 bg-neutral-50 hover:bg-brand-50 border border-neutral-100 hover:border-brand-200 rounded-2xl transition-all group min-h-[80px]"
+            >
+              <span className="text-2xl">{cat.emoji}</span>
+              <span className="text-xs font-medium text-neutral-600 group-hover:text-brand-700 text-center leading-tight">
+                {cat.label}
+              </span>
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* ── How it works ── */}
+      <section className="bg-neutral-50 py-14">
+        <div className="max-w-4xl mx-auto px-4">
+          <h2 className="text-2xl font-bold text-neutral-900 mb-2 text-center">How it works</h2>
+          <p className="text-neutral-500 text-center mb-10 text-sm">Simple enough to use on a boda stage</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {steps.map((s) => (
+              <div key={s.n} className="bg-white rounded-2xl p-6 border border-neutral-100 shadow-sm">
+                <div className="text-4xl font-black text-brand-100 mb-3">{s.n}</div>
+                <h3 className="font-bold text-neutral-900 mb-2">{s.title}</h3>
+                <p className="text-sm text-neutral-500 leading-relaxed">{s.body}</p>
+              </div>
+            ))}
+          </div>
+          <div className="text-center mt-8">
+            <button
+              onClick={go}
+              className="bg-brand-600 text-white font-bold px-8 py-4 rounded-xl hover:bg-brand-700 transition-colors inline-flex items-center gap-2 min-h-[52px]"
+            >
+              Join SökoPay now
+              <ArrowRight className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ── For vendors callout ── */}
+      <section className="max-w-5xl mx-auto px-4 py-14">
+        <div className="bg-copper-50 border border-copper-100 rounded-3xl p-8 sm:p-10 flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div>
+            <div className="text-2xl mb-2">🏪</div>
+            <h2 className="text-xl font-bold text-neutral-900 mb-1">Own a local business?</h2>
+            <p className="text-neutral-500 text-sm max-w-sm">
+              Get discovered by customers in your area. Set up your shop profile in under 5 minutes — free.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <button
-                type="button"
-                className="z-20 bg-white text-brand-700 px-10 py-4 rounded-xl font-bold text-lg hover:bg-brand-50 transition-colors flex items-center shadow-lg"
-                onClick={() => router.push('/auth/role')}
-              >
-                Get Started
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </button>
-              <button
-                type="button"
-                className="z-20 border-2 border-white/40 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white/10 transition-colors"
-                onClick={() => {
-                  const el = document.getElementById('categories');
-                  el?.scrollIntoView({ behavior: 'smooth' });
-                }}
-              >
-                Browse Categories
-              </button>
-            </div>
           </div>
+          <button
+            onClick={go}
+            className="bg-copper-400 text-white font-bold px-7 py-3.5 rounded-xl hover:bg-copper-500 transition-colors whitespace-nowrap min-h-[48px] flex-shrink-0"
+          >
+            Start selling →
+          </button>
         </div>
-      </div>
+      </section>
 
-      {/* Categories Preview */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="text-center mb-12">
-          <h3 className="text-3xl font-bold text-neutral-900 mb-4">Browse Categories</h3>
-          <p className="text-neutral-600 max-w-2xl mx-auto">From fresh produce to essential services, find everything you need</p>
-        </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-          {categories.map((category) => {
-            const IconComponent = iconMap[category.icon];
-            return (
-              <button
-                key={category.id}
-                onClick={() => handleCategoryClick(category.dbCategory)}
-                className="flex flex-col items-center p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 border border-neutral-100 hover:border-brand-200 group"
-              >
-                {IconComponent && <IconComponent className="w-6 h-6 text-neutral-600 group-hover:text-brand-600 transition-colors" />}
-                <span className="text-sm font-medium text-neutral-700 text-center group-hover:text-brand-600 transition-colors mt-2">
-                  {category.label}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* How It Works */}
-      <div className="bg-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h3 className="text-3xl font-bold text-neutral-900 mb-4">How It Works</h3>
-            <p className="text-neutral-600 max-w-2xl mx-auto">Simple, fast, and designed for Kenya</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center p-6">
-              <div className="w-16 h-16 bg-brand-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <Users className="w-8 h-8 text-brand-600" />
-              </div>
-              <h4 className="text-xl font-bold text-neutral-900 mb-3">1. Sign Up</h4>
-              <p className="text-neutral-600">Create your account in seconds. Choose whether you're shopping or selling.</p>
-            </div>
-            <div className="text-center p-6">
-              <div className="w-16 h-16 bg-brand-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <Search className="w-8 h-8 text-brand-600" />
-              </div>
-              <h4 className="text-xl font-bold text-neutral-900 mb-3">2. Discover</h4>
-              <p className="text-neutral-600">Browse local vendors, compare products, and find exactly what you need.</p>
-            </div>
-            <div className="text-center p-6">
-              <div className="w-16 h-16 bg-brand-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <Shield className="w-8 h-8 text-brand-600" />
-              </div>
-              <h4 className="text-xl font-bold text-neutral-900 mb-3">3. Connect</h4>
-              <p className="text-neutral-600">Chat with vendors, place orders, and enjoy local commerce made easy.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Search Section */}
-      <div className="bg-neutral-100 py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <h3 className="text-2xl font-bold text-neutral-900 mb-2">Already know what you're looking for?</h3>
-            <p className="text-neutral-600">Search for specific items, vendors, or services</p>
-          </div>
-          <div className="relative z-10 bg-white rounded-2xl shadow-lg p-4">
-            <div className="flex flex-col sm:flex-row gap-3">
-              <div className="flex-1 relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-neutral-400 h-5 w-5" />
-                <input
-                  type="text"
-                  placeholder="What do you need? (e.g., sukuma wiki, haircut, water)"
-                  className="w-full pl-12 pr-4 py-4 border border-neutral-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-transparent text-neutral-900 placeholder:text-neutral-400"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                />
-              </div>
-              <button 
-                type="button"
-                className="z-20 bg-brand-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-brand-700 transition-colors whitespace-nowrap"
-                onClick={handleSearch}
-              >
-                Search
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <footer className="bg-neutral-900 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-            <div className="col-span-1 md:col-span-2">
-              <h4 className="text-2xl font-bold mb-4">SökoPay</h4>
-              <p className="text-neutral-400 max-w-md">
-                Connecting local vendors and customers across Kenya. Supporting the informal economy through digital innovation.
-              </p>
-            </div>
-            <div>
-              <h5 className="font-semibold mb-4">For Customers</h5>
-              <ul className="space-y-2 text-neutral-400">
-                <li><button onClick={() => router.push('/auth/role')} className="hover:text-white transition-colors">Find Vendors</button></li>
-                <li><button onClick={() => router.push('/auth/role')} className="hover:text-white transition-colors">My Orders</button></li>
-              </ul>
-            </div>
-            <div>
-              <h5 className="font-semibold mb-4">For Vendors</h5>
-              <ul className="space-y-2 text-neutral-400">
-                <li><button onClick={() => router.push('/auth/role')} className="hover:text-white transition-colors">Start Selling</button></li>
-                <li><button onClick={() => router.push('/auth/role')} className="hover:text-white transition-colors">Vendor Dashboard</button></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-neutral-800 pt-8 flex flex-col sm:flex-row justify-between items-center">
-            <p className="text-neutral-400 text-sm">
-              &copy; 2024 SökoPay. All rights reserved.
-            </p>
-            <div className="flex space-x-6 mt-4 sm:mt-0">
-              <a href="/about" className="text-neutral-400 hover:text-white text-sm transition-colors">About</a>
-              <a href="/support" className="text-neutral-400 hover:text-white text-sm transition-colors">Support</a>
-              <a href="/contact" className="text-neutral-400 hover:text-white text-sm transition-colors">Contact</a>
-            </div>
+      {/* ── Footer ── */}
+      <footer className="border-t border-neutral-100 bg-white py-8">
+        <div className="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <span className="text-lg font-bold text-brand-700">SökoPay</span>
+          <p className="text-xs text-neutral-400">© 2025 SökoPay · Connecting local Kenya</p>
+          <div className="flex gap-5 text-sm text-neutral-500">
+            <a href="/about" className="hover:text-neutral-800 transition-colors">About</a>
+            <a href="/support" className="hover:text-neutral-800 transition-colors">Support</a>
+            <a href="/contact" className="hover:text-neutral-800 transition-colors">Contact</a>
           </div>
         </div>
       </footer>

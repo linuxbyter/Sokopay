@@ -15,7 +15,9 @@ export async function GET(
       return NextResponse.json({ error: 'Vendor not found' }, { status: 404 })
     }
 
-    return NextResponse.json({ vendor: result.rows[0] })
+    return NextResponse.json({ vendor: result.rows[0] }, {
+      headers: { 'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=120' },
+    })
   } catch (error) {
     console.error('GET /api/vendors/[id] error:', error)
     return NextResponse.json({ error: 'Failed to fetch vendor' }, { status: 500 })

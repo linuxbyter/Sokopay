@@ -60,7 +60,12 @@ export async function GET(request: NextRequest) {
       }
     });
 
-    return NextResponse.json({ vendors })
+    return NextResponse.json({ vendors }, {
+      headers: {
+        // Browser caches for 60s, CDN/edge serves stale for up to 5 min while revalidating
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+      },
+    })
   } catch (error) {
     console.error('GET /api/vendors error:', error)
     return NextResponse.json({ error: 'Failed to fetch vendors' }, { status: 500 })

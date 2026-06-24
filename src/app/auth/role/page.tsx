@@ -1,56 +1,74 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { ShoppingBag, Store, ArrowRight } from 'lucide-react';
+import { ArrowRight, ArrowLeft } from 'lucide-react';
 
 export default function RoleSelectionPage() {
   const router = useRouter();
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-neutral-50 p-6">
-      <div className="text-center mb-10">
-        <h1 className="text-3xl font-bold text-brand-700 mb-2">SökoPay</h1>
-        <p className="text-neutral-600 text-lg">How would you like to use SökoPay?</p>
+    <div className="min-h-screen bg-neutral-50 flex flex-col">
+      {/* Top bar */}
+      <div className="px-4 pt-5 flex items-center justify-between max-w-lg mx-auto w-full">
+        <button
+          onClick={() => router.push('/')}
+          className="p-2 rounded-lg hover:bg-neutral-100 transition-colors text-neutral-500 hover:text-neutral-700 min-h-[44px] min-w-[44px] flex items-center justify-center"
+        >
+          <ArrowLeft className="w-5 h-5" />
+        </button>
+        <span className="text-lg font-bold text-brand-700">SökoPay</span>
+        <div className="w-11" />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl w-full">
-        <button
-          onClick={() => router.push('/auth/login/customer')}
-          className="bg-white rounded-2xl shadow-lg p-8 text-left hover:shadow-xl transition-shadow border border-neutral-100 hover:border-brand-200"
-        >
-          <div className="w-14 h-14 bg-brand-100 rounded-xl flex items-center justify-center mb-6">
-            <ShoppingBag className="w-7 h-7 text-brand-600" />
+      {/* Main */}
+      <div className="flex-1 flex flex-col items-center justify-center px-4 py-10">
+        <div className="w-full max-w-sm">
+          <div className="text-center mb-8">
+            <h1 className="text-2xl font-extrabold text-neutral-900 mb-2">Welcome!</h1>
+            <p className="text-neutral-500 text-sm">How would you like to use SökoPay?</p>
           </div>
-          <h3 className="text-xl font-bold text-neutral-900 mb-2">I&apos;m a Customer</h3>
-          <p className="text-neutral-500 text-sm mb-6">Find vendors, compare prices, and shop local</p>
-          <div className="flex items-center text-brand-600 font-medium text-sm">
-            Continue as Customer
-            <ArrowRight className="ml-2 w-4 h-4" />
-          </div>
-        </button>
 
-        <button
-          onClick={() => router.push('/auth/login/vendor')}
-          className="bg-white rounded-2xl shadow-lg p-8 text-left hover:shadow-xl transition-shadow border border-neutral-100 hover:border-copper-200"
-        >
-          <div className="w-14 h-14 bg-copper-100 rounded-xl flex items-center justify-center mb-6">
-            <Store className="w-7 h-7 text-copper-600" />
+          <div className="space-y-4">
+            {/* Customer */}
+            <button
+              onClick={() => router.push('/auth/login/customer')}
+              className="w-full bg-white border-2 border-neutral-100 hover:border-brand-400 rounded-2xl p-5 text-left transition-all hover:shadow-md group"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 bg-brand-50 rounded-2xl flex items-center justify-center flex-shrink-0 text-2xl group-hover:bg-brand-100 transition-colors">
+                  🛍️
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-bold text-neutral-900 text-base mb-0.5">I'm a Customer</div>
+                  <div className="text-sm text-neutral-500">Find vendors, browse products, chat & order</div>
+                </div>
+                <ArrowRight className="w-5 h-5 text-neutral-300 group-hover:text-brand-500 transition-colors flex-shrink-0" />
+              </div>
+            </button>
+
+            {/* Vendor */}
+            <button
+              onClick={() => router.push('/auth/login/vendor')}
+              className="w-full bg-white border-2 border-neutral-100 hover:border-copper-300 rounded-2xl p-5 text-left transition-all hover:shadow-md group"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 bg-copper-50 rounded-2xl flex items-center justify-center flex-shrink-0 text-2xl group-hover:bg-copper-100 transition-colors">
+                  🏪
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-bold text-neutral-900 text-base mb-0.5">I'm a Vendor</div>
+                  <div className="text-sm text-neutral-500">Create your shop, receive orders, grow your business</div>
+                </div>
+                <ArrowRight className="w-5 h-5 text-neutral-300 group-hover:text-copper-400 transition-colors flex-shrink-0" />
+              </div>
+            </button>
           </div>
-          <h3 className="text-xl font-bold text-neutral-900 mb-2">I&apos;m a Vendor</h3>
-          <p className="text-neutral-500 text-sm mb-6">Create your shop and reach more customers</p>
-          <div className="flex items-center text-copper-600 font-medium text-sm">
-            Continue as Vendor
-            <ArrowRight className="ml-2 w-4 h-4" />
-          </div>
-        </button>
+
+          <p className="text-center text-xs text-neutral-400 mt-6">
+            Your first login sets your role permanently.
+          </p>
+        </div>
       </div>
-
-      <button
-        onClick={() => router.push('/')}
-        className="mt-8 text-neutral-500 hover:text-neutral-700 text-sm"
-      >
-        Back to home
-      </button>
     </div>
   );
 }
