@@ -123,7 +123,7 @@ export default function Navbar({ title = 'SökoPay', glass = false }: NavbarProp
   const menuItems = isVendor ? vendorMenuItems : customerMenuItems;
 
   const navBase = glass
-    ? 'bg-brand-700/75 backdrop-blur-md border-b border-white/10'
+    ? 'bg-brand-900/80 backdrop-blur-xl border-b border-white/10'
     : 'bg-white border-b border-neutral-100 shadow-sm';
 
   const brandColor = glass ? 'text-white hover:text-brand-100' : 'text-brand-700 hover:text-brand-800';
