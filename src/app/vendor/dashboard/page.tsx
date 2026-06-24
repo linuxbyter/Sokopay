@@ -3,7 +3,7 @@
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { Store, MessageCircle, ShoppingBag, Plus, Settings, Star, Users, MessageSquare, Trash2, Power } from 'lucide-react';
+import { Store, MessageCircle, ShoppingBag, Plus, Settings, Star, Users, MessageSquare, Trash2, Power, EyeOff } from 'lucide-react';
 import Navbar from '@/components/navbar';
 
 interface VendorProfile {
@@ -86,8 +86,34 @@ export default function VendorDashboardPage() {
     }
   };
 
+  const handleDeactivate = async (vendor: VendorProfile) => {
+    if (!confirm(`Deactivate "${vendor.business_name}"? Your shop will be hidden from customers but all data is kept. You can reactivate anytime by toggling it back open.`)) return;
+    setDeleting(vendor.id);
+    try {
+      const response = await fetch(`/api/vendors/${vendor.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ is_open: false }),
+      });
+      if (response.ok) {
+        setVendors(prev => prev.map(v => v.id === vendor.id ? { ...v, is_open: false } : v));
+      } else {
+        alert('Failed to deactivate shop');
+      }
+    } catch (error) {
+      console.error('Failed to deactivate vendor:', error);
+    } finally {
+      setDeleting(null);
+    }
+  };
+
   const handleDelete = async (vendor: VendorProfile) => {
-    if (!confirm(`Delete "${vendor.business_name}"? This cannot be undone.`)) return;
+    const confirmed = confirm(
+      `Permanently delete "${vendor.business_name}"?\n\n` +
+      `⚠️ This will fail if you have any open conversations or unpaid transactions.\n\n` +
+      `Consider deactivating instead — it hides your shop without losing any data.`
+    );
+    if (!confirmed) return;
     setDeleting(vendor.id);
     try {
       const response = await fetch(`/api/vendors/${vendor.id}`, { method: 'DELETE' });
@@ -256,10 +282,18 @@ export default function VendorDashboardPage() {
                   <Settings className="w-4 h-4" />
                 </button>
                 <button
+                  onClick={() => handleDeactivate(v)}
+                  disabled={deleting === v.id}
+                  className="p-2 text-neutral-400 hover:bg-neutral-100 rounded-lg transition-colors min-h-[40px] min-w-[40px] flex items-center justify-center disabled:opacity-50"
+                  title="Deactivate shop (hides from customers, keeps data)"
+                >
+                  <EyeOff className="w-4 h-4" />
+                </button>
+                <button
                   onClick={() => handleDelete(v)}
                   disabled={deleting === v.id}
-                  className="p-2 text-red-400 hover:bg-red-50 rounded-lg transition-colors min-h-[40px] min-w-[40px] flex items-center justify-center disabled:opacity-50"
-                  title="Delete shop"
+                  className="p-2 text-red-300 hover:bg-red-50 hover:text-red-500 rounded-lg transition-colors min-h-[40px] min-w-[40px] flex items-center justify-center disabled:opacity-50"
+                  title="Permanently delete shop"
                 >
                   {deleting === v.id ? (
                     <div className="w-4 h-4 border-2 border-red-400 border-t-transparent rounded-full animate-spin" />

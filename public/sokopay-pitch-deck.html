@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SökoPay — Investor Pitch Deck</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --green: #2d5a29;
+    --green-mid: #457841;
+    --green-light: #e8f0e7;
+    --copper: #b87333;
+    --copper-light: #f5ece3;
+    --dark: #111827;
+    --mid: #374151;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --white: #ffffff;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    color: var(--dark);
+    background: var(--white);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* ── Slide base ── */
+  .slide {
+    width: 100%;
+    min-height: 100vh;
+    padding: 64px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    page-break-after: always;
+    break-after: page;
+  }
+
+  @media print {
+    .slide {
+      min-height: 100vh;
+      padding: 48px 60px;
+    }
+    @page { size: A4 landscape; margin: 0; }
+  }
+
+  /* ── Slide types ── */
+  .slide-cover {
+    background: linear-gradient(135deg, var(--green) 0%, #1a3a17 100%);
+    color: var(--white);
+    align-items: flex-start;
+    justify-content: flex-end;
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .slide-cover::before {
+    content: '';
+    position: absolute;
+    top: -120px; right: -120px;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+
+  .slide-cover::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: 30%;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.03);
+  }
+
+  .slide-dark {
+    background: var(--dark);
+    color: var(--white);
+  }
+
+  .slide-copper {
+    background: linear-gradient(135deg, var(--copper) 0%, #8b5a1e 100%);
+    color: var(--white);
+  }
+
+  .slide-light { background: var(--white); }
+  .slide-tinted { background: var(--green-light); }
+
+  /* ── Typography ── */
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 100px;
+    margin-bottom: 20px;
+  }
+
+  .tag-green { background: var(--green-light); color: var(--green); }
+  .tag-white { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.9); }
+  .tag-copper { background: var(--copper-light); color: var(--copper); }
+
+  h1 { font-size: 52px; font-weight: 900; line-height: 1.1; letter-spacing: -0.02em; }
+  h2 { font-size: 36px; font-weight: 800; line-height: 1.2; letter-spacing: -0.01em; margin-bottom: 16px; }
+  h3 { font-size: 22px; font-weight: 700; margin-bottom: 10px; }
+  h4 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+  p  { font-size: 15px; line-height: 1.7; color: var(--mid); }
+  .lead { font-size: 20px; line-height: 1.6; }
+  .muted { color: var(--muted); }
+  .on-dark p, .on-dark .muted { color: rgba(255,255,255,0.7); }
+
+  /* ── Layout helpers ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+  .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 20px; }
+  .flex-row { display: flex; gap: 24px; align-items: flex-start; }
+  .spacer { margin-top: 40px; }
+  .spacer-sm { margin-top: 20px; }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+  }
+
+  .card-green {
+    background: var(--green-light);
+    border: none;
+    border-radius: 16px;
+    padding: 28px;
+  }
+
+  .card-dark {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 28px;
+  }
+
+  .card-copper {
+    background: var(--copper-light);
+    border: none;
+    border-radius: 16px;
+    padding: 28px;
+  }
+
+  /* ── Stat blocks ── */
+  .stat-num {
+    font-size: 42px;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--green);
+    margin-bottom: 6px;
+  }
+
+  .stat-num-white { color: var(--white); }
+  .stat-label { font-size: 13px; font-weight: 500; color: var(--muted); }
+  .stat-label-white { color: rgba(255,255,255,0.65); }
+
+  /* ── Timeline ── */
+  .timeline { display: flex; gap: 0; }
+  .tl-item { flex: 1; position: relative; padding: 0 16px 0 0; }
+  .tl-item:not(:last-child)::after {
+    content: '→';
+    position: absolute;
+    right: -6px; top: 12px;
+    font-size: 18px;
+    color: var(--muted);
+  }
+
+  /* ── Table ── */
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { text-align: left; padding: 10px 16px; background: var(--green-light); font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--green); }
+  td { padding: 12px 16px; border-bottom: 1px solid var(--border); }
+  tr:last-child td { border-bottom: none; }
+
+  /* ── Pill ── */
+  .pill {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .pill-green { background: var(--green-light); color: var(--green); }
+  .pill-copper { background: var(--copper-light); color: var(--copper); }
+  .pill-gray { background: #f3f4f6; color: var(--mid); }
+
+  /* ── Divider ── */
+  hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+  hr.dark { border-top-color: rgba(255,255,255,0.1); }
+
+  /* ── Footer watermark ── */
+  .slide-num {
+    position: absolute;
+    bottom: 28px; right: 48px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    opacity: 0.35;
+  }
+
+  .logo-mark {
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+  }
+
+  .check { color: var(--green); font-weight: 700; margin-right: 8px; }
+  .check-white { color: rgba(255,255,255,0.8); font-weight: 700; margin-right: 8px; }
+
+  ul.clean { list-style: none; }
+  ul.clean li { padding: 6px 0; font-size: 15px; }
+  ul.clean li::before { content: '✓'; color: var(--green); font-weight: 700; margin-right: 10px; }
+
+  ul.clean-white li::before { color: rgba(255,255,255,0.7); }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     SLIDE 1 — COVER
+══════════════════════════════════════════ -->
+<div class="slide slide-cover" style="position:relative;">
+  <div style="position:absolute; top:56px; left:64px;">
+    <div class="logo-mark" style="color:white;">SökoPay</div>
+    <div style="color:rgba(255,255,255,0.45); font-size:12px; font-weight:500; margin-top:4px; letter-spacing:0.08em; text-transform:uppercase;">Confidential · 2026</div>
+  </div>
+
+  <div style="position:relative; z-index:1; max-width:700px;">
+    <div class="tag tag-white">Seed Round</div>
+    <h1 style="color:white; margin-bottom:24px;">
+      Digitising Kenya's<br />informal commerce
+    </h1>
+    <p class="lead" style="color:rgba(255,255,255,0.75); max-width:560px;">
+      A free mobile marketplace connecting urban Kenyans with local vendors — the moat for Kenya's first informal-sector payment and credit network.
+    </p>
+  </div>
+  <div class="slide-num" style="color:white;">01</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SLIDE 2 — THE PROBLEM
+══════════════════════════════════════════ -->
+<div class="slide slide-light" style="position:relative;">
+  <div class="tag tag-green">The Problem</div>
+  <h2>Kenya's informal economy is<br />invisible to digital consumers</h2>
+
+  <div class="grid-3 spacer-sm">
+    <div class="card">
+      <div style="font-size:36px; margin-bottom:12px;">🏪</div>
+      <h4>No digital presence</h4>
+      <p>Millions of micro-vendors — mama mbogas, barbers, eateries, boda riders — have zero online visibility. Customers find them only by walking past.</p>
+    </div>
+    <div class="card">
+      <div style="font-size:36px; margin-bottom:12px;">💸</div>
+      <h4>Untracked transactions</h4>
+      <p>Every transaction is cash, unrecorded, unverified. No payment history means no credit profile. No credit profile means no financial services.</p>
+    </div>
+    <div class="card">
+      <div style="font-size:36px; margin-bottom:12px;">📵</div>
+      <h4>Broken discovery</h4>
+      <p>Existing platforms (Google Maps, social media) require technical literacy that most informal vendors don't have, and don't support real-time availability.</p>
+    </div>
+  </div>
+
+  <div class="spacer">
+    <div style="background:#fef2f2; border-radius:12px; padding:20px 28px; display:inline-block;">
+      <span style="font-size:22px; font-weight:800; color:#dc2626;">30%+ of Kenya's GDP</span>
+      <span style="font-size:15px; color:var(--mid); margin-left:12px;">comes from the informal sector — operating entirely without digital infrastructure.</span>
+    </div>
+  </div>
+  <div class="slide-num">02</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SLIDE 3 — OUR SOLUTION
+══════════════════════════════════════════ -->
+<div class="slide slide-tinted" style="position:relative;">
+  <div class="tag tag-green">The Solution</div>
+  <h2>SökoPay — a digital front door<br />for every local vendor</h2>
+
+  <div class="grid-2 spacer-sm" style="gap:40px; align-items:center;">
+    <div>
+      <div style="display:flex; flex-direction:column; gap:20px;">
+        <div class="flex-row">
+          <div style="width:44px; height:44px; background:var(--green); border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:20px;">🏪</div>
+          <div>
+            <h4>Vendor shop in 5 minutes</h4>
+            <p>Photos, category, location, hours — live and discoverable on a map immediately.</p>
+          </div>
+        </div>
+        <div class="flex-row">
+          <div style="width:44px; height:44px; background:var(--green); border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:20px;">💬</div>
+          <div>
+            <h4>Real-time chat + transaction flow</h4>
+            <p>Customer enquires, negotiates, pays — vendor confirms, dispatches, closes. All inside the app. No WhatsApp, no middlemen.</p>
+          </div>
+        </div>
+        <div class="flex-row">
+          <div style="width:44px; height:44px; background:var(--green); border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:20px;">⭐</div>
+          <div>
+            <h4>Trust through ratings</h4>
+            <p>Every completed transaction generates a review. Vendors build a reputation, customers gain confidence.</p>
+          </div>
+        </div>
+        <div class="flex-row">
+          <div style="width:44px; height:44px; background:var(--green); border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:20px;">📍</div>
+          <div>
+            <h4>Hyperlocal map discovery</h4>
+            <p>OpenStreetMap-powered. See every open vendor within walking distance, sorted by distance and rating.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:var(--green); border-radius:24px; padding:36px; color:white;">
+      <div style="font-size:13px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:rgba(255,255,255,0.55); margin-bottom:24px;">Categories live in V1</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <div style="background:rgba(255,255,255,0.1); border-radius:10px; padding:12px; font-size:14px;">🧆 Grab Ka-Snacko</div>
+        <div style="background:rgba(255,255,255,0.1); border-radius:10px; padding:12px; font-size:14px;">🛵 Quick Rides</div>
+        <div style="background:rgba(255,255,255,0.1); border-radius:10px; padding:12px; font-size:14px;">💈 Barbers</div>
+        <div style="background:rgba(255,255,255,0.1); border-radius:10px; padding:12px; font-size:14px;">💅 Salons</div>
+        <div style="background:rgba(255,255,255,0.1); border-radius:10px; padding:12px; font-size:14px;">🥬 Mama Mboga</div>
+        <div style="background:rgba(255,255,255,0.1); border-radius:10px; padding:12px; font-size:14px;">🛒 Groceries</div>
+        <div style="background:rgba(255,255,255,0.1); border-radius:10px; padding:12px; font-size:14px;">🔥 Gas Refill</div>
+        <div style="background:rgba(255,255,255,0.1); border-radius:10px; padding:12px; font-size:14px;">💧 Water Vendor</div>
+        <div style="background:rgba(255,255,255,0.1); border-radius:10px; padding:12px; font-size:14px;">📱 Electronics</div>
+        <div style="background:rgba(255,255,255,0.1); border-radius:10px; padding:12px; font-size:14px;">+ More</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num">03</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SLIDE 4 — MARKET SIZE
+══════════════════════════════════════════ -->
+<div class="slide slide-light" style="position:relative;">
+  <div class="tag tag-green">Market Opportunity</div>
+  <h2>A massive underserved market<br />hiding in plain sight</h2>
+
+  <div class="grid-4 spacer-sm">
+    <div>
+      <div class="stat-num">17M+</div>
+      <div class="stat-label">Micro & informal businesses in Kenya</div>
+    </div>
+    <div>
+      <div class="stat-num">4.5M</div>
+      <div class="stat-label">Urban Nairobi residents, primary TAM</div>
+    </div>
+    <div>
+      <div class="stat-num">$14B</div>
+      <div class="stat-label">Kenya informal retail market annually</div>
+    </div>
+    <div>
+      <div class="stat-num">65%</div>
+      <div class="stat-label">Kenyan smartphone penetration (growing)</div>
+    </div>
+  </div>
+
+  <hr />
+
+  <div class="grid-2">
+    <div class="card-green">
+      <h4 style="color:var(--green);">Why now?</h4>
+      <ul class="clean" style="margin-top:8px;">
+        <li>Mobile internet penetration crossed 50% in 2024</li>
+        <li>M-Pesa normalised mobile-first transactions</li>
+        <li>Post-COVID consumers expect digital discovery</li>
+        <li>No dominant player owns informal vendor discovery</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Competitive landscape</h4>
+      <table style="margin-top:8px;">
+        <tr><th>Player</th><th>Gap</th></tr>
+        <tr><td>WhatsApp Business</td><td>No discovery, no map, no transactions</td></tr>
+        <tr><td>Jumia / Kilimall</td><td>Formal retail only, high vendor barrier</td></tr>
+        <tr><td>Google Maps</td><td>No chat, no real-time, no transactions</td></tr>
+        <tr><td style="font-weight:700; color:var(--green);">SökoPay</td><td style="font-weight:600;">All of the above, informal-first</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="slide-num">04</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SLIDE 5 — THE MOAT & ROADMAP
+══════════════════════════════════════════ -->
+<div class="slide slide-dark on-dark" style="position:relative;">
+  <div class="tag tag-white">3-Phase Strategy</div>
+  <h2 style="color:white;">Free today. Payment rails tomorrow.<br />Credit network after that.</h2>
+
+  <div class="grid-3 spacer-sm">
+    <div class="card-dark">
+      <div style="color:rgba(255,255,255,0.4); font-size:12px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:16px;">Phase 1 — Now</div>
+      <div style="font-size:28px; margin-bottom:12px;">🏪</div>
+      <h3 style="color:white;">The Moat</h3>
+      <p>Free marketplace. Zero fees for vendors or customers. Goal: 500 DAU in Nairobi. Build the liquidity — buyers and sellers who depend on the platform daily.</p>
+      <div style="margin-top:20px;">
+        <span class="pill" style="background:rgba(255,255,255,0.12); color:white;">Building now</span>
+      </div>
+    </div>
+
+    <div class="card-dark">
+      <div style="color:rgba(255,255,255,0.4); font-size:12px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:16px;">Phase 2 — V2</div>
+      <div style="font-size:28px; margin-bottom:12px;">💰</div>
+      <h3 style="color:white;">SökoPay Payments</h3>
+      <p>In-app escrow. Customer pays SökoPay, vendor gets funds on confirmation. M-Pesa integration. We take 1–2% per transaction. Every informal sale now flows through our rails.</p>
+      <div style="margin-top:20px;">
+        <span class="pill" style="background:rgba(255,255,255,0.12); color:white;">Post 500 DAU</span>
+      </div>
+    </div>
+
+    <div class="card-dark" style="border-color:var(--copper); border-width:2px;">
+      <div style="color:rgba(255,255,255,0.4); font-size:12px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:16px;">Phase 3 — V3</div>
+      <div style="font-size:28px; margin-bottom:12px;">🌍</div>
+      <h3 style="color:white;">SökoPay Credit</h3>
+      <p>Buy-now-pay-later for daily essentials. Chapati, water, haircut, gas — pay Friday. Credit scoring from transaction history. <strong style="color:var(--copper);">Klarna for Kenya's informal sector.</strong></p>
+      <div style="margin-top:20px;">
+        <span class="pill" style="background:var(--copper); color:white;">The endgame</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:32px; background:rgba(255,255,255,0.05); border-radius:12px; padding:20px 28px; display:flex; align-items:center; gap:16px;">
+    <div style="font-size:22px;">💡</div>
+    <p style="color:rgba(255,255,255,0.75);">
+      <strong style="color:white;">Why this works:</strong> Phase 1 builds the transaction history that makes Phase 3 possible. No credit bureau has data on informal vendors. We will. That data moat is worth more than the marketplace itself.
+    </p>
+  </div>
+  <div class="slide-num" style="color:white;">05</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SLIDE 6 — BUSINESS MODEL
+══════════════════════════════════════════ -->
+<div class="slide slide-light" style="position:relative;">
+  <div class="tag tag-green">Business Model</div>
+  <h2>Free to grow. Revenue from<br />the financial layer.</h2>
+
+  <div class="grid-3 spacer-sm">
+    <div class="card">
+      <div style="font-size:32px; margin-bottom:12px;">🆓</div>
+      <h4>V1 — Free</h4>
+      <p>Zero revenue. 100% focused on user acquisition and network effects. Cost: hosting (~$50/mo on Vercel + Neon free tier).</p>
+    </div>
+    <div class="card-green">
+      <div style="font-size:32px; margin-bottom:12px;">💳</div>
+      <h4>V2 — Transaction fees</h4>
+      <p><strong style="color:var(--green);">1.5% per transaction</strong> via in-app escrow. At 500 DAU × 2 transactions/day × KES 500 avg = <strong style="color:var(--green);">KES 7,500/day (~$58)</strong>.</p>
+    </div>
+    <div class="card" style="border-color:var(--copper); border-width:2px;">
+      <div style="font-size:32px; margin-bottom:12px;">📈</div>
+      <h4>V3 — Credit interest</h4>
+      <p>BNPL at 5–8% monthly interest on micro-credit (KES 200–5,000 ticket size). Underwritten by in-app transaction history. Highest margin product.</p>
+    </div>
+  </div>
+
+  <hr />
+
+  <div class="grid-2">
+    <div>
+      <h4>Unit economics at scale (V2)</h4>
+      <table style="margin-top:12px;">
+        <tr><th>Metric</th><th>Estimate</th></tr>
+        <tr><td>DAU target (V1 exit)</td><td>500</td></tr>
+        <tr><td>Avg transactions per user/day</td><td>2</td></tr>
+        <tr><td>Avg transaction value</td><td>KES 450</td></tr>
+        <tr><td>Platform take rate (V2)</td><td>1.5%</td></tr>
+        <tr><td><strong>Monthly GMV at 1K DAU</strong></td><td><strong>KES 27M (~$210K)</strong></td></tr>
+        <tr><td><strong>Monthly revenue at 1K DAU</strong></td><td><strong>KES 405K (~$3,100)</strong></td></tr>
+      </table>
+    </div>
+    <div>
+      <h4>Why 1.5% is a no-brainer for vendors</h4>
+      <ul class="clean" style="margin-top:12px;">
+        <li>M-Pesa charges 0–1.5% on withdrawals anyway</li>
+        <li>We provide dispute protection, ratings, and reach</li>
+        <li>Alternative is cash — untracked, unsafe, uncreditable</li>
+        <li>We build their credit profile for Phase 3 financing</li>
+      </ul>
+    </div>
+  </div>
+  <div class="slide-num">06</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SLIDE 7 — TRACTION & MILESTONES
+══════════════════════════════════════════ -->
+<div class="slide slide-tinted" style="position:relative;">
+  <div class="tag tag-green">Traction</div>
+  <h2>Built, live, and iterating fast</h2>
+
+  <div class="grid-2 spacer-sm">
+    <div>
+      <div class="card" style="margin-bottom:20px;">
+        <h4>What's live today</h4>
+        <ul class="clean" style="margin-top:12px;">
+          <li>Full-stack marketplace (Next.js 14, Neon Postgres)</li>
+          <li>Real-time chat + transaction confirmation flow (Ably)</li>
+          <li>Vendor shop creation with photo upload (Cloudinary)</li>
+          <li>Map-based discovery with open/closed status</li>
+          <li>Rating & review system post-transaction</li>
+          <li>PWA — installable on Android and iOS home screen</li>
+          <li>Push notifications for messages when app is closed</li>
+          <li>Clerk auth — social login, role-based routing</li>
+        </ul>
+      </div>
+    </div>
+
+    <div>
+      <div class="card-green" style="margin-bottom:20px;">
+        <h4 style="color:var(--green);">V1 Milestones (2026)</h4>
+        <table style="margin-top:12px;">
+          <tr><th>Target</th><th>Timeline</th></tr>
+          <tr><td>10 vendors onboarded (Nairobi pilot)</td><td>Q3 2026</td></tr>
+          <tr><td>100 registered users</td><td>Q3 2026</td></tr>
+          <tr><td>500 DAU</td><td>Q4 2026</td></tr>
+          <tr><td>First paid transaction (escrow V2)</td><td>Q4 2026</td></tr>
+          <tr><td>Expand to Mombasa</td><td>Q1 2027</td></tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <h4>Tech stack cost at 500 DAU</h4>
+        <p style="margin-top:8px;">Vercel Pro: $20/mo · Neon Serverless: $19/mo · Ably: $0–25/mo · Cloudinary: free tier · <strong>Total: ~$65/mo</strong></p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num">07</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SLIDE 8 — THE ASK
+══════════════════════════════════════════ -->
+<div class="slide slide-copper on-dark" style="position:relative;">
+  <div class="tag tag-white">The Ask</div>
+  <h2 style="color:white;">Seed funding to own<br />the informal commerce layer</h2>
+
+  <div class="grid-2 spacer-sm">
+    <div>
+      <div class="card-dark">
+        <h3 style="color:white;">What we're raising</h3>
+        <div style="font-size:52px; font-weight:900; color:white; letter-spacing:-0.02em; margin:20px 0;">$50K – $150K</div>
+        <p style="color:rgba(255,255,255,0.7);">Pre-seed / Angel round. Equity or convertible note. Open to discussing structure.</p>
+      </div>
+    </div>
+    <div>
+      <div class="card-dark">
+        <h3 style="color:white; margin-bottom:20px;">Use of funds</h3>
+        <div style="display:flex; flex-direction:column; gap:16px;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:40px; height:40px; background:rgba(255,255,255,0.1); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;">👥</div>
+            <div><div style="color:white; font-weight:600; font-size:14px;">Growth & vendor acquisition (40%)</div><div style="color:rgba(255,255,255,0.6); font-size:13px;">Field team, first 100 vendor onboarding</div></div>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:40px; height:40px; background:rgba(255,255,255,0.1); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;">💳</div>
+            <div><div style="color:white; font-weight:600; font-size:14px;">M-Pesa API integration (30%)</div><div style="color:rgba(255,255,255,0.6); font-size:13px;">Daraja API licensing + V2 payment rails</div></div>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:40px; height:40px; background:rgba(255,255,255,0.1); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;">⚙️</div>
+            <div><div style="color:white; font-weight:600; font-size:14px;">Infrastructure & product (20%)</div><div style="color:rgba(255,255,255,0.6); font-size:13px;">Scaling DB, ops tooling, team</div></div>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:40px; height:40px; background:rgba(255,255,255,0.1); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;">🏛️</div>
+            <div><div style="color:white; font-weight:600; font-size:14px;">Legal & compliance (10%)</div><div style="color:rgba(255,255,255,0.6); font-size:13px;">CBK sandbox, payments licensing</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num" style="color:rgba(255,255,255,0.4);">08</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SLIDE 9 — TEAM / FOUNDER
+══════════════════════════════════════════ -->
+<div class="slide slide-light" style="position:relative;">
+  <div class="tag tag-green">The Founder</div>
+  <h2>One person. Clear vision.<br />Fast execution.</h2>
+
+  <div class="grid-2 spacer-sm" style="gap:48px; align-items:center;">
+    <div>
+      <div style="background:var(--green-light); border-radius:20px; padding:36px;">
+        <div style="width:64px; height:64px; background:var(--green); border-radius:16px; display:flex; align-items:center; justify-content:center; font-size:28px; margin-bottom:20px;">👤</div>
+        <h3 style="color:var(--green);">Founder & CEO</h3>
+        <p style="margin-top:8px;">Building SökoPay solo from concept to a fully functional marketplace — real-time chat, map discovery, transaction flows, PWA with push notifications — shipped and live.</p>
+        <p style="margin-top:12px;">Deep understanding of Nairobi's informal market from lived experience. Vision rooted in how Kenyans actually transact daily.</p>
+        <div style="margin-top:24px; display:flex; flex-direction:column; gap:10px;">
+          <a href="tel:+254755948148" style="display:flex; align-items:center; gap:8px; color:var(--green); font-weight:600; text-decoration:none; font-size:14px;">
+            📞 +254 755 948 148
+          </a>
+          <a href="https://sokopay.vercel.app" style="display:flex; align-items:center; gap:8px; color:var(--green); font-weight:600; text-decoration:none; font-size:14px;">
+            🌐 sokopay.vercel.app (live product)
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h4 style="margin-bottom:20px;">Why back this founder?</h4>
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div class="flex-row">
+          <div style="width:36px; height:36px; background:var(--green-light); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">⚡</div>
+          <div>
+            <h4 style="margin-bottom:4px;">Ships fast, alone</h4>
+            <p>Built a complete marketplace — auth, real-time chat, map, payments flow, PWA — without a team or funding.</p>
+          </div>
+        </div>
+        <div class="flex-row">
+          <div style="width:36px; height:36px; background:var(--green-light); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">🎯</div>
+          <div>
+            <h4 style="margin-bottom:4px;">Clear multi-phase thinking</h4>
+            <p>Marketplace → payments → credit. The strategy is coherent, the moat logic is sound, and the target market is personal not theoretical.</p>
+          </div>
+        </div>
+        <div class="flex-row">
+          <div style="width:36px; height:36px; background:var(--green-light); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">🌍</div>
+          <div>
+            <h4 style="margin-bottom:4px;">Market-native insight</h4>
+            <p>Understands that Mama Mboga and a gas refiller have completely different UX needs. That granularity only comes from real proximity to the market.</p>
+          </div>
+        </div>
+        <div class="flex-row">
+          <div style="width:36px; height:36px; background:var(--green-light); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">📈</div>
+          <div>
+            <h4 style="margin-bottom:4px;">Unfair advantage</h4>
+            <p>First-mover in this exact niche. V1 costs $65/month to run. Capital efficiency is extreme at this stage.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-num">09</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     SLIDE 10 — CLOSING
+══════════════════════════════════════════ -->
+<div class="slide slide-cover" style="position:relative; justify-content:center; align-items:center; text-align:center;">
+  <div style="position:relative; z-index:1; max-width:680px;">
+    <div style="font-size:48px; margin-bottom:24px;">🌍</div>
+    <h1 style="color:white; font-size:44px; margin-bottom:20px;">
+      The informal sector is<br />not going away.
+    </h1>
+    <p class="lead" style="color:rgba(255,255,255,0.75); margin-bottom:40px;">
+      It's going to get a payment layer, a credit score, and a digital identity — and whoever owns that infrastructure will be worth billions. We're building the foundation, right now, for free.
+    </p>
+    <div style="background:rgba(255,255,255,0.1); border-radius:16px; padding:28px 36px; display:inline-block;">
+      <div style="color:rgba(255,255,255,0.6); font-size:12px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:12px;">Let's talk</div>
+      <div style="color:white; font-size:22px; font-weight:700;">+254 755 948 148</div>
+      <div style="color:rgba(255,255,255,0.6); font-size:14px; margin-top:4px;">sokopay.vercel.app</div>
+    </div>
+  </div>
+  <div class="slide-num" style="color:rgba(255,255,255,0.3);">10</div>
+</div>
+
+<script>
+  // Print helper — auto-triggers when ?print=1 in URL
+  if (window.location.search.includes('print=1')) {
+    window.onload = () => window.print();
+  }
+</script>
+</body>
+</html>

@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useUser } from '@clerk/nextjs';
-import { Send, ArrowLeft, CheckCircle, Package, Truck, MessageSquare, Star, RotateCcw } from 'lucide-react';
+import { Send, ArrowLeft, CheckCircle, Package, Truck, MessageSquare, Star, RotateCcw, Flag, MoreVertical } from 'lucide-react';
 import FeedbackModal from './feedback-modal';
+import ReportModal from './report-modal';
 import { subscribeToChatMessages, subscribeToChatStatus } from '@/lib/ably-client';
 
 interface Message {
@@ -49,6 +50,8 @@ export default function ChatDialog({ chat, onBack, onChatUpdate, isVendor }: Cha
   const [sending, setSending] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
   const [feedbackType, setFeedbackType] = useState<'customer' | 'vendor'>('customer');
+  const [showReport, setShowReport] = useState(false);
+  const [quickRepliesDismissed, setQuickRepliesDismissed] = useState(false);
   const [activeChat, setActiveChat] = useState<Chat>(chat);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -264,6 +267,49 @@ export default function ChatDialog({ chat, onBack, onChatUpdate, isVendor }: Cha
     }
   };
 
+  const CATEGORY_QUICK_REPLIES: Record<string, string[]> = {
+    'Barbers': ['Is there a queue right now?', 'When are you next free?', 'How much for a haircut?', 'Can I book an appointment?'],
+    'Salons': ['Is there a queue right now?', 'When are you next free?', 'How much for braids?', 'Can I book an appointment?'],
+    'Quick Snacks': ['Is the food ready now?', 'Is it warm and fresh?', 'How long is the queue?', "What's on the menu today?"],
+    'Quick Rides': ['Are you available now?', 'How much to [destination]?', 'Where are you currently?', 'Can you come to me?'],
+    'Gas Refill': ['Do you have a 6kg cylinder?', 'Do you have a 13kg cylinder?', 'Is delivery available?', "What's the current price?"],
+    'Water Vendor': ['I need 20L — are you available?', 'Is delivery available?', 'Payment before or after delivery?', 'How much per 20 litres?'],
+    'Mama Mboga': ["What's fresh today?", 'Is [item] available?', 'Do you deliver?', "What are today's prices?"],
+    'Groceries': ['Is [item] in stock?', 'Do you deliver?', "What's your M-Pesa number?", 'Are you open now?'],
+    'Electronics': ['Is this item in stock?', 'Do you do repairs?', 'What is the warranty?', 'Can we negotiate the price?'],
+  };
+
+  const DEFAULT_QUICK_REPLIES = ['Are you open right now?', 'How much does it cost?', 'Do you deliver?', 'Where are you located?'];
+
+  const renderCategoryQuickReplies = () => {
+    // Only show to customers, only before any transaction starts, only if not dismissed
+    if (isVendor || activeChat.customer_paid || quickRepliesDismissed || activeChat.is_finalized) return null;
+    // Only show when few messages (conversation just started)
+    if (messages.length > 4) return null;
+
+    const replies = CATEGORY_QUICK_REPLIES[activeChat.vendor_category] || DEFAULT_QUICK_REPLIES;
+
+    return (
+      <div className="px-3 pb-2 pt-1 bg-white border-t border-neutral-100">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-xs text-neutral-400 font-medium">Quick messages</span>
+          <button onClick={() => setQuickRepliesDismissed(true)} className="text-xs text-neutral-400 hover:text-neutral-600 px-1">✕</button>
+        </div>
+        <div className="flex gap-2 flex-wrap">
+          {replies.map((reply) => (
+            <button
+              key={reply}
+              onClick={() => setNewMessage(reply)}
+              className="px-3 py-1.5 bg-brand-50 hover:bg-brand-100 text-brand-700 text-xs font-medium rounded-full border border-brand-100 transition-colors whitespace-nowrap"
+            >
+              {reply}
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   const renderQuickActions = () => {
     if (activeChat.is_finalized) {
       return (
@@ -444,10 +490,19 @@ export default function ChatDialog({ chat, onBack, onChatUpdate, isVendor }: Cha
             {isVendor ? activeChat.vendor_category : activeChat.vendor_category}
           </p>
         </div>
-        <div className={`px-2 py-1 rounded-full text-xs font-medium ${
-          activeChat.status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'
-        }`}>
-          {activeChat.status === 'completed' ? 'Completed' : 'Active'}
+        <div className="flex items-center gap-1">
+          <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+            activeChat.status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'
+          }`}>
+            {activeChat.status === 'completed' ? 'Completed' : 'Active'}
+          </div>
+          <button
+            onClick={() => setShowReport(true)}
+            className="p-2 hover:bg-red-50 rounded-lg transition-colors"
+            title={`Report this ${isVendor ? 'customer' : 'vendor'}`}
+          >
+            <Flag className="w-4 h-4 text-neutral-300 hover:text-red-400" />
+          </button>
         </div>
       </div>
 
@@ -507,6 +562,9 @@ export default function ChatDialog({ chat, onBack, onChatUpdate, isVendor }: Cha
       {/* Quick Actions */}
       {renderQuickActions()}
 
+      {/* Category Quick Replies */}
+      {renderCategoryQuickReplies()}
+
       {/* Message Input */}
       {!activeChat.is_finalized && (
         <div className="p-4 border-t border-neutral-200 bg-white">
@@ -531,6 +589,16 @@ export default function ChatDialog({ chat, onBack, onChatUpdate, isVendor }: Cha
           </div>
         </div>
       )}
+
+      {/* Report Modal */}
+      <ReportModal
+        isOpen={showReport}
+        onClose={() => setShowReport(false)}
+        reportedId={isVendor ? activeChat.customer_id : activeChat.vendor_id}
+        reportedType={isVendor ? 'customer' : 'vendor'}
+        reportedName={isVendor ? (activeChat.customer_name || 'Customer') : activeChat.vendor_name}
+        referenceId={activeChat.id}
+      />
 
       {/* Feedback Modal */}
       <FeedbackModal

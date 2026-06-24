@@ -5,14 +5,16 @@ import { useUser } from '@clerk/nextjs';
 import { useRouter, useParams } from 'next/navigation';
 import {
   ArrowLeft, MapPin, MessageSquare, Phone, Star, ChevronLeft, ChevronRight,
-  Loader2, Store, Share2, PhoneCall
+  Loader2, Store, Share2, PhoneCall, Flag
 } from 'lucide-react';
+import ReportModal from '@/components/report-modal';
 import dynamic from 'next/dynamic';
 
 const MiniMap = dynamic(() => import('@/components/mini-map'), { ssr: false });
 
 interface VendorData {
   id: string;
+  user_id: string;
   business_name: string;
   category: string;
   description: string | null;
@@ -42,6 +44,7 @@ export default function VendorProfilePage() {
   const [currentPhoto, setCurrentPhoto] = useState(0);
   const [creatingChat, setCreatingChat] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [showReport, setShowReport] = useState(false);
 
   useEffect(() => {
     fetchVendor();
@@ -188,13 +191,24 @@ export default function VendorProfilePage() {
             <ArrowLeft className="w-5 h-5 text-neutral-600" />
           </button>
           <h1 className="font-semibold text-neutral-900 truncate">{vendor.business_name}</h1>
-          <button
-            onClick={handleShare}
-            className="p-2 hover:bg-neutral-100 rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
-            title={copied ? 'Link copied!' : 'Share'}
-          >
-            {copied ? <span className="text-xs text-brand-600 font-medium">Copied!</span> : <Share2 className="w-5 h-5 text-neutral-600" />}
-          </button>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={handleShare}
+              className="p-2 hover:bg-neutral-100 rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+              title={copied ? 'Link copied!' : 'Share'}
+            >
+              {copied ? <span className="text-xs text-brand-600 font-medium">Copied!</span> : <Share2 className="w-5 h-5 text-neutral-600" />}
+            </button>
+            {user && user.id !== vendor.user_id && (
+              <button
+                onClick={() => setShowReport(true)}
+                className="p-2 hover:bg-red-50 rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+                title="Report this vendor"
+              >
+                <Flag className="w-4 h-4 text-neutral-400 hover:text-red-400" />
+              </button>
+            )}
+          </div>
         </div>
       </nav>
 
@@ -394,6 +408,17 @@ export default function VendorProfilePage() {
           </button>
         </div>
       </div>
+
+      {vendor && (
+        <ReportModal
+          isOpen={showReport}
+          onClose={() => setShowReport(false)}
+          reportedId={vendor.user_id}
+          reportedType="vendor"
+          reportedName={vendor.business_name}
+          referenceId={vendor.id}
+        />
+      )}
     </div>
   );
 }

@@ -108,3 +108,17 @@ CREATE TABLE IF NOT EXISTS push_subscriptions (
 );
 
 CREATE INDEX IF NOT EXISTS idx_push_subscriptions_user_id ON push_subscriptions(user_id);
+
+-- Reports (vendor/customer abuse reporting)
+CREATE TABLE IF NOT EXISTS reports (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  reporter_id TEXT NOT NULL,
+  reported_id TEXT NOT NULL,
+  reported_type TEXT NOT NULL CHECK (reported_type IN ('vendor', 'customer')),
+  reason TEXT NOT NULL,
+  notes TEXT,
+  reference_id TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_reports_reported_id ON reports(reported_id);

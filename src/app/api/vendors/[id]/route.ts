@@ -110,15 +110,27 @@ export async function DELETE(
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
-    // Check if there are active (non-finalized) chats for this vendor
+    // Block deletion if any transaction has money involved (customer_paid but not finalized)
+    const paidUnfinalized = await query(
+      `SELECT COUNT(*) FROM chats
+       WHERE vendor_id = $1 AND customer_paid = true AND is_finalized = false`,
+      [id]
+    )
+    if (parseInt(paidUnfinalized.rows[0].count) > 0) {
+      return NextResponse.json(
+        { error: 'Cannot delete shop while transactions are in progress. All paid orders must be finalized first.' },
+        { status: 400 }
+      )
+    }
+
+    // Also block if any unfinalized chats exist (dispute protection)
     const activeChats = await query(
       'SELECT COUNT(*) FROM chats WHERE vendor_id = $1 AND is_finalized = false',
       [id]
     )
-
     if (parseInt(activeChats.rows[0].count) > 0) {
       return NextResponse.json(
-        { error: 'Cannot delete shop with active conversations. Complete or finalize all chats first.' },
+        { error: 'Cannot delete shop with open conversations. Ask customers to finalize all chats first, or deactivate your shop instead.' },
         { status: 400 }
       )
     }
