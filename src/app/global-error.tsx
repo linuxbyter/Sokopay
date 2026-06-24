@@ -1,7 +1,7 @@
 'use client';
 
-import Link from 'next/link';
-import { AlertOctagon, Home, RefreshCw } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import FruitGame from '@/components/fruit-game';
 
 export default function GlobalError({
   error,
@@ -10,36 +10,37 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const router = useRouter();
+
   return (
     <html lang="en">
       <body className="bg-neutral-50">
         <div className="min-h-screen flex flex-col items-center justify-center px-4">
-          <div className="max-w-md w-full text-center">
-            <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <AlertOctagon className="w-10 h-10 text-red-600" />
-            </div>
-            
-            <h1 className="text-6xl font-bold text-red-600 mb-4">Error</h1>
-            <h2 className="text-2xl font-bold text-neutral-900 mb-2">Application Error</h2>
-            <p className="text-neutral-600 mb-6">
-              Samahani! The app encountered a critical error. Please try refreshing.
+          <div className="max-w-sm w-full text-center">
+            <h1 className="text-5xl font-bold text-copper-500 mb-2">Error</h1>
+            <h2 className="text-lg font-semibold text-neutral-900 mb-1">Something broke</h2>
+            <p className="text-neutral-500 text-sm mb-2">
+              Samahani! The app hit a critical error. Play a game while we sort it out.
             </p>
+            {error.digest && (
+              <p className="text-xs text-neutral-400 mb-4">Error ID: {error.digest}</p>
+            )}
 
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <FruitGame onExit={reset} />
+
+            <div className="flex gap-3 mt-6 justify-center">
               <button
                 onClick={reset}
-                className="inline-flex items-center justify-center gap-2 bg-brand-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-brand-700 transition-colors"
+                className="text-sm text-brand-600 hover:text-brand-700 font-medium"
               >
-                <RefreshCw className="w-4 h-4" />
                 Refresh Page
               </button>
-              <Link
-                href="/dashboard"
-                className="inline-flex items-center justify-center gap-2 bg-neutral-100 text-neutral-800 px-6 py-3 rounded-lg font-medium hover:bg-neutral-200 transition-colors"
+              <button
+                onClick={() => router.push('/dashboard')}
+                className="text-sm text-neutral-500 hover:text-neutral-700 font-medium"
               >
-                <Home className="w-4 h-4" />
                 Go Home
-              </Link>
+              </button>
             </div>
           </div>
         </div>

@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 import { useUser } from '@clerk/nextjs';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import {
   ArrowLeft, MapPin, Clock, MessageSquare, Phone, Star, ChevronLeft, ChevronRight,
   ExternalLink, Loader2, Store
@@ -32,8 +32,9 @@ interface VendorData {
 
 const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-export default function VendorProfilePage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
+export default function VendorProfilePage() {
+  const params = useParams();
+  const id = params.id as string;
   const { user } = useUser();
   const router = useRouter();
   const [vendor, setVendor] = useState<VendorData | null>(null);

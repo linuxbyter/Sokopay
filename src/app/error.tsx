@@ -1,7 +1,7 @@
 'use client';
 
-import Link from 'next/link';
-import { AlertTriangle, Home, ArrowLeft, RefreshCw } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import FruitGame from '@/components/fruit-game';
 
 export default function Error({
   error,
@@ -10,37 +10,35 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const router = useRouter();
+
   return (
     <div className="min-h-screen bg-neutral-50 flex flex-col items-center justify-center px-4">
-      <div className="max-w-md w-full text-center">
-        <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
-          <AlertTriangle className="w-10 h-10 text-red-600" />
-        </div>
-        
-        <h1 className="text-6xl font-bold text-red-600 mb-4">Oops!</h1>
-        <h2 className="text-2xl font-bold text-neutral-900 mb-2">Something went wrong</h2>
-        <p className="text-neutral-600 mb-2">
-          Samahani! We encountered an unexpected error.
+      <div className="max-w-sm w-full text-center">
+        <h1 className="text-5xl font-bold text-copper-500 mb-2">Oops!</h1>
+        <h2 className="text-lg font-semibold text-neutral-900 mb-1">Something went wrong</h2>
+        <p className="text-neutral-500 text-sm mb-2">
+          Samahani! An unexpected error occurred.
         </p>
         {error.digest && (
-          <p className="text-xs text-neutral-400 mb-6">Error ID: {error.digest}</p>
+          <p className="text-xs text-neutral-400 mb-4">Error ID: {error.digest}</p>
         )}
 
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+        <FruitGame onExit={reset} />
+
+        <div className="flex gap-3 mt-6 justify-center">
           <button
             onClick={reset}
-            className="inline-flex items-center justify-center gap-2 bg-brand-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-brand-700 transition-colors"
+            className="text-sm text-brand-600 hover:text-brand-700 font-medium"
           >
-            <RefreshCw className="w-4 h-4" />
             Try Again
           </button>
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center justify-center gap-2 bg-neutral-100 text-neutral-800 px-6 py-3 rounded-lg font-medium hover:bg-neutral-200 transition-colors"
+          <button
+            onClick={() => router.push('/dashboard')}
+            className="text-sm text-neutral-500 hover:text-neutral-700 font-medium"
           >
-            <Home className="w-4 h-4" />
             Go Home
-          </Link>
+          </button>
         </div>
       </div>
     </div>

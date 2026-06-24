@@ -1,38 +1,29 @@
 'use client';
 
-import Link from 'next/link';
-import { MapPin, Home, ArrowLeft } from 'lucide-react';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import FruitGame from '@/components/fruit-game';
 
 export default function NotFound() {
+  const router = useRouter();
+
   return (
     <div className="min-h-screen bg-neutral-50 flex flex-col items-center justify-center px-4">
-      <div className="max-w-md w-full text-center">
-        <div className="w-20 h-20 bg-brand-100 rounded-full flex items-center justify-center mx-auto mb-6">
-          <MapPin className="w-10 h-10 text-brand-600" />
-        </div>
-        
-        <h1 className="text-6xl font-bold text-brand-600 mb-4">404</h1>
-        <h2 className="text-2xl font-bold text-neutral-900 mb-2">Page Not Found</h2>
-        <p className="text-neutral-600 mb-8">
-          Samahani! The page you are looking for does not exist or has been moved.
+      <div className="max-w-sm w-full text-center">
+        <h1 className="text-5xl font-bold text-brand-600 mb-2">404</h1>
+        <h2 className="text-lg font-semibold text-neutral-900 mb-1">Page not found</h2>
+        <p className="text-neutral-500 text-sm mb-6">
+          Samahani! This page doesn&apos;t exist. While you wait, try catching some fruits 🍎
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center justify-center gap-2 bg-brand-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-brand-700 transition-colors"
-          >
-            <Home className="w-4 h-4" />
-            Go Home
-          </Link>
-          <button
-            onClick={() => window.history.back()}
-            className="inline-flex items-center justify-center gap-2 bg-neutral-100 text-neutral-800 px-6 py-3 rounded-lg font-medium hover:bg-neutral-200 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Go Back
-          </button>
-        </div>
+        <FruitGame onExit={() => router.push('/dashboard')} />
+
+        <button
+          onClick={() => router.push('/dashboard')}
+          className="mt-6 text-sm text-brand-600 hover:text-brand-700 font-medium"
+        >
+          ← Back to Dashboard
+        </button>
       </div>
     </div>
   );

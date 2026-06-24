@@ -5,6 +5,9 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "SökoPay",
   description: "Digital operating layer for local commerce in Kenya",
+  icons: {
+    icon: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({
