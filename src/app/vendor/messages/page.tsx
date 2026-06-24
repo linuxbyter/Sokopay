@@ -3,9 +3,23 @@
 import { useState, useEffect } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
-import { MessageSquare, Store } from 'lucide-react';
+import { MessageSquare } from 'lucide-react';
 import Navbar from '@/components/navbar';
 import ChatDialog from '@/components/chat-dialog';
+
+function timeAgo(dateString: string) {
+  const now = new Date();
+  const date = new Date(dateString);
+  const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+  if (seconds < 60) return 'Just now';
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 7) return `${days}d ago`;
+  return date.toLocaleDateString('en-KE', { day: 'numeric', month: 'short' });
+}
 
 interface Chat {
   id: string;
@@ -22,6 +36,9 @@ interface Chat {
   customer_marked_served: boolean;
   is_finalized: boolean;
   updated_at: string;
+  last_message?: string | null;
+  last_message_at?: string | null;
+  last_message_sender?: string | null;
 }
 
 export default function VendorMessagesPage() {
@@ -105,18 +122,18 @@ export default function VendorMessagesPage() {
                       <h4 className="font-semibold text-neutral-900 truncate">
                         {chat.customer_name || 'Customer'}
                       </h4>
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                        chat.status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'
-                      }`}>
-                        {chat.status === 'completed' ? 'Done' : 'Active'}
-                      </span>
+                      {chat.last_message_at && (
+                        <span className="text-xs text-neutral-400 whitespace-nowrap ml-2">
+                          {timeAgo(chat.last_message_at)}
+                        </span>
+                      )}
                     </div>
-                    <div className="flex items-center gap-2 mt-2">
-                      <div className={`w-2 h-2 rounded-full ${chat.customer_paid ? 'bg-green-500' : 'bg-neutral-300'}`} />
-                      <span className="text-xs text-neutral-500">
-                        {chat.is_finalized ? 'Completed' : 
-                         chat.customer_paid ? 'In Progress' : 'Pending Payment'}
-                      </span>
+                    <div className="mt-2">
+                      {chat.last_message ? (
+                        <p className="text-sm text-neutral-600 truncate">{chat.last_message}</p>
+                      ) : (
+                        <p className="text-sm text-neutral-400 italic">No messages yet</p>
+                      )}
                     </div>
                   </div>
                 </div>

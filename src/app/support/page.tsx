@@ -52,7 +52,7 @@ const faqs = [
       },
       {
         q: 'How many photos can I add?',
-        a: 'You can add up to 3 photos to your vendor profile. Photos are compressed automatically before upload.',
+        a: 'You can add up to 10 photos to your vendor profile. Photos are compressed automatically before upload.',
       },
       {
         q: 'How do customers find my shop?',

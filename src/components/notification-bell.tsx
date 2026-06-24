@@ -1,6 +1,7 @@
 'use client';
 
 import { useUser } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation';
 import { useState, useEffect, useCallback } from 'react';
 import { Bell, MessageSquare, Star, Zap, Info, CheckCheck } from 'lucide-react';
 import { subscribeToNotifications } from '@/lib/ably-client';
@@ -18,6 +19,7 @@ interface Notification {
 
 export default function NotificationBell() {
   const { user } = useUser();
+  const router = useRouter();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
@@ -145,7 +147,13 @@ export default function NotificationBell() {
                 notifications.map(notification => (
                   <div
                     key={notification.id}
-                    onClick={() => !notification.is_read && markAsRead(notification.id)}
+                    onClick={() => {
+                      if (!notification.is_read) markAsRead(notification.id);
+                      if (notification.reference_type === 'chat' && notification.reference_id) {
+                        router.push(`/messages?chatId=${notification.reference_id}`);
+                        setIsOpen(false);
+                      }
+                    }}
                     className={`px-4 py-3 border-b border-neutral-50 cursor-pointer hover:bg-neutral-50 transition-colors ${
                       !notification.is_read ? 'bg-brand-50/30' : ''
                     }`}

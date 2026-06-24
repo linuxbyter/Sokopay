@@ -1,11 +1,25 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useUser } from '@clerk/nextjs';
-import { useRouter } from 'next/navigation';
-import { MessageSquare, Store, ShoppingBag } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { MessageSquare, Store } from 'lucide-react';
 import Navbar from '@/components/navbar';
 import ChatDialog from '@/components/chat-dialog';
+
+function timeAgo(dateString: string) {
+  const now = new Date();
+  const date = new Date(dateString);
+  const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+  if (seconds < 60) return 'Just now';
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 7) return `${days}d ago`;
+  return date.toLocaleDateString('en-KE', { day: 'numeric', month: 'short' });
+}
 
 interface Chat {
   id: string;
@@ -22,11 +36,16 @@ interface Chat {
   customer_marked_served: boolean;
   is_finalized: boolean;
   updated_at: string;
+  last_message?: string | null;
+  last_message_at?: string | null;
+  last_message_sender?: string | null;
 }
 
-export default function MessagesPage() {
+function MessagesContent() {
   const { user, isLoaded } = useUser();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const chatIdParam = searchParams.get('chatId');
   const [chats, setChats] = useState<Chat[]>([]);
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [loading, setLoading] = useState(true);
@@ -52,7 +71,14 @@ export default function MessagesPage() {
       const role = window.location.pathname.startsWith('/vendor') ? 'vendor' : 'customer';
       const response = await fetch(`/api/chats?userId=${user.id}&role=${role}`);
       const data = await response.json();
-      setChats(data.chats || []);
+      const chatList = data.chats || [];
+      setChats(chatList);
+
+      // Auto-select chat from URL param (deep-link from notifications)
+      if (chatIdParam) {
+        const target = chatList.find((c: Chat) => c.id === chatIdParam);
+        if (target) setSelectedChat(target);
+      }
     } catch (error) {
       console.error('Failed to fetch chats:', error);
     } finally {
@@ -109,19 +135,19 @@ export default function MessagesPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
                       <h4 className="font-semibold text-neutral-900 truncate">{chat.vendor_name}</h4>
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                        chat.status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'
-                      }`}>
-                        {chat.status === 'completed' ? 'Done' : 'Active'}
-                      </span>
+                      {chat.last_message_at && (
+                        <span className="text-xs text-neutral-400 whitespace-nowrap ml-2">
+                          {timeAgo(chat.last_message_at)}
+                        </span>
+                      )}
                     </div>
-                    <p className="text-sm text-neutral-500">{chat.vendor_category}</p>
-                    <div className="flex items-center gap-2 mt-2">
-                      <div className={`w-2 h-2 rounded-full ${chat.customer_paid ? 'bg-green-500' : 'bg-neutral-300'}`} />
-                      <span className="text-xs text-neutral-500">
-                        {chat.is_finalized ? 'Completed' : 
-                         chat.customer_paid ? 'In Progress' : 'Pending Payment'}
-                      </span>
+                    <p className="text-xs text-neutral-400 mt-0.5">{chat.vendor_category}</p>
+                    <div className="mt-2">
+                      {chat.last_message ? (
+                        <p className="text-sm text-neutral-600 truncate">{chat.last_message}</p>
+                      ) : (
+                        <p className="text-sm text-neutral-400 italic">No messages yet</p>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -131,5 +157,19 @@ export default function MessagesPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function MessagesPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-neutral-50">
+        <div className="flex items-center justify-center py-12">
+          <div className="w-8 h-8 border-2 border-brand-600 border-t-transparent rounded-full animate-spin" />
+        </div>
+      </div>
+    }>
+      <MessagesContent />
+    </Suspense>
   );
 }

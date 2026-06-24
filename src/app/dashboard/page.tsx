@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useUser } from '@clerk/nextjs';
-import { Search, MapPin, List, SlidersHorizontal, Loader2 } from 'lucide-react';
+import { Search, MapPin, List, SlidersHorizontal, Loader2, Star } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import Navbar from '@/components/navbar';
@@ -19,6 +19,7 @@ interface Vendor {
   isOpen: boolean;
   photoUrl: string;
   rating: number;
+  feedbackCount: number;
   address: string;
 }
 
@@ -73,7 +74,8 @@ function DashboardContent() {
           distance: 0,
           isOpen: v.is_open,
           photoUrl: v.photos?.[0] || '/placeholder.svg',
-          rating: 4.5,
+          rating: parseFloat(v.avg_rating) || 0,
+          feedbackCount: parseInt(v.feedback_count) || 0,
           address: v.address || '',
         }));
 
@@ -309,7 +311,17 @@ function DashboardContent() {
                         {userLocation && (
                           <p className="text-sm font-medium text-neutral-700">{vendor.distance.toFixed(1)} km</p>
                         )}
-                        <p className="text-xs text-neutral-400">{vendor.rating} stars</p>
+                        <div className="flex items-center gap-1">
+                          {vendor.rating > 0 ? (
+                            <>
+                              <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+                              <span className="text-xs text-neutral-600">{vendor.rating}</span>
+                              <span className="text-xs text-neutral-400">({vendor.feedbackCount})</span>
+                            </>
+                          ) : (
+                            <span className="text-xs text-neutral-400">No reviews</span>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { query } from '@/lib/db'
+import { auth } from '@clerk/nextjs/server'
 
 export async function GET(
   request: NextRequest,
@@ -26,7 +27,22 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
+    const { userId } = await auth()
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     const { id } = params
+
+    // Verify ownership
+    const owner = await query('SELECT user_id FROM vendors WHERE id = $1', [id])
+    if (owner.rows.length === 0) {
+      return NextResponse.json({ error: 'Vendor not found' }, { status: 404 })
+    }
+    if (owner.rows[0].user_id !== userId) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+
     const body = await request.json()
 
     const fields: string[] = []
@@ -76,7 +92,21 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
+    const { userId } = await auth()
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     const { id } = params
+
+    // Verify ownership
+    const owner = await query('SELECT user_id FROM vendors WHERE id = $1', [id])
+    if (owner.rows.length === 0) {
+      return NextResponse.json({ error: 'Vendor not found' }, { status: 404 })
+    }
+    if (owner.rows[0].user_id !== userId) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
 
     // Check if there are active (non-finalized) chats for this vendor
     const activeChats = await query(

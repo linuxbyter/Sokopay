@@ -65,9 +65,19 @@ export async function GET(request: NextRequest) {
       sql = `
         SELECT c.*,
           v.business_name as vendor_name, v.category as vendor_category, v.photos as vendor_photos,
-          c.customer_name
+          c.customer_name,
+          lm.content as last_message,
+          lm.created_at as last_message_at,
+          lm.sender_id as last_message_sender
         FROM chats c
         JOIN vendors v ON c.vendor_id = v.id
+        LEFT JOIN LATERAL (
+          SELECT content, created_at, sender_id
+          FROM messages
+          WHERE chat_id = c.id
+          ORDER BY created_at DESC
+          LIMIT 1
+        ) lm ON true
         WHERE v.user_id = $1
         ORDER BY c.updated_at DESC
       `
@@ -76,9 +86,19 @@ export async function GET(request: NextRequest) {
       sql = `
         SELECT c.*,
           v.business_name as vendor_name, v.category as vendor_category, v.photos as vendor_photos,
-          v.id as vendor_id, v.user_id as vendor_user_id
+          v.id as vendor_id, v.user_id as vendor_user_id,
+          lm.content as last_message,
+          lm.created_at as last_message_at,
+          lm.sender_id as last_message_sender
         FROM chats c
         JOIN vendors v ON c.vendor_id = v.id
+        LEFT JOIN LATERAL (
+          SELECT content, created_at, sender_id
+          FROM messages
+          WHERE chat_id = c.id
+          ORDER BY created_at DESC
+          LIMIT 1
+        ) lm ON true
         WHERE c.customer_id = $1
         ORDER BY c.updated_at DESC
       `

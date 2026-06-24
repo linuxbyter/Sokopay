@@ -14,7 +14,7 @@ export default function ImageUpload({
   images, 
   previews, 
   onImagesChange, 
-  maxImages = 3 
+  maxImages = 10 
 }: ImageUploadProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState('');

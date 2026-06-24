@@ -204,8 +204,8 @@ function CreateVendorProfilePage() {
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    if (profile.photos.length + files.length > 3) {
-      setErrors({ photos: 'Maximum 3 photos allowed' });
+    if (profile.photos.length + files.length > 10) {
+      setErrors({ photos: 'Maximum 10 photos allowed' });
       return;
     }
 
@@ -547,14 +547,14 @@ function CreateVendorProfilePage() {
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-medium text-neutral-900 mb-4">Business Photos</h3>
-        <p className="text-sm text-neutral-600 mb-6">Upload up to 3 photos of your business</p>
+        <p className="text-sm text-neutral-600 mb-6">Upload up to 10 photos of your business</p>
       </div>
 
       <ImageUpload
         images={profile.photos}
         previews={profile.photoPreviews}
         onImagesChange={(photos, photoPreviews) => updateProfile({ photos, photoPreviews })}
-        maxImages={3}
+            maxImages={10}
       />
 
       {errors.photos && <p className="text-red-500 text-sm">{errors.photos}</p>}

@@ -29,6 +29,9 @@ interface Chat {
   customer_marked_served: boolean;
   is_finalized: boolean;
   updated_at: string;
+  last_message?: string | null;
+  last_message_at?: string | null;
+  last_message_sender?: string | null;
 }
 
 interface ChatDialogProps {

@@ -306,7 +306,7 @@ src/
 2. **No vendor fees** — Basic listing is free forever. Build supply through value.
 3. **No admin moderation** — Deferred to V2. V1 relies on vendor self-service + customer reporting.
 4. **No public reviews** — V1 stores feedback privately. Public aggregation comes in V2.
-5. **3 photo max** — Strict limit for vendor profiles. Enforce client-side before upload.
+5. **10 photo max** — Strict limit for vendor profiles. Enforce client-side before upload.
 6. **Text-only chat** — No media messages in V1 (prevents abuse/spam, saves bandwidth).
 7. **Offline-first mindset** — Optimistic UI, cache last successful state, handle 2G/3G gracefully.
 8. **Brand name** — Always "SökoPay" with ö. Never "SokoPay" or "SOKOPAY".

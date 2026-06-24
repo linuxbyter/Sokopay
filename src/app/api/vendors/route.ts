@@ -8,30 +8,33 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search')
     const userId = searchParams.get('userId')
 
-    let sql = 'SELECT * FROM vendors'
+    let sql = `SELECT v.*,
+      (SELECT COALESCE(AVG(rating), 0)::numeric(3,1) FROM feedback WHERE vendor_id = v.id AND rating IS NOT NULL) as avg_rating,
+      (SELECT COUNT(*) FROM feedback WHERE vendor_id = v.id) as feedback_count
+      FROM vendors v`
     const conditions: string[] = []
     const params: unknown[] = []
 
     if (userId) {
       params.push(userId)
-      conditions.push(`user_id = $${params.length}`)
+      conditions.push(`v.user_id = $${params.length}`)
     }
 
     if (category) {
       params.push(category)
-      conditions.push(`category = $${params.length}`)
+      conditions.push(`v.category = $${params.length}`)
     }
 
     if (search) {
       params.push(`%${search}%`)
-      conditions.push(`(business_name ILIKE $${params.length} OR description ILIKE $${params.length} OR category ILIKE $${params.length})`)
+      conditions.push(`(v.business_name ILIKE $${params.length} OR v.description ILIKE $${params.length} OR v.category ILIKE $${params.length})`)
     }
 
     if (conditions.length > 0) {
       sql += ' WHERE ' + conditions.join(' AND ')
     }
 
-    sql += ' ORDER BY created_at DESC'
+    sql += ' ORDER BY v.created_at DESC'
 
     const result = await query(sql, params)
     return NextResponse.json({ vendors: result.rows })
