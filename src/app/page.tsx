@@ -3,8 +3,6 @@ import { useRouter } from "next/navigation";
 import { ArrowRight, MapPin, Star, MessageSquare } from "lucide-react";
 
 const categories = [
-  { emoji: "🧆", label: "Grab Ka-Snacko", db: "Quick Snacks" },
-  { emoji: "🛵", label: "Quick Rides",    db: "Quick Rides" },
   { emoji: "🥬", label: "Mama Mboga",     db: "Mama/Baba Mboga" },
   { emoji: "🏪", label: "Maasai Shop",    db: "Maasai Shop" },
   { emoji: "✂️", label: "Barbers",        db: "Barbers" },
@@ -15,6 +13,7 @@ const categories = [
   { emoji: "👕", label: "Laundry Mart",   db: "Laundry Mart" },
   { emoji: "🛒", label: "Supermarkets",   db: "SuperMarkets" },
   { emoji: "🍽️", label: "Eateries",       db: "Eateries" },
+  { emoji: "🧆", label: "Quick Snacks",   db: "Quick Snacks" },
 ];
 
 const steps = [

@@ -129,13 +129,13 @@ export default function AboutPage() {
             Reach out directly — no pitch deck needed for the first call.
           </p>
           <a
-            href="tel:+254755948148"
+            href="tel:+254700000000"
             className="inline-flex items-center gap-2 bg-white text-brand-700 font-bold px-5 py-3 rounded-xl hover:bg-brand-50 transition-colors text-sm"
           >
             <PhoneCall className="w-4 h-4" />
             Call the founder
           </a>
-          <p className="text-xs text-brand-300 mt-3">+254 755 948 148</p>
+          <p className="text-xs text-brand-300 mt-3">+254 700 000 000</p>
         </div>
       </div>
     </div>

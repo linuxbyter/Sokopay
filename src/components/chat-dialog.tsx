@@ -80,8 +80,14 @@ export default function ChatDialog({ chat, onBack, onChatUpdate, isVendor }: Cha
 
     // Real-time: sync transaction status when the other party acts
     const unsubscribeStatus = subscribeToChatStatus(activeChat.id, (updatedChat: Chat) => {
-      setActiveChat(prev => ({ ...prev, ...updatedChat }));
-      if (onChatUpdate) onChatUpdate({ ...activeChat, ...updatedChat });
+      setActiveChat(prev => {
+        const merged = { ...prev, ...updatedChat };
+        // Use setTimeout to avoid calling onChatUpdate during render
+        setTimeout(() => {
+          if (onChatUpdate) onChatUpdate(merged);
+        }, 0);
+        return merged;
+      });
     });
 
     return () => {
@@ -174,8 +180,13 @@ export default function ChatDialog({ chat, onBack, onChatUpdate, isVendor }: Cha
         const data = await response.json();
         // Update local state immediately so action buttons re-render
         if (data.chat) {
-          setActiveChat(prev => ({ ...prev, ...data.chat }));
-          if (onChatUpdate) onChatUpdate({ ...activeChat, ...data.chat });
+          setActiveChat(prev => {
+            const merged = { ...prev, ...data.chat };
+            setTimeout(() => {
+              if (onChatUpdate) onChatUpdate(merged);
+            }, 0);
+            return merged;
+          });
         }
         const systemMessage: Message = {
           id: Date.now().toString(),

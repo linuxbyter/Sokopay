@@ -166,14 +166,14 @@ export default function SupportPage() {
             We respond fast.
           </p>
           <a
-            href="https://wa.me/254755948148"
+            href="https://wa.me/254700000000"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold px-6 py-3 rounded-xl transition-colors text-sm"
           >
             WhatsApp Support
           </a>
-          <p className="text-xs text-neutral-400 mt-2">+254 755 948 148</p>
+          <p className="text-xs text-neutral-400 mt-2">+254 700 000 000</p>
         </div>
       </div>
     </div>

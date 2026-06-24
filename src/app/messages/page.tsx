@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { MessageSquare, Store } from 'lucide-react';
@@ -52,6 +52,10 @@ function MessagesContent() {
   const [loading, setLoading] = useState(true);
   const [isVendor, setIsVendor] = useState(false);
 
+  const handleChatUpdate = useCallback((updatedChat: Chat) => {
+    setSelectedChat(updatedChat);
+  }, []);
+
   useEffect(() => {
     if (isLoaded && !user) {
       router.push('/auth/role');
@@ -94,7 +98,7 @@ function MessagesContent() {
           <ChatDialog
             chat={selectedChat}
             onBack={() => setSelectedChat(null)}
-            onChatUpdate={(updatedChat) => setSelectedChat(updatedChat)}
+            onChatUpdate={handleChatUpdate}
             isVendor={isVendor}
           />
         </div>

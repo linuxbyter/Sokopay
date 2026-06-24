@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { MessageSquare } from 'lucide-react';
@@ -49,6 +49,10 @@ export default function VendorMessagesPage() {
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const handleChatUpdate = useCallback((updatedChat: Chat) => {
+    setSelectedChat(updatedChat);
+  }, []);
+
   useEffect(() => {
     if (isLoaded && !user) {
       router.push('/auth/role');
@@ -79,7 +83,7 @@ export default function VendorMessagesPage() {
           <ChatDialog
             chat={selectedChat}
             onBack={() => setSelectedChat(null)}
-            onChatUpdate={(updatedChat) => setSelectedChat(updatedChat)}
+            onChatUpdate={handleChatUpdate}
             isVendor={true}
           />
         </div>

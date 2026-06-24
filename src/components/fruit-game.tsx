@@ -227,7 +227,7 @@ export default function FruitGame({ onExit }: FruitGameProps) {
       {gameOver && (
         <div className="absolute inset-0 bg-black/40 flex items-center justify-center z-10 rounded-2xl">
           <div className="bg-white rounded-2xl p-6 text-center shadow-xl max-w-xs">
-            <div className="text-4xl mb-2"> basket</div>
+            <div className="text-4xl mb-2">🧺</div>
             <h4 className="text-xl font-bold text-neutral-900 mb-1">Game Over!</h4>
             <p className="text-neutral-500 mb-1">Score: <span className="font-bold text-brand-600">{score}</span></p>
             {score >= highScore && score > 0 && (

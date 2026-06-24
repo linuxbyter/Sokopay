@@ -144,12 +144,16 @@ export default function VendorProfilePage() {
 
   const isOpenNow = () => {
     if (!vendor?.hours) return false;
+    // Use Nairobi time (UTC+3)
     const now = new Date();
-    const dayIndex = (now.getDay() + 6) % 7; // Mon=0, Sun=6
+    const utcHours = now.getUTCHours();
+    const utcMinutes = now.getUTCMinutes();
+    const eatHours = (utcHours + 3) % 24;
+    const dayIndex = (now.getUTCDay() + 6) % 7; // Mon=0, Sun=6
     const today = daysOfWeek[dayIndex];
     const todayHours = vendor.hours[today];
     if (!todayHours || todayHours.closed) return false;
-    const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    const currentTime = `${String(eatHours).padStart(2, '0')}:${String(utcMinutes).padStart(2, '0')}`;
     return currentTime >= todayHours.open && currentTime <= todayHours.close;
   };
 

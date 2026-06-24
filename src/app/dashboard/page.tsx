@@ -24,8 +24,6 @@ interface Vendor {
 }
 
 const allCategories = [
-  { emoji: '🧆', label: 'Grab Ka-Snacko', db: 'Quick Snacks' },
-  { emoji: '🛵', label: 'Quick Rides',    db: 'Quick Rides' },
   { emoji: '🥬', label: 'Mama Mboga',     db: 'Mama/Baba Mboga' },
   { emoji: '🏪', label: 'Maasai Shop',    db: 'Maasai Shop' },
   { emoji: '✂️', label: 'Barbers',        db: 'Barbers' },
@@ -36,6 +34,7 @@ const allCategories = [
   { emoji: '👕', label: 'Laundry',        db: 'Laundry Mart' },
   { emoji: '🛒', label: 'Supermarkets',   db: 'SuperMarkets' },
   { emoji: '🍽️', label: 'Eateries',       db: 'Eateries' },
+  { emoji: '🧆', label: 'Snacks',         db: 'Quick Snacks' },
 ];
 
 // ── Skeleton card ──────────────────────────────────────────────────────────
@@ -435,7 +434,7 @@ function DashboardContent() {
               className="col-span-2 sm:col-span-3 bg-gradient-to-r from-copper-600 to-copper-400 rounded-2xl p-5 text-left text-white hover:opacity-95 transition-opacity"
             >
               <div className="text-3xl mb-2">🧆</div>
-              <h3 className="font-extrabold text-lg leading-tight">Grab Ka-Snacko</h3>
+              <h3 className="font-extrabold text-lg leading-tight">Quick Snacks</h3>
               <p className="text-copper-100 text-sm mt-1">
                 Smocha, Chapati, Viazi — find top-rated street food stalls near you
               </p>
