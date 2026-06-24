@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { ClerkProviderWrapper } from '@/components/clerk-provider';
 import PwaInstallPrompt from '@/components/pwa-install-prompt';
+import PushManager from '@/components/push-manager';
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -37,6 +38,7 @@ export default function RootLayout({
         <body className="min-h-screen bg-neutral-50 antialiased">
           {children}
           <PwaInstallPrompt />
+          <PushManager />
         </body>
       </html>
     </ClerkProviderWrapper>

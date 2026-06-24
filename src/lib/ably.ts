@@ -1,4 +1,5 @@
 import Ably from 'ably'
+import { sendWebPush } from './web-push'
 
 if (!process.env.ABLY_APP_ID || !process.env.ABLY_API_KEY) {
   console.warn('Ably credentials not configured. Notifications will not work in real-time.')
@@ -38,6 +39,18 @@ export async function triggerNotification(userId: string, notification: {
   } catch (error) {
     console.error('Failed to publish Ably notification:', error)
   }
+
+  // Also send a Web Push so installed PWA users get notified in the background
+  const url = notification.reference_type === 'chat'
+    ? `/messages?chatId=${notification.reference_id}`
+    : '/dashboard';
+
+  await sendWebPush(userId, {
+    title: notification.title,
+    body: notification.body || '',
+    url,
+    tag: notification.reference_id || 'sokopay',
+  }).catch(() => {});
 }
 
 export async function publishChatStatus(chatId: string, chat: Record<string, unknown>) {
