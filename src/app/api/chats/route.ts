@@ -68,7 +68,8 @@ export async function GET(request: NextRequest) {
           c.customer_name,
           lm.content as last_message,
           lm.created_at as last_message_at,
-          lm.sender_id as last_message_sender
+          lm.sender_id as last_message_sender,
+          (SELECT COUNT(*) FROM messages WHERE chat_id = c.id AND sender_id = c.customer_id AND read_at IS NULL)::int as unread_count
         FROM chats c
         JOIN vendors v ON c.vendor_id = v.id
         LEFT JOIN LATERAL (
@@ -89,7 +90,8 @@ export async function GET(request: NextRequest) {
           v.id as vendor_id, v.user_id as vendor_user_id,
           lm.content as last_message,
           lm.created_at as last_message_at,
-          lm.sender_id as last_message_sender
+          lm.sender_id as last_message_sender,
+          (SELECT COUNT(*) FROM messages WHERE chat_id = c.id AND sender_id != $1 AND read_at IS NULL)::int as unread_count
         FROM chats c
         JOIN vendors v ON c.vendor_id = v.id
         LEFT JOIN LATERAL (

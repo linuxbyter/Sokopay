@@ -10,8 +10,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing vendorId or images' }, { status: 400 })
     }
 
-    if (images.length > 3) {
-      return NextResponse.json({ error: 'Maximum 3 images allowed' }, { status: 400 })
+    if (images.length > 10) {
+      return NextResponse.json({ error: 'Maximum 10 images allowed' }, { status: 400 })
     }
 
     // Store images as base64 in the database

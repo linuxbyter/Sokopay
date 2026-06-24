@@ -37,3 +37,17 @@ export function subscribeToChatMessages(chatId: string, onMessage: (message: any
     channel.unsubscribe('message')
   }
 }
+
+export function subscribeToChatStatus(chatId: string, onStatus: (chat: any) => void) {
+  if (!ablyClient) return () => {}
+
+  const channel = ablyClient.channels.get(`chat-${chatId}`)
+
+  channel.subscribe('status', (message) => {
+    onStatus(message.data)
+  })
+
+  return () => {
+    channel.unsubscribe('status')
+  }
+}

@@ -34,7 +34,7 @@ export default function FruitGame({ onExit }: FruitGameProps) {
   const gameActiveRef = useRef(false);
 
   useEffect(() => {
-    const saved = localStorage.getItem(' Sokopay_fruit_high_score');
+    const saved = localStorage.getItem('Sokopay_fruit_high_score');
     if (saved) setHighScore(parseInt(saved));
   }, []);
 
@@ -147,7 +147,7 @@ export default function FruitGame({ onExit }: FruitGameProps) {
   useEffect(() => {
     if (gameOver && score > highScore) {
       setHighScore(score);
-      localStorage.setItem(' Sokopay_fruit_high_score', score.toString());
+      localStorage.setItem('Sokopay_fruit_high_score', score.toString());
     }
   }, [gameOver, score, highScore]);
 

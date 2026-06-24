@@ -98,3 +98,29 @@ export async function POST(
     return NextResponse.json({ error: 'Failed to send message' }, { status: 500 })
   }
 }
+
+// Mark all messages in a chat as read for a given user (messages NOT sent by them)
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const { id } = params
+    const body = await request.json()
+    const { userId } = body
+
+    if (!userId) {
+      return NextResponse.json({ error: 'Missing userId' }, { status: 400 })
+    }
+
+    await query(
+      `UPDATE messages SET read_at = NOW() WHERE chat_id = $1 AND sender_id != $2 AND read_at IS NULL`,
+      [id, userId]
+    )
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('PATCH /api/chats/[id]/messages error:', error)
+    return NextResponse.json({ error: 'Failed to mark messages as read' }, { status: 500 })
+  }
+}

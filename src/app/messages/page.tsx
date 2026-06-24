@@ -39,6 +39,7 @@ interface Chat {
   last_message?: string | null;
   last_message_at?: string | null;
   last_message_sender?: string | null;
+  unread_count?: number;
 }
 
 function MessagesContent() {
@@ -134,12 +135,19 @@ function MessagesContent() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <h4 className="font-semibold text-neutral-900 truncate">{chat.vendor_name}</h4>
-                      {chat.last_message_at && (
-                        <span className="text-xs text-neutral-400 whitespace-nowrap ml-2">
-                          {timeAgo(chat.last_message_at)}
-                        </span>
-                      )}
+                      <h4 className={`font-semibold truncate ${(chat.unread_count ?? 0) > 0 ? 'text-neutral-900' : 'text-neutral-800'}`}>{chat.vendor_name}</h4>
+                      <div className="flex items-center gap-2 ml-2 flex-shrink-0">
+                        {chat.last_message_at && (
+                          <span className="text-xs text-neutral-400 whitespace-nowrap">
+                            {timeAgo(chat.last_message_at)}
+                          </span>
+                        )}
+                        {(chat.unread_count ?? 0) > 0 && (
+                          <span className="w-5 h-5 bg-brand-600 text-white text-xs rounded-full flex items-center justify-center font-medium">
+                            {chat.unread_count! > 9 ? '9+' : chat.unread_count}
+                          </span>
+                        )}
+                      </div>
                     </div>
                     <p className="text-xs text-neutral-400 mt-0.5">{chat.vendor_category}</p>
                     <div className="mt-2">

@@ -39,6 +39,7 @@ interface Chat {
   last_message?: string | null;
   last_message_at?: string | null;
   last_message_sender?: string | null;
+  unread_count?: number;
 }
 
 export default function VendorMessagesPage() {
@@ -122,11 +123,18 @@ export default function VendorMessagesPage() {
                       <h4 className="font-semibold text-neutral-900 truncate">
                         {chat.customer_name || 'Customer'}
                       </h4>
-                      {chat.last_message_at && (
-                        <span className="text-xs text-neutral-400 whitespace-nowrap ml-2">
-                          {timeAgo(chat.last_message_at)}
-                        </span>
-                      )}
+                      <div className="flex items-center gap-2 ml-2 flex-shrink-0">
+                        {chat.last_message_at && (
+                          <span className="text-xs text-neutral-400 whitespace-nowrap">
+                            {timeAgo(chat.last_message_at)}
+                          </span>
+                        )}
+                        {(chat.unread_count ?? 0) > 0 && (
+                          <span className="w-5 h-5 bg-brand-600 text-white text-xs rounded-full flex items-center justify-center font-medium">
+                            {chat.unread_count! > 9 ? '9+' : chat.unread_count}
+                          </span>
+                        )}
+                      </div>
                     </div>
                     <div className="mt-2">
                       {chat.last_message ? (

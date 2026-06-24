@@ -52,6 +52,7 @@ function DashboardContent() {
   const [sortBy, setSortBy] = useState<'distance' | 'rating'>('distance');
   const [showFilters, setShowFilters] = useState(false);
   const [locationLoading, setLocationLoading] = useState(false);
+  const [openNowOnly, setOpenNowOnly] = useState(false);
 
   // --- ALL useEffect hooks BEFORE conditional returns ---
   // Fetch vendors when search/category/sort changes. No location dependency for the fetch itself.
@@ -82,11 +83,21 @@ function DashboardContent() {
         // Calculate distance client-side if we have user location
         if (userLocation) {
           vendors = vendors.map(vendor => {
-            const latDiff = vendor.latitude - userLocation.lat;
-            const lngDiff = vendor.longitude - userLocation.lng;
-            const distance = Math.sqrt(latDiff * latDiff + lngDiff * lngDiff) * 111;
+            const R = 6371;
+            const dLat = (vendor.latitude - userLocation.lat) * (Math.PI / 180);
+            const dLng = (vendor.longitude - userLocation.lng) * (Math.PI / 180);
+            const a =
+              Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+              Math.cos(userLocation.lat * (Math.PI / 180)) *
+                Math.cos(vendor.latitude * (Math.PI / 180)) *
+                Math.sin(dLng / 2) * Math.sin(dLng / 2);
+            const distance = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
             return { ...vendor, distance };
           });
+        }
+
+        if (openNowOnly) {
+          vendors = vendors.filter(v => v.isOpen);
         }
 
         if (sortBy === 'rating') {
@@ -106,7 +117,7 @@ function DashboardContent() {
     if (isLoaded) {
       fetchVendors();
     }
-  }, [searchQuery, userLocation, selectedCategory, sortBy, isLoaded]);
+  }, [searchQuery, userLocation, selectedCategory, sortBy, openNowOnly, isLoaded]);
 
   // --- ALL useCallback hooks BEFORE conditional returns ---
   const handleVendorClick = useCallback((vendor: Vendor) => {
@@ -227,6 +238,13 @@ function DashboardContent() {
                   className={`px-4 py-2 text-xs rounded-full transition-colors min-h-[40px] ${sortBy === 'rating' ? 'bg-brand-600 text-white' : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'}`}
                 >
                   Rating
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setOpenNowOnly(v => !v)}
+                  className={`px-4 py-2 text-xs rounded-full transition-colors min-h-[40px] ${openNowOnly ? 'bg-green-600 text-white' : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'}`}
+                >
+                  Open Now
                 </button>
                 {selectedCategory && (
                   <button

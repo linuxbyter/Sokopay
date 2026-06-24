@@ -40,6 +40,18 @@ export async function triggerNotification(userId: string, notification: {
   }
 }
 
+export async function publishChatStatus(chatId: string, chat: Record<string, unknown>) {
+  const client = getAbly()
+  if (!client) return
+
+  try {
+    const channel = client.channels.get(`chat-${chatId}`)
+    await channel.publish('status', chat)
+  } catch (error) {
+    console.error('Failed to publish chat status:', error)
+  }
+}
+
 export async function publishChatMessage(chatId: string, message: {
   id: string
   chat_id: string

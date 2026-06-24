@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { Send, ArrowLeft, CheckCircle, Package, Truck, MessageSquare, Star, RotateCcw } from 'lucide-react';
 import FeedbackModal from './feedback-modal';
-import { subscribeToChatMessages } from '@/lib/ably-client';
+import { subscribeToChatMessages, subscribeToChatStatus } from '@/lib/ably-client';
 
 interface Message {
   id: string;
@@ -65,18 +65,25 @@ export default function ChatDialog({ chat, onBack, onChatUpdate, isVendor }: Cha
   useEffect(() => {
     if (!activeChat.id) return;
 
-    const unsubscribe = subscribeToChatMessages(activeChat.id, (message: Message) => {
-      // Only add if it's not our own message (we already added it optimistically)
+    const unsubscribeMessages = subscribeToChatMessages(activeChat.id, (message: Message) => {
       if (message.sender_id !== user?.id) {
         setMessages(prev => {
-          // Deduplicate by id
           if (prev.some(m => m.id === message.id)) return prev;
           return [...prev, message];
         });
       }
     });
 
-    return unsubscribe;
+    // Real-time: sync transaction status when the other party acts
+    const unsubscribeStatus = subscribeToChatStatus(activeChat.id, (updatedChat: Chat) => {
+      setActiveChat(prev => ({ ...prev, ...updatedChat }));
+      if (onChatUpdate) onChatUpdate({ ...activeChat, ...updatedChat });
+    });
+
+    return () => {
+      unsubscribeMessages();
+      unsubscribeStatus();
+    };
   }, [activeChat.id, user?.id]);
 
   // Auto-scroll on new messages
@@ -90,6 +97,14 @@ export default function ChatDialog({ chat, onBack, onChatUpdate, isVendor }: Cha
       if (response.ok) {
         const data = await response.json();
         setMessages(data.messages || []);
+        // Mark incoming messages as read
+        if (user?.id) {
+          fetch(`/api/chats/${activeChat.id}/messages`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId: user.id }),
+          }).catch(() => {});
+        }
       }
     } catch (error) {
       console.error('Failed to fetch messages:', error);
@@ -150,7 +165,12 @@ export default function ChatDialog({ chat, onBack, onChatUpdate, isVendor }: Cha
       });
 
       if (response.ok) {
-        // Add system message to UI
+        const data = await response.json();
+        // Update local state immediately so action buttons re-render
+        if (data.chat) {
+          setActiveChat(prev => ({ ...prev, ...data.chat }));
+          if (onChatUpdate) onChatUpdate({ ...activeChat, ...data.chat });
+        }
         const systemMessage: Message = {
           id: Date.now().toString(),
           sender_id: 'system',

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { query } from '@/lib/db'
-import { triggerNotification } from '@/lib/ably'
+import { triggerNotification, publishChatStatus } from '@/lib/ably'
 
 // Update transaction status
 export async function PUT(
@@ -91,8 +91,12 @@ export async function PUT(
 
     // Get updated chat
     const result = await query('SELECT * FROM chats WHERE id = $1', [id])
+    const updatedChat = result.rows[0]
 
-    return NextResponse.json({ chat: result.rows[0] })
+    // Broadcast updated chat state to all subscribers of this chat room
+    await publishChatStatus(id, updatedChat)
+
+    return NextResponse.json({ chat: updatedChat })
   } catch (error) {
     console.error('PUT /api/chats/[id]/status error:', error)
     return NextResponse.json({ error: 'Failed to update status' }, { status: 500 })

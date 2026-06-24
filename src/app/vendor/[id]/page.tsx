@@ -5,7 +5,7 @@ import { useUser } from '@clerk/nextjs';
 import { useRouter, useParams } from 'next/navigation';
 import {
   ArrowLeft, MapPin, Clock, MessageSquare, Phone, Star, ChevronLeft, ChevronRight,
-  ExternalLink, Loader2, Store
+  ExternalLink, Loader2, Store, Share2
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 
@@ -41,6 +41,7 @@ export default function VendorProfilePage() {
   const [loading, setLoading] = useState(true);
   const [currentPhoto, setCurrentPhoto] = useState(0);
   const [creatingChat, setCreatingChat] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     fetchVendor();
@@ -119,6 +120,20 @@ export default function VendorProfilePage() {
     }
   };
 
+  const handleShare = async () => {
+    const url = window.location.href;
+    const text = `Check out ${vendor?.business_name} on Sokopay`;
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: vendor?.business_name, text, url });
+      } catch {}
+    } else {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
   const formatHours = (day: string, hours: { open: string; close: string; closed: boolean }) => {
     if (hours.closed) return 'Closed';
     return `${hours.open} - ${hours.close}`;
@@ -173,7 +188,13 @@ export default function VendorProfilePage() {
             <ArrowLeft className="w-5 h-5 text-neutral-600" />
           </button>
           <h1 className="font-semibold text-neutral-900 truncate">{vendor.business_name}</h1>
-          <div className="w-10" />
+          <button
+            onClick={handleShare}
+            className="p-2 hover:bg-neutral-100 rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+            title={copied ? 'Link copied!' : 'Share'}
+          >
+            {copied ? <span className="text-xs text-brand-600 font-medium">Copied!</span> : <Share2 className="w-5 h-5 text-neutral-600" />}
+          </button>
         </div>
       </nav>
 
