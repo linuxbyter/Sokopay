@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, Suspense } from 'react';
 import { useUser } from '@clerk/nextjs';
-import { Search, MapPin, SlidersHorizontal, Loader2, Star, X } from 'lucide-react';
+import { Search, MapPin, SlidersHorizontal, Loader2, Star, X, Leaf, Store, Scissors, Droplet, Flame, Beef, ShoppingBag, ShoppingCart, Utensils, Cookie, Map } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import Navbar from '@/components/navbar';
@@ -24,17 +24,17 @@ interface Vendor {
 }
 
 const allCategories = [
-  { emoji: '🥬', label: 'Mama Mboga',     db: 'Mama/Baba Mboga' },
-  { emoji: '🏪', label: 'Maasai Shop',    db: 'Maasai Shop' },
-  { emoji: '✂️', label: 'Barbers',        db: 'Barbers' },
-  { emoji: '💇', label: 'Saloonists',     db: 'Saloonists' },
-  { emoji: '💧', label: 'Water',          db: 'Water Vendors' },
-  { emoji: '🔥', label: 'Gas',            db: 'Gas Refillers' },
-  { emoji: '🥩', label: 'Butcheries',     db: 'Butcheries' },
-  { emoji: '👕', label: 'Laundry',        db: 'Laundry Mart' },
-  { emoji: '🛒', label: 'Supermarkets',   db: 'SuperMarkets' },
-  { emoji: '🍽️', label: 'Eateries',       db: 'Eateries' },
-  { emoji: '🧆', label: 'Snacks',         db: 'Quick Snacks' },
+  { icon: Leaf, label: 'Mama Mboga',     db: 'Mama/Baba Mboga' },
+  { icon: Store, label: 'Maasai Shop',   db: 'Maasai Shop' },
+  { icon: Scissors, label: 'Barbers',     db: 'Barbers' },
+  { icon: Scissors, label: 'Saloonists',  db: 'Saloonists' },
+  { icon: Droplet, label: 'Water',        db: 'Water Vendors' },
+  { icon: Flame, label: 'Gas',            db: 'Gas Refillers' },
+  { icon: Beef, label: 'Butcheries',      db: 'Butcheries' },
+  { icon: ShoppingBag, label: 'Laundry',   db: 'Laundry Mart' },
+  { icon: ShoppingCart, label: 'Supermarkets', db: 'SuperMarkets' },
+  { icon: Utensils, label: 'Eateries',    db: 'Eateries' },
+  { icon: Cookie, label: 'Snacks',        db: 'Quick Snacks' },
 ];
 
 // ── Skeleton card ──────────────────────────────────────────────────────────
@@ -78,7 +78,7 @@ function VendorCard({ vendor, onClick, userLocation }: {
           />
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center gap-1">
-            <span className="text-4xl">{cat?.emoji ?? '🏪'}</span>
+            {cat ? <cat.icon className="w-10 h-10 text-brand-400" /> : <Store className="w-10 h-10 text-brand-400" />}
             <span className="text-xs text-neutral-400">{vendor.category}</span>
           </div>
         )}
@@ -132,7 +132,7 @@ function EmptyState({ search, category, onClear }: {
 }) {
   return (
     <div className="col-span-2 sm:col-span-3 flex flex-col items-center justify-center py-16 text-center px-4">
-      <div className="text-5xl mb-4">🔍</div>
+      <Search className="w-12 h-12 text-neutral-300 mb-4" />
       <h3 className="font-bold text-neutral-800 mb-1">
         {search ? `No results for "${search}"` : category ? `No ${category} vendors yet` : 'No vendors found'}
       </h3>
@@ -283,7 +283,7 @@ function DashboardContent() {
         {/* ── Greeting + location ───────────────────────── */}
         <div className="pt-5 pb-3 flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-bold text-neutral-900">Habari, {firstName}! 👋</h1>
+            <h1 className="text-xl font-bold text-neutral-900">Habari, {firstName}!</h1>
             <p className="text-sm text-neutral-500 mt-0.5">What do you need today?</p>
           </div>
           <button
@@ -354,7 +354,7 @@ function DashboardContent() {
                       sortBy === s ? 'bg-brand-600 text-white' : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
                     }`}
                   >
-                    {s === 'distance' ? '📍 Nearest' : '⭐ Top rated'}
+                    {s === 'distance' ? 'Nearest' : 'Top rated'}
                   </button>
                 ))}
               </div>
@@ -367,7 +367,7 @@ function DashboardContent() {
                   openNowOnly ? 'bg-green-500 text-white' : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
                 }`}
               >
-                🟢 Open now only
+                Open now only
               </button>
             </div>
             {activeFilters.length > 0 && (
@@ -398,7 +398,7 @@ function DashboardContent() {
                   : 'bg-white text-neutral-600 border border-neutral-200 hover:border-brand-300'
               }`}
             >
-              {cat.emoji} {cat.label}
+              <cat.icon className="w-3.5 h-3.5" /> {cat.label}
             </button>
           ))}
         </div>
@@ -473,7 +473,7 @@ function DashboardContent() {
             ) : vendors.length === 0 ? (
               <div className="w-full h-full flex items-center justify-center">
                 <div className="text-center px-6">
-                  <div className="text-4xl mb-3">🗺️</div>
+                  <Map className="w-10 h-10 text-neutral-300 mx-auto mb-3" />
                   <h3 className="font-semibold text-neutral-800 mb-1">No vendors on the map</h3>
                   <p className="text-sm text-neutral-500">Try removing filters or searching a different area</p>
                   <button onClick={clearFilters} className="mt-4 px-4 py-2 bg-brand-600 text-white text-sm rounded-lg hover:bg-brand-700 transition-colors">

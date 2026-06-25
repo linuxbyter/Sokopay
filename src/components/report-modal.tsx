@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { X, Flag } from 'lucide-react';
+import { X, Flag, CheckCircle } from 'lucide-react';
 
 interface ReportModalProps {
   isOpen: boolean;
@@ -72,7 +72,7 @@ export default function ReportModal({
 
         {submitted ? (
           <div className="p-8 text-center">
-            <div className="text-4xl mb-3">✅</div>
+            <CheckCircle className="w-10 h-10 text-green-500 mx-auto mb-3" />
             <h4 className="font-bold text-neutral-900 mb-2">Report submitted</h4>
             <p className="text-sm text-neutral-500 mb-5">
               Thank you. We review all reports within 24 hours and take action on confirmed violations.

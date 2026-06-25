@@ -1,34 +1,34 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { ArrowRight, MapPin, Star, MessageSquare } from "lucide-react";
+import { ArrowRight, MapPin, Star, MessageSquare, Leaf, Store, Scissors, Droplet, Flame, Beef, ShoppingBag, ShoppingCart, Utensils, Cookie, User } from "lucide-react";
 
 const categories = [
-  { emoji: "🥬", label: "Mama Mboga",     db: "Mama/Baba Mboga" },
-  { emoji: "🏪", label: "Maasai Shop",    db: "Maasai Shop" },
-  { emoji: "✂️", label: "Barbers",        db: "Barbers" },
-  { emoji: "💇", label: "Saloonists",     db: "Saloonists" },
-  { emoji: "💧", label: "Water Vendors",  db: "Water Vendors" },
-  { emoji: "🔥", label: "Gas Refillers",  db: "Gas Refillers" },
-  { emoji: "🥩", label: "Butcheries",     db: "Butcheries" },
-  { emoji: "👕", label: "Laundry Mart",   db: "Laundry Mart" },
-  { emoji: "🛒", label: "Supermarkets",   db: "SuperMarkets" },
-  { emoji: "🍽️", label: "Eateries",       db: "Eateries" },
-  { emoji: "🧆", label: "Quick Snacks",   db: "Quick Snacks" },
+  { icon: Leaf, label: "Mama Mboga",     db: "Mama/Baba Mboga" },
+  { icon: Store, label: "Maasai Shop",   db: "Maasai Shop" },
+  { icon: Scissors, label: "Barbers",     db: "Barbers" },
+  { icon: Scissors, label: "Saloonists",  db: "Saloonists" },
+  { icon: Droplet, label: "Water Vendors", db: "Water Vendors" },
+  { icon: Flame, label: "Gas Refillers",  db: "Gas Refillers" },
+  { icon: Beef, label: "Butcheries",      db: "Butcheries" },
+  { icon: ShoppingBag, label: "Laundry Mart", db: "Laundry Mart" },
+  { icon: ShoppingCart, label: "Supermarkets", db: "SuperMarkets" },
+  { icon: Utensils, label: "Eateries",     db: "Eateries" },
+  { icon: Cookie, label: "Quick Snacks",   db: "Quick Snacks" },
 ];
 
 const steps = [
   {
-    emoji: "👤",
+    icon: User,
     title: "Pick your role",
     body: "Shopping for yourself or selling to your neighbourhood? Takes 30 seconds.",
   },
   {
-    emoji: "📍",
+    icon: MapPin,
     title: "Discover nearby",
     body: "Browse vendors on a map or list. Filter by category, rating, or who's open right now.",
   },
   {
-    emoji: "💬",
+    icon: MessageSquare,
     title: "Message & transact",
     body: "Chat directly, agree on price, pay via M-Pesa or cash, and mark it done.",
   },
@@ -105,18 +105,21 @@ export default function HomePage() {
         <h2 className="text-2xl font-bold text-neutral-900 mb-2 text-center">What do you need?</h2>
         <p className="text-neutral-500 text-center mb-8 text-sm">11 categories of local vendors, all in one place</p>
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
-          {categories.map((cat) => (
-            <button
-              key={cat.db}
-              onClick={go}
-              className="flex flex-col items-center gap-2 p-4 bg-neutral-50 hover:bg-brand-50 border border-neutral-100 hover:border-brand-200 rounded-2xl transition-all group min-h-[80px]"
-            >
-              <span className="text-2xl">{cat.emoji}</span>
-              <span className="text-xs font-medium text-neutral-600 group-hover:text-brand-700 text-center leading-tight">
-                {cat.label}
-              </span>
-            </button>
-          ))}
+          {categories.map((cat) => {
+              const Icon = cat.icon;
+              return (
+                <button
+                  key={cat.db}
+                  onClick={go}
+                  className="flex flex-col items-center gap-2 p-4 bg-neutral-50 hover:bg-brand-50 border border-neutral-100 hover:border-brand-200 rounded-2xl transition-all group min-h-[80px]"
+                >
+                  <Icon className="w-6 h-6 text-brand-600 group-hover:text-brand-700" />
+                  <span className="text-xs font-medium text-neutral-600 group-hover:text-brand-700 text-center leading-tight">
+                    {cat.label}
+                  </span>
+                </button>
+              );
+            })}
         </div>
       </section>
 
@@ -126,13 +129,16 @@ export default function HomePage() {
           <h2 className="text-2xl font-bold text-neutral-900 mb-2 text-center">How it works</h2>
           <p className="text-neutral-500 text-center mb-10 text-sm">Simple enough to use on a boda stage</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {steps.map((s) => (
-              <div key={s.title} className="bg-white rounded-2xl p-6 border border-neutral-100 shadow-sm">
-                <div className="text-3xl mb-3">{s.emoji}</div>
-                <h3 className="font-bold text-neutral-900 mb-2">{s.title}</h3>
-                <p className="text-sm text-neutral-500 leading-relaxed">{s.body}</p>
-              </div>
-            ))}
+            {steps.map((s) => {
+                const Icon = s.icon;
+                return (
+                  <div key={s.title} className="bg-white rounded-2xl p-6 border border-neutral-100 shadow-sm">
+                    <Icon className="w-8 h-8 text-brand-600 mb-3" />
+                    <h3 className="font-bold text-neutral-900 mb-2">{s.title}</h3>
+                    <p className="text-sm text-neutral-500 leading-relaxed">{s.body}</p>
+                  </div>
+                );
+              })}
           </div>
           <div className="text-center mt-8">
             <button
@@ -150,7 +156,7 @@ export default function HomePage() {
       <section className="max-w-5xl mx-auto px-4 py-14">
         <div className="bg-copper-50 border border-copper-100 rounded-3xl p-8 sm:p-10 flex flex-col sm:flex-row items-center justify-between gap-6">
           <div>
-            <div className="text-2xl mb-2">🏪</div>
+            <Store className="w-7 h-7 text-copper-500 mb-2" />
             <h2 className="text-xl font-bold text-neutral-900 mb-1">Own a local business?</h2>
             <p className="text-neutral-500 text-sm max-w-sm">
               Get discovered by customers in your area. Set up your shop profile in under 5 minutes — free.

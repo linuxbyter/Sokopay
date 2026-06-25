@@ -12,7 +12,7 @@ export default function NotFound() {
         <h1 className="text-5xl font-bold text-brand-600 mb-2">404</h1>
         <h2 className="text-lg font-semibold text-neutral-900 mb-1">Page not found</h2>
         <p className="text-neutral-500 text-sm mb-6">
-          Samahani! This page doesn&apos;t exist. While you wait, try catching some fruits 🍎
+          Samahani! This page doesn&apos;t exist. While you wait, try the fruit catching game below.
         </p>
 
         <FruitGame onExit={() => router.push('/dashboard')} />

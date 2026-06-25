@@ -121,7 +121,9 @@ export default function AboutPage() {
 
         {/* Founder contact */}
         <div className="bg-brand-700 text-white rounded-3xl p-8">
-          <div className="text-2xl mb-3">👋</div>
+          <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center mb-3">
+            <PhoneCall className="w-6 h-6 text-white" />
+          </div>
           <h2 className="text-xl font-bold mb-2">Talk to the founder</h2>
           <p className="text-brand-200 text-sm leading-relaxed mb-5">
             We're open to conversations with investors, strategic partners, and

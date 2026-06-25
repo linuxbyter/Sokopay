@@ -1,4 +1,4 @@
-node_modules
+ inode_modules
 .next
 .env*.local
 tsconfig.tsbuildinfo

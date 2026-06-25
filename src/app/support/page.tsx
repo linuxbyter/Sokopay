@@ -159,7 +159,7 @@ export default function SupportPage() {
         </div>
 
         <div className="mt-12 bg-green-50 border border-green-100 rounded-2xl p-6 text-center">
-          <div className="text-3xl mb-3">💬</div>
+          <MessageSquare className="w-8 h-8 text-brand-600 mx-auto mb-3" />
           <h3 className="font-bold text-neutral-900 mb-1">Still need help?</h3>
           <p className="text-sm text-neutral-500 mb-4">
             WhatsApp us directly — complaints, feedback, or anything at all.

@@ -110,7 +110,7 @@ export default function VendorDashboardPage() {
   const handleDelete = async (vendor: VendorProfile) => {
     const confirmed = confirm(
       `Permanently delete "${vendor.business_name}"?\n\n` +
-      `⚠️ This will fail if you have any open conversations or unpaid transactions.\n\n` +
+      `WARNING: This will fail if you have any open conversations or unpaid transactions.\n\n` +
       `Consider deactivating instead — it hides your shop without losing any data.`
     );
     if (!confirmed) return;

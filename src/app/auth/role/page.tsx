@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { ArrowRight, ArrowLeft } from 'lucide-react';
+import { ArrowRight, ArrowLeft, ShoppingBag, Store } from 'lucide-react';
 
 export default function RoleSelectionPage() {
   const router = useRouter();
@@ -35,8 +35,8 @@ export default function RoleSelectionPage() {
               className="w-full bg-white border-2 border-neutral-100 hover:border-brand-400 rounded-2xl p-5 text-left transition-all hover:shadow-md group"
             >
               <div className="flex items-center gap-4">
-                <div className="w-14 h-14 bg-brand-50 rounded-2xl flex items-center justify-center flex-shrink-0 text-2xl group-hover:bg-brand-100 transition-colors">
-                  🛍️
+                <div className="w-14 h-14 bg-brand-50 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:bg-brand-100 transition-colors">
+                  <ShoppingBag className="w-7 h-7 text-brand-600" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="font-bold text-neutral-900 text-base mb-0.5">I'm a Customer</div>
@@ -52,8 +52,8 @@ export default function RoleSelectionPage() {
               className="w-full bg-white border-2 border-neutral-100 hover:border-copper-300 rounded-2xl p-5 text-left transition-all hover:shadow-md group"
             >
               <div className="flex items-center gap-4">
-                <div className="w-14 h-14 bg-copper-50 rounded-2xl flex items-center justify-center flex-shrink-0 text-2xl group-hover:bg-copper-100 transition-colors">
-                  🏪
+                <div className="w-14 h-14 bg-copper-50 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:bg-copper-100 transition-colors">
+                  <Store className="w-7 h-7 text-copper-600" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="font-bold text-neutral-900 text-base mb-0.5">I'm a Vendor</div>
