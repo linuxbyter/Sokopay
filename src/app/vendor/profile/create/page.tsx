@@ -77,6 +77,7 @@ function CreateVendorProfilePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [loadingEdit, setLoadingEdit] = useState(!!editVendorId);
+  const [dataLoaded, setDataLoaded] = useState(!editVendorId);
 
   // Load existing vendor data when editing
   useEffect(() => {
@@ -115,6 +116,7 @@ function CreateVendorProfilePage() {
         setErrors({ submit: 'Failed to load shop data.' });
       } finally {
         setLoadingEdit(false);
+        setDataLoaded(true);
       }
     })();
   }, [editVendorId, isLoaded]);
@@ -166,6 +168,7 @@ function CreateVendorProfilePage() {
   };
 
   const nextStep = () => {
+    if (isEditMode && !dataLoaded) return;
     if (validateStep(step)) {
       setStep(prev => Math.min(prev + 1, 7));
     }
@@ -815,10 +818,20 @@ function CreateVendorProfilePage() {
             <button
               type="button"
               onClick={nextStep}
-              className="flex-1 bg-brand-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-brand-700 transition-colors flex items-center justify-center gap-2"
+              disabled={isEditMode && !dataLoaded}
+              className="flex-1 bg-brand-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-brand-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
             >
-              Next
-              <ArrowRight className="w-4 h-4" />
+              {isEditMode && !dataLoaded ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Loading...
+                </>
+              ) : (
+                <>
+                  Next
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
             </button>
           ) : (
             <button

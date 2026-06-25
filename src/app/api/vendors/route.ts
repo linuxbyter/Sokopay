@@ -38,29 +38,7 @@ export async function GET(request: NextRequest) {
 
     const result = await query(sql, params)
 
-    // Compute effective is_open from scheduled hours (Nairobi = UTC+3)
-    const nairobiOffset = 3 * 60;
-    const now = new Date(Date.now() + nairobiOffset * 60 * 1000);
-    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    const todayName = dayNames[now.getUTCDay()];
-    const currentTime = `${String(now.getUTCHours()).padStart(2, '0')}:${String(now.getUTCMinutes()).padStart(2, '0')}`;
-
-    const vendors = result.rows.map(v => {
-      if (!v.hours) return v;
-      try {
-        const hours = typeof v.hours === 'string' ? JSON.parse(v.hours) : v.hours;
-        const todayHours = hours[todayName];
-        if (todayHours && !todayHours.closed) {
-          const scheduledOpen = currentTime >= todayHours.open && currentTime <= todayHours.close;
-          return { ...v, is_open: scheduledOpen };
-        }
-        return { ...v, is_open: false };
-      } catch {
-        return v;
-      }
-    });
-
-    return NextResponse.json({ vendors }, {
+    return NextResponse.json({ vendors: result.rows }, {
       headers: {
         // Browser caches for 60s, CDN/edge serves stale for up to 5 min while revalidating
         'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
