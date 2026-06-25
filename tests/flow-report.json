@@ -1,0 +1,187 @@
+{
+  "timestamp": "2026-06-25T05:57:20.614Z",
+  "baseUrl": "http://localhost:3457",
+  "summary": {
+    "passed": 25,
+    "failed": 4,
+    "warned": 0,
+    "consoleErrors": 10
+  },
+  "results": [
+    {
+      "name": "Page title",
+      "status": "pass",
+      "detail": "SökoPay"
+    },
+    {
+      "name": "Hero heading visible",
+      "status": "pass"
+    },
+    {
+      "name": "Get Started button exists",
+      "status": "pass"
+    },
+    {
+      "name": "Category chips rendered",
+      "status": "pass"
+    },
+    {
+      "name": "Nav link: About",
+      "status": "pass"
+    },
+    {
+      "name": "Nav link: Support",
+      "status": "pass"
+    },
+    {
+      "name": "Nav link: Contact",
+      "status": "pass"
+    },
+    {
+      "name": "Sign in button exists",
+      "status": "pass"
+    },
+    {
+      "name": "Footer rendered",
+      "status": "pass"
+    },
+    {
+      "name": "Landing page loads",
+      "status": "pass",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "About page loads",
+      "status": "pass",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "Support page loads",
+      "status": "pass",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "Contact page loads",
+      "status": "pass",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "Role Selection page loads",
+      "status": "pass",
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "Customer button exists",
+      "status": "pass"
+    },
+    {
+      "name": "Vendor button exists",
+      "status": "pass"
+    },
+    {
+      "name": "Back button exists",
+      "status": "pass"
+    },
+    {
+      "name": "Role notice visible",
+      "status": "pass"
+    },
+    {
+      "name": "Customer click → login page",
+      "status": "pass",
+      "detail": "http://localhost:3457/auth/login/customer"
+    },
+    {
+      "name": "Vendor click didn't navigate to login",
+      "status": "fail",
+      "detail": "http://localhost:3457/auth/role"
+    },
+    {
+      "name": "customer login: phone input missing",
+      "status": "fail"
+    },
+    {
+      "name": "customer login: back button exists",
+      "status": "pass"
+    },
+    {
+      "name": "customer login: submit button exists",
+      "status": "pass"
+    },
+    {
+      "name": "customer login: back button works",
+      "status": "pass"
+    },
+    {
+      "name": "vendor login: phone input missing",
+      "status": "fail"
+    },
+    {
+      "name": "vendor login: back button exists",
+      "status": "pass"
+    },
+    {
+      "name": "vendor login: submit button exists",
+      "status": "pass"
+    },
+    {
+      "name": "vendor login: back button works",
+      "status": "pass"
+    },
+    {
+      "name": "FATAL ERROR",
+      "status": "fail",
+      "detail": "page.goto: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3457/dashboard\", waiting until \"networkidle\"\u001b[22m\n"
+    }
+  ],
+  "consoleErrors": [
+    {
+      "url": "http://localhost:3457/",
+      "message": "PAGE ERROR: Invalid or unexpected token"
+    },
+    {
+      "url": "http://localhost:3457/auth/role",
+      "request": "http://localhost:3457/auth/login/customer?_rsc=35pm9",
+      "message": "FAILED: net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3457/auth/role",
+      "request": "http://localhost:3457/auth/login/vendor?_rsc=1qybt",
+      "message": "FAILED: net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3457/auth/role",
+      "request": "http://localhost:3457/auth/login/vendor?_rsc=1ein8",
+      "message": "FAILED: net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3457/auth/role",
+      "message": "Failed to fetch RSC payload for http://localhost:3457/auth/login/vendor. Falling back to browser navigation. TypeError: Failed to fetch\n    at fetchServerResponse (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/router-reducer/fetch-server-response.js:58:27)\n    at InnerLayoutRouter (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js:305:90)\n    at renderWithHooks (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom.development.js:11121:18)\n    at mountIndeterminateComponent (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom.development.js:16869:13)\n    at beginWork$1 (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom.development.js:18458:16)\n    at beginWork (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom.development.js:26927:14)\n    at performUnitOfWork (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom.development.js:25748:12)\n    at workLoopConcurrent (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom.development.js:25734:5)\n    at renderRootConcurrent (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom.development.js:25690:9)\n    at performConcurrentWorkOnRoot (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom.development.js:24504:38)\n    at workLoop (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/scheduler/cjs/scheduler.development.js:256:34)\n    at flushWork (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/scheduler/cjs/scheduler.development.js:225:14)\n    at MessagePort.performWorkUntilDeadline (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/scheduler/cjs/scheduler.development.js:534:21)"
+    },
+    {
+      "url": "http://localhost:3457/auth/login/vendor",
+      "request": "http://localhost:3457/auth/role?_rsc=1l9fk",
+      "message": "FAILED: net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3457/auth/login/vendor",
+      "request": "http://localhost:3457/auth/role?_rsc=1dw08",
+      "message": "FAILED: net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3457/dashboard",
+      "message": "Warning: Cannot update a component (`%s`) while rendering a different component (`%s`). To locate the bad setState() call inside `%s`, follow the stack trace as described in https://reactjs.org/link/setstate-in-render%s Router DashboardContent DashboardContent \n    at DashboardContent (webpack-internal:///(app-pages-browser)/./src/app/dashboard/page.tsx:396:87)\n    at Suspense\n    at DashboardPage\n    at ClientPageRoot (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/client-page.js:14:11)\n    at InnerLayoutRouter (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js:243:11)\n    at RedirectErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/redirect-boundary.js:74:9)\n    at RedirectBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/redirect-boundary.js:82:11)\n    at NotFoundBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/not-found-boundary.js:84:11)\n    at LoadingBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js:349:11)\n    at ErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/error-boundary.js:160:11)\n    at InnerScrollAndFocusHandler (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js:153:9)\n    at ScrollAndFocusHandler (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js:228:11)\n    at RenderFromTemplateContext (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/render-from-template-context.js:16:44)\n    at OuterLayoutRouter (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js:370:11)\n    at InnerLayoutRouter (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js:243:11)\n    at RedirectErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/redirect-boundary.js:74:9)\n    at RedirectBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/redirect-boundary.js:82:11)\n    at NotFoundErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/not-found-boundary.js:76:9)\n    at NotFoundBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/not-found-boundary.js:84:11)\n    at LoadingBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js:349:11)\n    at ErrorBoundaryHandler (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/error-boundary.js:113:9)\n    at ErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/error-boundary.js:160:11)\n    at InnerScrollAndFocusHandler (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js:153:9)\n    at ScrollAndFocusHandler (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js:228:11)\n    at RenderFromTemplateContext (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/render-from-template-context.js:16:44)\n    at OuterLayoutRouter (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/layout-router.js:370:11)\n    at body\n    at html\n    at __experimental_CheckoutProvider (webpack-internal:///(app-pages-browser)/./node_modules/@clerk/clerk-react/node_modules/@clerk/shared/dist/runtime/react/index.mjs:136:44)\n    at SWRConfig (webpack-internal:///(app-pages-browser)/./node_modules/@clerk/clerk-react/node_modules/swr/dist/_internal/config-context-client-BoS53ST9.mjs:554:13)\n    at SWRConfigCompat (webpack-internal:///(app-pages-browser)/./node_modules/@clerk/clerk-react/node_modules/@clerk/shared/dist/runtime/react/index.mjs:124:28)\n    at OrganizationProvider (webpack-internal:///(app-pages-browser)/./node_modules/@clerk/clerk-react/node_modules/@clerk/shared/dist/runtime/react/index.mjs:148:33)\n    at ClerkContextProvider (webpack-internal:///(app-pages-browser)/./node_modules/@clerk/clerk-react/dist/index.mjs:1849:11)\n    at ClerkProviderBase (webpack-internal:///(app-pages-browser)/./node_modules/@clerk/clerk-react/dist/index.mjs:1941:11)\n    at Hoc (webpack-internal:///(app-pages-browser)/./node_modules/@clerk/clerk-react/dist/chunk-THNCS7QR.mjs:84:5)\n    at ClerkNextOptionsProvider (webpack-internal:///(app-pages-browser)/./node_modules/@clerk/nextjs/dist/esm/client-boundary/NextOptionsContext.js:17:11)\n    at NextClientClerkProvider (webpack-internal:///(app-pages-browser)/./node_modules/@clerk/nextjs/dist/esm/app-router/client/ClerkProvider.js:58:13)\n    at ClientClerkProvider (webpack-internal:///(app-pages-browser)/./node_modules/@clerk/nextjs/dist/esm/app-router/client/ClerkProvider.js:120:13)\n    at ClerkProvider (webpack-internal:///(app-pages-browser)/./node_modules/@clerk/nextjs/dist/esm/client-boundary/ClerkProvider.js:19:81)\n    at ClerkProviderWrapper (webpack-internal:///(app-pages-browser)/./src/components/clerk-provider.tsx:10:11)\n    at RootLayout (Server)\n    at RedirectErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/redirect-boundary.js:74:9)\n    at RedirectBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/redirect-boundary.js:82:11)\n    at NotFoundErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/not-found-boundary.js:76:9)\n    at NotFoundBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/not-found-boundary.js:84:11)\n    at DevRootNotFoundBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/dev-root-not-found-boundary.js:33:11)\n    at ReactDevOverlay (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/react-dev-overlay/app/ReactDevOverlay.js:87:9)\n    at HotReload (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/react-dev-overlay/app/hot-reloader-client.js:321:11)\n    at Router (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/app-router.js:207:11)\n    at ErrorBoundaryHandler (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/error-boundary.js:113:9)\n    at ErrorBoundary (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/error-boundary.js:160:11)\n    at AppRouter (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/app-router.js:585:13)\n    at ServerRoot (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:112:27)\n    at Root (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/app-index.js:117:11)"
+    },
+    {
+      "url": "http://localhost:3457/dashboard",
+      "request": "http://localhost:3457/auth/role?_rsc=1538b",
+      "message": "FAILED: net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:3457/dashboard",
+      "request": "http://localhost:3457/auth/role?_rsc=184b8",
+      "message": "FAILED: net::ERR_ABORTED"
+    }
+  ],
+  "deadButtons": []
+}
