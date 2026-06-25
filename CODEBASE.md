@@ -132,11 +132,11 @@ NEXT_PUBLIC_ABLY_API_KEY=xxx
 ### Current Credentials (as of last session)
 
 ```
-Neon: postgresql://neondb_owner:npg_BezOIgb07xtn@ep-red-mode-ains0riv-pooler.c-4.us-east-1.aws.neon.tech/neondb?sslmode=require
-Clerk PK: pk_test_aGFuZHktbG9ic3Rlci01My5jbGVyay5hY2NvdW50cy5kZXYk
-Clerk SK: sk_test_qwPTK3tvo9t4Fzfw5SxT4xg4RiDDxRyxxAj9xmThzR
-Ably App ID: 1Yt3xw
-Ably API Key: 1Yt3xw.8vc9Tg:3kEe26_0cVn0n4--EGdwUkguxnm9XAgh30TD1aajOms
+Neon: stored in `.env.local` as `DATABASE_URL`
+Clerk PK: stored in `.env.local`
+Clerk SK: stored in `.env.local`
+Ably App ID: stored in `.env.local`
+Ably API Key: stored in `.env.local`
 ```
 
 ### Clerk Dashboard Configuration
