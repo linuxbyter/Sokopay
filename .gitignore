@@ -1,4 +1,6 @@
- inode_modules
+nu inode_modules
 .next
 .env*.local
 tsconfig.tsbuildinfo
+node_modules
+.vercel

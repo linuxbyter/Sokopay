@@ -1,0 +1,19 @@
+{
+  "name": "@sokopay/auth",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules"
+  },
+  "dependencies": {
+    "@clerk/nextjs": "6.10.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  }
+}

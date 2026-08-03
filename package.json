@@ -1,44 +1,19 @@
 {
   "name": "sokopay",
-  "version": "0.1.0",
   "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "db:setup": "npx tsx src/lib/setup-db.ts"
-  },
-  "dependencies": {
-    "@clerk/nextjs": "6.10.3",
-    "@radix-ui/react-slot": "^1.3.0",
-    "@types/leaflet": "^1.9.21",
-    "ably": "^2.23.0",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "dotenv": "^17.4.2",
-    "leaflet": "^1.9.4",
-    "lucide-react": "^0.468.0",
-    "next": "14.2.21",
-    "pg": "^8.22.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-leaflet": "^4.2.1",
-    "tailwind-merge": "^2.6.1",
-    "tsx": "^4.22.4",
-    "web-push": "^3.6.7"
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "clean": "turbo clean"
   },
   "devDependencies": {
-    "@types/node": "^20",
-    "@types/pg": "^8.20.0",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "@types/web-push": "^3.6.4",
-    "autoprefixer": "^10.0.1",
-    "eslint": "^8",
-    "eslint-config-next": "14.2.21",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1",
-    "typescript": "^5"
-  }
+    "turbo": "^2.4.0",
+    "typescript": "^5.7.0"
+  },
+  "packageManager": "npm@10.9.0"
 }
