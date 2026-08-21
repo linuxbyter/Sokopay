@@ -4,3 +4,4 @@ nu inode_modules
 tsconfig.tsbuildinfo
 node_modules
 .vercel
+.env*

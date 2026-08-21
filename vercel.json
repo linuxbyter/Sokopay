@@ -1,0 +1,6 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "turbo run build --filter=@sokopay/customer",
+  "outputDirectory": "apps/customer/.next",
+  "installCommand": "npm install"
+}

@@ -33,40 +33,6 @@ export function formatDate(dateString: string): string {
   })
 }
 
-export function formatOrderStatus(status: string): string {
-  const labels: Record<string, string> = {
-    pending: "Pending",
-    confirmed: "Confirmed",
-    preparing: "Preparing",
-    washing: "Washing",
-    chopping: "Chopping",
-    packing: "Packing",
-    ready: "Ready for Pickup",
-    out_for_delivery: "Out for Delivery",
-    delivered: "Delivered",
-    completed: "Completed",
-    cancelled: "Cancelled",
-  }
-  return labels[status] || status
-}
-
-export function getStatusColor(status: string): string {
-  const colors: Record<string, string> = {
-    pending: "bg-copper-400/10 text-copper-400 border-copper-400/20",
-    confirmed: "bg-primary/10 text-primary border-primary/20",
-    preparing: "bg-primary/10 text-primary border-primary/20",
-    washing: "bg-primary/10 text-primary border-primary/20",
-    chopping: "bg-primary/10 text-primary border-primary/20",
-    packing: "bg-primary/10 text-primary border-primary/20",
-    ready: "bg-success/10 text-success border-success/20",
-    out_for_delivery: "bg-primary/10 text-primary border-primary/20",
-    delivered: "bg-success/10 text-success border-success/20",
-    completed: "bg-surface-hover text-text-secondary border-border",
-    cancelled: "bg-destructive/10 text-destructive border-destructive/20",
-  }
-  return colors[status] || "bg-surface-hover text-text-secondary border-border"
-}
-
 export function getInitials(name: string): string {
   return name
     .split(" ")

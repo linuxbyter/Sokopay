@@ -4,21 +4,23 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "./lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98]",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 active:scale-[0.98]",
   {
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground hover:bg-primary-hover shadow-sm",
+          "bg-brand-600 text-white hover:bg-brand-700 shadow-sm",
         destructive:
           "bg-destructive text-white hover:bg-destructive/90 shadow-sm",
         outline:
-          "border border-border bg-transparent hover:bg-surface-hover text-text-primary",
+          "border border-neutral-200 bg-white hover:bg-neutral-50 text-foreground",
         secondary:
-          "bg-surface text-text-primary border border-border hover:bg-surface-hover",
+          "bg-neutral-100 text-foreground border border-neutral-200 hover:bg-neutral-200",
         ghost:
-          "hover:bg-surface-hover text-text-secondary hover:text-text-primary",
-        link: "text-primary hover:text-primary-hover underline-offset-4 hover:underline",
+          "hover:bg-neutral-100 text-neutral-600 hover:text-foreground",
+        link: "text-brand-600 hover:text-brand-700 underline-offset-4 hover:underline",
+        copper:
+          "bg-copper-400 text-white hover:bg-copper-500 shadow-sm",
       },
       size: {
         default: "h-10 px-4 py-2",
