@@ -2,30 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   SökoPay Design System — Bright, Warm, Kenyan
-   Light mode only. No dark mode.
-   ═══════════════════════════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════════════════
+   SökoPay — Minimal Aesthetic
+   ✍️ Paler green, lots of whitespace, shadows, skeletons for poor network
+   ══════════════════════════════════════════════════════════════════════════ */
 
 * {
-  border-color: #E5E4DF;
+  border-color: #E5E7EB;
+  box-sizing: border-box;
 }
 
 body {
-  background: #F8F6F0;
-  color: #2D3748;
+  background: #FFFFFF;
+  color: #111827;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  line-height: 1.6;
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   Scrollbar (light, subtle)
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-::-webkit-scrollbar {
+/* ══════════════════════════════════════════════════════════════════════════
+   Scrollbar (minimal, light)
+   ══════════════::-webkit-scrollbar {
   width: 4px;
-  height: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -33,25 +32,172 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.12);
-  border-radius: 2px;
+  background: #E5E7EB;
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.2);
+  background: #D1D5DB;
 }
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   Scroll Reveal
+/* ══════════════════════════════════════════════════════════════════════════
+   Skeleton screens — for poor network
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.skeleton {
+  background-color: #F3F4F6;
+  border-radius: 0.5rem;
+  animation: pulse 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+  from {
+    background-color: #F3F4F6;
+  }
+  to {
+    background-color: #E5E7EB;
+  }
+}
+
+.skeleton-text {
+  @apply skeleton h-6 w-full;
+}
+
+.skeleton-text-sm {
+  @apply skeleton h-4 w-full;
+}
+
+.skeleton-circle {
+  @apply skeleton h-8 w-8 rounded-full;
+}
+
+.skeleton-button {
+  @apply skeleton h-10 w-full;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Status indicators — subtle
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.status-online {
+  @apply text-green-600;
+}
+
+.status-offline {
+  @apply text-gray-500;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Buttons — minimal, functional with skeleton support
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.button-primary {
+  @apply inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none;
+  background-color: #FFFFFF;
+  color: #059669;
+  border: 1px solid #E5E7EB;
+}
+
+.button-primary:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.button-secondary {
+  @apply inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-secondary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none;
+  background-color: #FFFFFF;
+  color: #6B7280;
+  border: 1px solid #E5E7EB;
+}
+
+.button-plain {
+  @apply inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none;
+  background-color: transparent;
+  color: #000000;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Core utility classes
    ═══════════════════════════════════════════════════════════════════════════ */
 
-.reveal {
-  opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+.container {
+  @apply max-w-2xl mx-auto px-4 py-6;
 }
 
-.reveal.is-visible {
-  opacity: 1;
-  transform: translateY(0);
+.card {
+  @apply rounded-md border p-6 bg-white shadow-sm;
+}
+
+.input {
+  @apply w-full rounded-md border p-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+}
+
+.select {
+  @apply w-full rounded-md border p-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+}
+
+.label {
+  @apply block text-sm font-medium text-neutral-700 mb-1;
+}
+
+.error {
+  @apply text-sm text-red-600 mt-1;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Typography — large, comfortable
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+h1 {
+  @apply text-3xl font-bold tracking-tight mb-3;
+}
+
+h2 {
+  @apply text-2xl font-bold tracking-tight mb-3;
+}
+
+h3 {
+  @apply text-lg font-medium tracking-tight mb-2;
+}
+
+p {
+  @apply text-sm leading-relaxed mb-4;
+}
+
+.soft {
+  @apply text-neutral-600 mb-6;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Subtle status colors
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.badge-online {
+  @apply inline-flex items-center rounded-full px-2 py-1 text-xs font-medium bg-green-100 text-green-600;
+}
+
+.badge-offline {
+  @apply inline-flex items-center rounded-full px-2 py-1 text-xs font-medium bg-gray-100 text-gray-500;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Responsive
+   ══════════════════════════════════════════════════════════════════════════ */
+
+@media (min-width: 640px) {
+  .container {
+    @apply max-w-md;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    @apply max-w-lg;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    @apply max-w-2xl;
+  }
 }
