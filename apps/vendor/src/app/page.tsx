@@ -6,7 +6,6 @@ import {
   MessageSquare,
   CheckCircle,
   LogOut,
-  Clock,
 } from "lucide-react"
 
 interface Vendor {
@@ -15,16 +14,8 @@ interface Vendor {
   isOpen: boolean
 }
 
-interface Message {
-  id: string
-  customerName: string
-  content: string
-  timestamp: string
-}
-
 export default function VendorPage() {
   const [vendor, setVendor] = useState<Vendor | null>(null)
-  const [messages, setMessages] = useState<Message[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -35,14 +26,6 @@ export default function VendorPage() {
         name: "Mama Njeri's Veggies",
         isOpen: true,
       })
-      setMessages([
-        {
-          id: "1",
-          customerName: "Peter",
-          content: "Do you have fresh tomatoes?",
-          timestamp: "2 min ago",
-        },
-      ])
       setLoading(false)
     }, 1500)
 
@@ -52,10 +35,8 @@ export default function VendorPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-white p-8">
-        <div className="grid grid-cols-1 gap-6 max-w-2xl mx-auto">
-          <div className="skeleton skeleton-button" />
-          <div className="skeleton skeleton-text-sm" />
-          <div className="skeleton skeleton-text-sm" />
+        <div className="flex items-center justify-center">
+          <div className="w-12 h-12 border-2 border-primary border-t-transparent rounded-full animate-spin" />
         </div>
       </div>
     )
@@ -64,7 +45,7 @@ export default function VendorPage() {
   if (!vendor) {
     return (
       <div className="min-h-screen bg-white">
-        <p className="text-neutral-500">No vendor data</p>
+        <p className="text-neutral-500">Loading vendor data...</p>
       </div>
     )
   }
@@ -103,33 +84,6 @@ export default function VendorPage() {
         <button className="button-primary w-full mb-4" onClick={() => window.alert("Toggle open/clicked")}>
           Toggle Open/Closed
         </button>
-
-        {/* Messages */}
-        <div className="space-y-4">
-          <h1 className="text-2xl font-bold text-foreground mb-4">Messages</h1>
-          {messages.length === 0 ? (
-            <p className="text-neutral-400">No messages yet</p>
-          ) : (
-            <div className="divide-y divide-neutral-100">
-              {messages.map((message) => (
-                <div key={message.id} className="flex items-start gap-3 py-3">
-                  <div className="w-10 h-10 rounded bg-primary/5 flex items-center justify-center flex-shrink-0">
-                    <span className="text-sm font-bold text-primary">
-                      {message.customerName[0]}
-                    </span>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm text-foreground">
-                      <strong>{message.customerName}</strong>
-                      <p className="text-xs text-neutral-500">{message.content}</p>
-                      <p className="text-xs text-neutral-400">{message.timestamp}</p>
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
       </main>
 
       {/* Bottom Nav */}
